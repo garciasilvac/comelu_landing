@@ -463,7 +463,7 @@ function App() {
                 </li>
               </ul>
 
-              <div className="mt-8 flex flex-wrap items-center gap-3">
+              <div className="hero-cta mt-8 flex flex-wrap items-center gap-3">
                 <button type="button" onClick={onWaitlistClick} className={`${primaryButton} w-full justify-center sm:w-auto`}>
                   Unirme a la lista de espera
                 </button>
@@ -619,7 +619,7 @@ function App() {
                 )}
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="form-grid grid gap-4 sm:grid-cols-2">
                 <div className="grid gap-2">
                   <label htmlFor="email" className="field-label">
                     Email
@@ -651,7 +651,7 @@ function App() {
                   <label htmlFor="telefono-pais" className="field-label">
                     Teléfono
                   </label>
-                  <div className="grid gap-2 sm:grid-cols-[140px_1fr]">
+                  <div className="phone-grid grid gap-2 sm:grid-cols-[140px_1fr]">
                     <div className="relative">
                       <select
                         id="telefono-pais"
@@ -723,7 +723,7 @@ function App() {
                 </div>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-3">
+              <div className="meta-grid grid gap-4 sm:grid-cols-3">
                 <div className="grid gap-2">
                   <label htmlFor="rol" className="field-label">
                     Rol
@@ -835,7 +835,7 @@ function App() {
                   ¿Qué te interesa más?
                   <span className="block text-sm font-medium text-slate-300">(máximo 3 opciones)</span>
                 </legend>
-                <div className={`grid gap-2 sm:grid-cols-2 ${fieldErrors.intereses ? "rounded-xl border border-rose-400/70 p-2" : ""}`}>
+                <div className={`interest-grid grid gap-2 sm:grid-cols-2 ${fieldErrors.intereses ? "rounded-xl border border-rose-400/70 p-2" : ""}`}>
                   {INTERESES.map((interest) => (
                     <label
                       key={interest}
