@@ -283,8 +283,20 @@ footer {
   .interest-grid {
     grid-template-columns: 1fr;
   }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .phone-field,
+  .phone-grid,
+  .phone-grid > * {
+    min-width: 0;
+  }
 
   .phone-grid {
     grid-template-columns: 1fr;
+  }
+
+  .phone-field {
+    grid-column: 1 / -1;
   }
 }

@@ -647,7 +647,7 @@ function App() {
                   )}
                 </div>
 
-                <div className="grid gap-2">
+                <div className="phone-field grid gap-2">
                   <label htmlFor="telefono-pais" className="field-label">
                     Teléfono
                   </label>
