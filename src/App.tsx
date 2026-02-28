@@ -33,13 +33,27 @@ type Interest =
 type FormState = {
   nombre: string;
   email: string;
-  whatsapp: string;
+  telefonoPais: string;
+  telefonoNumero: string;
   rol: Role;
   tamano: LabSize;
   dolor: MainPain;
   intereses: Interest[];
   checklist: boolean;
 };
+
+type FieldErrors = {
+  nombre: string;
+  email: string;
+  telefonoPais: string;
+  telefonoNumero: string;
+  rol: string;
+  tamano: string;
+  dolor: string;
+  intereses: string;
+};
+
+type InlineValidatableField = "nombre" | "email" | "telefonoPais" | "telefonoNumero";
 
 const NAV_LINKS = [
   { id: "problemas", label: "Problemas" },
@@ -106,7 +120,8 @@ const FAQ = [
 const initialForm: FormState = {
   nombre: "",
   email: "",
-  whatsapp: "",
+  telefonoPais: "+56",
+  telefonoNumero: "",
   rol: "",
   tamano: "",
   dolor: "",
@@ -125,6 +140,16 @@ function App() {
   const [faqOpenIndex, setFaqOpenIndex] = useState<number | null>(0);
   const [form, setForm] = useState<FormState>(initialForm);
   const [formError, setFormError] = useState<string>("");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({
+    nombre: "",
+    email: "",
+    telefonoPais: "",
+    telefonoNumero: "",
+    rol: "",
+    tamano: "",
+    dolor: "",
+    intereses: "",
+  });
   const [submitted, setSubmitted] = useState(false);
   const firstInputRef = useRef<HTMLInputElement>(null);
 
@@ -175,23 +200,128 @@ function App() {
     }));
   };
 
+  const validateNombre = (value: string) => {
+    if (value.trim().length < 2) return "El nombre debe tener al menos 2 letras.";
+    return "";
+  };
+
+  const validateEmail = (value: string) => {
+    const trimmed = value.trim();
+    if (!trimmed) return "El email es obligatorio.";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmed)) return "Ingresa un email válido (ej: nombre@empresa.cl).";
+    return "";
+  };
+
+  const validateTelefono = (pais: string, numero: string) => {
+    const numeroTrimmed = numero.trim();
+    if (!pais) {
+      return {
+        telefonoPais: "Selecciona un código de país.",
+        telefonoNumero: "",
+      };
+    }
+    if (!numeroTrimmed) {
+      return {
+        telefonoPais: "",
+        telefonoNumero: "Ingresa tu número de teléfono.",
+      };
+    }
+
+    const digitsOnly = numeroTrimmed.replace(/\D/g, "");
+    const countryDigits = pais.replace(/\D/g, "");
+    const totalDigits = countryDigits.length + digitsOnly.length;
+    const combined = `${pais}${digitsOnly}`;
+    const e164Regex = /^\+[1-9]\d+$/;
+
+    if (!e164Regex.test(combined) || totalDigits !== 11) {
+      return {
+        telefonoPais: "",
+        telefonoNumero: "El teléfono debe tener 11 dígitos en total (código país + número).",
+      };
+    }
+
+    return {
+      telefonoPais: "",
+      telefonoNumero: "",
+    };
+  };
+
+  const validateField = (field: InlineValidatableField, value: string) => {
+    if (field === "nombre") return validateNombre(value);
+    if (field === "email") return validateEmail(value);
+    const telefonoValidation = validateTelefono(
+      field === "telefonoPais" ? value : form.telefonoPais,
+      field === "telefonoNumero" ? value : form.telefonoNumero,
+    );
+    return telefonoValidation[field];
+  };
+
+  const onFieldBlur = (field: InlineValidatableField) => {
+    setFieldErrors((prev) => ({
+      ...prev,
+      [field]: validateField(field, form[field]),
+    }));
+  };
+
+  const onFieldChange = (field: InlineValidatableField, value: string) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+    if (fieldErrors[field]) {
+      setFieldErrors((prev) => ({ ...prev, [field]: validateField(field, value) }));
+    }
+  };
+
   const validate = () => {
-    if (!form.nombre.trim()) {
-      setFormError("Ingresa tu nombre.");
+    const nextErrors: FieldErrors = {
+      nombre: validateNombre(form.nombre),
+      email: validateEmail(form.email),
+      ...validateTelefono(form.telefonoPais, form.telefonoNumero),
+      rol: form.rol ? "" : "Selecciona una opción.",
+      tamano: form.tamano ? "" : "Selecciona una opción.",
+      dolor: form.dolor ? "" : "Selecciona una opción.",
+      intereses: form.intereses.length > 0 ? "" : "Selecciona al menos una opción.",
+    };
+
+    setFieldErrors(nextErrors);
+
+    if (nextErrors.nombre) {
+      setFormError(nextErrors.nombre);
       return false;
     }
 
-    if (!form.email.trim() && !form.whatsapp.trim()) {
-      setFormError("Ingresa email o WhatsApp (al menos uno).");
+    if (nextErrors.email) {
+      setFormError(nextErrors.email);
       return false;
     }
 
-    if (form.email.trim()) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(form.email.trim())) {
-        setFormError("El email no tiene un formato válido.");
-        return false;
-      }
+    if (nextErrors.telefonoPais) {
+      setFormError(nextErrors.telefonoPais);
+      return false;
+    }
+
+    if (nextErrors.telefonoNumero) {
+      setFormError(nextErrors.telefonoNumero);
+      return false;
+    }
+
+    if (nextErrors.rol) {
+      setFormError("Selecciona un rol antes de enviar.");
+      return false;
+    }
+
+    if (nextErrors.tamano) {
+      setFormError("Selecciona el tamaño del laboratorio antes de enviar.");
+      return false;
+    }
+
+    if (nextErrors.dolor) {
+      setFormError("Selecciona el dolor principal antes de enviar.");
+      return false;
+    }
+
+    if (nextErrors.intereses) {
+      setFormError("Selecciona al menos una opción en “Qué te interesa más”.");
+      return false;
     }
 
     setFormError("");
@@ -222,6 +352,16 @@ function App() {
     console.log("Comelu waitlist lead", payload);
     setSubmitted(true);
     setForm(initialForm);
+    setFieldErrors({
+      nombre: "",
+      email: "",
+      telefonoPais: "",
+      telefonoNumero: "",
+      rol: "",
+      tamano: "",
+      dolor: "",
+      intereses: "",
+    });
   };
 
   return (
@@ -461,9 +601,22 @@ function App() {
                   type="text"
                   required
                   value={form.nombre}
-                  onChange={(e) => setForm((prev) => ({ ...prev, nombre: e.target.value }))}
+                  onChange={(e) => onFieldChange("nombre", e.target.value)}
+                  onBlur={() => onFieldBlur("nombre")}
+                  placeholder="Ej: Carlos González"
+                  aria-invalid={Boolean(fieldErrors.nombre)}
+                  aria-describedby="nombre-help nombre-error"
                   className="field"
                 />
+                {fieldErrors.nombre ? (
+                  <p id="nombre-error" className="text-xs text-rose-300">
+                    {fieldErrors.nombre}
+                  </p>
+                ) : (
+                  <p id="nombre-help" className="text-xs text-slate-400">
+                    Escribe tu nombre y apellido.
+                  </p>
+                )}
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
@@ -476,23 +629,97 @@ function App() {
                     name="email"
                     type="email"
                     value={form.email}
-                    onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
+                    onChange={(e) => onFieldChange("email", e.target.value)}
+                    onBlur={() => onFieldBlur("email")}
+                    placeholder="nombre@empresa.cl"
+                    aria-invalid={Boolean(fieldErrors.email)}
+                    aria-describedby="email-help email-error"
                     className="field"
                   />
+                  {fieldErrors.email ? (
+                    <p id="email-error" className="text-xs text-rose-300">
+                      {fieldErrors.email}
+                    </p>
+                  ) : (
+                    <p id="email-help" className="text-xs text-slate-400">
+                      Formato esperado: nombre@empresa.cl
+                    </p>
+                  )}
                 </div>
 
                 <div className="grid gap-2">
-                  <label htmlFor="whatsapp" className="field-label">
-                    WhatsApp
+                  <label htmlFor="telefono-pais" className="field-label">
+                    Teléfono
                   </label>
-                  <input
-                    id="whatsapp"
-                    name="whatsapp"
-                    type="tel"
-                    value={form.whatsapp}
-                    onChange={(e) => setForm((prev) => ({ ...prev, whatsapp: e.target.value }))}
-                    className="field"
-                  />
+                  <div className="grid gap-2 sm:grid-cols-[140px_1fr]">
+                    <div className="relative">
+                      <select
+                        id="telefono-pais"
+                        name="telefonoPais"
+                        value={form.telefonoPais}
+                        onChange={(e) => onFieldChange("telefonoPais", e.target.value)}
+                        onBlur={() => onFieldBlur("telefonoPais")}
+                        aria-invalid={Boolean(fieldErrors.telefonoPais)}
+                        aria-describedby="telefono-help telefono-pais-error telefono-numero-error"
+                        className="field w-full appearance-none pr-9"
+                      >
+                        <option className="bg-[#0b1222] text-slate-100" value="">
+                          País
+                        </option>
+                        <option className="bg-[#0b1222] text-slate-100" value="+56">
+                          Chile (+56)
+                        </option>
+                        <option className="bg-[#0b1222] text-slate-100" value="+54">
+                          Argentina (+54)
+                        </option>
+                        <option className="bg-[#0b1222] text-slate-100" value="+57">
+                          Colombia (+57)
+                        </option>
+                        <option className="bg-[#0b1222] text-slate-100" value="+51">
+                          Perú (+51)
+                        </option>
+                        <option className="bg-[#0b1222] text-slate-100" value="+52">
+                          México (+52)
+                        </option>
+                        <option className="bg-[#0b1222] text-slate-100" value="+1">
+                          EE.UU./Canadá (+1)
+                        </option>
+                        <option className="bg-[#0b1222] text-slate-100" value="+34">
+                          España (+34)
+                        </option>
+                      </select>
+                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                    </div>
+
+                    <input
+                      id="telefono-numero"
+                      name="telefonoNumero"
+                      type="tel"
+                      value={form.telefonoNumero}
+                      onChange={(e) => onFieldChange("telefonoNumero", e.target.value)}
+                      onBlur={() => onFieldBlur("telefonoNumero")}
+                      placeholder="9 1234 5678"
+                      aria-invalid={Boolean(fieldErrors.telefonoNumero)}
+                      aria-describedby="telefono-help telefono-pais-error telefono-numero-error"
+                      className="field"
+                    />
+                  </div>
+
+                  {fieldErrors.telefonoPais ? (
+                    <p id="telefono-pais-error" className="text-xs text-rose-300">
+                      {fieldErrors.telefonoPais}
+                    </p>
+                  ) : null}
+                  {fieldErrors.telefonoNumero ? (
+                    <p id="telefono-numero-error" className="text-xs text-rose-300">
+                      {fieldErrors.telefonoNumero}
+                    </p>
+                  ) : null}
+                  {!fieldErrors.telefonoPais && !fieldErrors.telefonoNumero ? (
+                    <p id="telefono-help" className="text-xs text-slate-400">
+                      Selecciona país y escribe el número sin código. Ej: +56 9 1234 5678
+                    </p>
+                  ) : null}
                 </div>
               </div>
 
@@ -506,7 +733,11 @@ function App() {
                       id="rol"
                       name="rol"
                       value={form.rol}
-                      onChange={(e) => setForm((prev) => ({ ...prev, rol: e.target.value as Role }))}
+                      onChange={(e) => {
+                        setForm((prev) => ({ ...prev, rol: e.target.value as Role }));
+                        if (fieldErrors.rol) setFieldErrors((prev) => ({ ...prev, rol: "" }));
+                      }}
+                      aria-invalid={Boolean(fieldErrors.rol)}
                       className="field w-full appearance-none border-white/25 bg-gradient-to-b from-white/10 to-white/[0.03] pr-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
                     >
                       <option className="bg-[#0b1222] text-slate-100" value="">
@@ -524,6 +755,7 @@ function App() {
                     </select>
                     <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                   </div>
+                  {fieldErrors.rol && <p className="text-xs text-rose-300">{fieldErrors.rol}</p>}
                 </div>
 
                 <div className="grid gap-2">
@@ -535,7 +767,11 @@ function App() {
                       id="tamano"
                       name="tamano"
                       value={form.tamano}
-                      onChange={(e) => setForm((prev) => ({ ...prev, tamano: e.target.value as LabSize }))}
+                      onChange={(e) => {
+                        setForm((prev) => ({ ...prev, tamano: e.target.value as LabSize }));
+                        if (fieldErrors.tamano) setFieldErrors((prev) => ({ ...prev, tamano: "" }));
+                      }}
+                      aria-invalid={Boolean(fieldErrors.tamano)}
                       className="field w-full appearance-none border-white/25 bg-gradient-to-b from-white/10 to-white/[0.03] pr-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
                     >
                       <option className="bg-[#0b1222] text-slate-100" value="">
@@ -553,6 +789,7 @@ function App() {
                     </select>
                     <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                   </div>
+                  {fieldErrors.tamano && <p className="text-xs text-rose-300">{fieldErrors.tamano}</p>}
                 </div>
 
                 <div className="grid gap-2">
@@ -564,7 +801,11 @@ function App() {
                       id="dolor"
                       name="dolor"
                       value={form.dolor}
-                      onChange={(e) => setForm((prev) => ({ ...prev, dolor: e.target.value as MainPain }))}
+                      onChange={(e) => {
+                        setForm((prev) => ({ ...prev, dolor: e.target.value as MainPain }));
+                        if (fieldErrors.dolor) setFieldErrors((prev) => ({ ...prev, dolor: "" }));
+                      }}
+                      aria-invalid={Boolean(fieldErrors.dolor)}
                       className="field w-full appearance-none border-white/25 bg-gradient-to-b from-white/10 to-white/[0.03] pr-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
                     >
                       <option className="bg-[#0b1222] text-slate-100" value="">
@@ -585,15 +826,16 @@ function App() {
                     </select>
                     <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                   </div>
+                  {fieldErrors.dolor && <p className="text-xs text-rose-300">{fieldErrors.dolor}</p>}
                 </div>
               </div>
 
               <fieldset className="grid">
-                <legend className="mb-4 block text-center text-lg font-semibold text-white sm:text-left">
+                <legend className={`mb-4 block text-center text-lg font-semibold sm:text-left ${fieldErrors.intereses ? "text-rose-300" : "text-white"}`}>
                   ¿Qué te interesa más?
                   <span className="block text-sm font-medium text-slate-300">(máximo 3 opciones)</span>
                 </legend>
-                <div className="grid gap-2 sm:grid-cols-2">
+                <div className={`grid gap-2 sm:grid-cols-2 ${fieldErrors.intereses ? "rounded-xl border border-rose-400/70 p-2" : ""}`}>
                   {INTERESES.map((interest) => (
                     <label
                       key={interest}
@@ -608,18 +850,23 @@ function App() {
                         name="intereses"
                         checked={form.intereses.includes(interest)}
                         disabled={!form.intereses.includes(interest) && form.intereses.length >= 3}
-                        onChange={(e) => toggleInterest(interest, e.target.checked)}
+                        onChange={(e) => {
+                          toggleInterest(interest, e.target.checked);
+                          if (fieldErrors.intereses) {
+                            setFieldErrors((prev) => ({ ...prev, intereses: "" }));
+                          }
+                        }}
                         className="mt-0.5 h-5 w-9 shrink-0 cursor-pointer appearance-none rounded-full border border-white/35 bg-slate-950/70 transition before:block before:h-4 before:w-4 before:translate-x-[1px] before:translate-y-[1px] before:rounded-full before:bg-white/80 before:content-[''] checked:border-[#2dd4bf] checked:bg-[#2dd4bf]/30 checked:before:translate-x-[17px] checked:before:bg-[#2dd4bf] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]"
                       />
                       <span className="transition group-hover:text-white">{interest}</span>
                     </label>
                   ))}
                 </div>
+                {fieldErrors.intereses && <p className="mt-2 text-xs text-rose-300">{fieldErrors.intereses}</p>}
               </fieldset>
 
               <input type="hidden" name="checklist" value={form.checklist ? "true" : "false"} />
 
-              {formError && <p className="text-sm text-rose-300">{formError}</p>}
               {submitted && <p className="text-sm text-emerald-300">Gracias. Te agregamos a la lista de espera de Comelu.</p>}
 
               <div className="flex flex-wrap items-center gap-3">

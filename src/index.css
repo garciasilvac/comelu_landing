@@ -223,6 +223,15 @@ footer {
   background: rgba(255, 255, 255, 0.07);
 }
 
+.field[aria-invalid="true"] {
+  border-color: rgba(251, 113, 133, 0.85);
+}
+
+.field[aria-invalid="true"]:focus {
+  border-color: rgba(251, 113, 133, 0.92);
+  box-shadow: 0 0 0 3px rgba(251, 113, 133, 0.2);
+}
+
 .field option {
   color: #e2e8f0;
   background: #111827;
