@@ -271,3 +271,20 @@ footer {
     transform: translate3d(16px, -12px, 0) scale(1.08);
   }
 }
+
+@media (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
+  .hero-cta > button {
+    width: auto;
+    flex: 1 1 220px;
+  }
+
+  .form-grid,
+  .meta-grid,
+  .interest-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .phone-grid {
+    grid-template-columns: 1fr;
+  }
+}
