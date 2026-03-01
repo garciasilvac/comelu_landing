@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import heroIllustration from "./assets/illustrations/hero.png";
 import retrabajosIllustration from "./assets/illustrations/retrabajos.png";
-import { supabase } from "./lib/supabaseClient";
 
 type Role = "" | "Laboratorista" | "Supervisor" | "Dueño";
 type LabSize = "" | "1–3" | "4–10" | "10+";
@@ -341,20 +340,36 @@ function App() {
     const payload = {
       nombre: form.nombre.trim(),
       email: form.email.trim(),
-      telefono_pais: form.telefonoPais,
-      telefono_numero: form.telefonoNumero.trim(),
+      telefonoPais: form.telefonoPais,
+      telefonoNumero: form.telefonoNumero.trim(),
       rol: form.rol,
       tamano: form.tamano,
       dolor: form.dolor,
       intereses: form.intereses,
       checklist: form.checklist,
-      market: "Chile",
-      source: "landing_comelu",
     };
 
-    const { error } = await supabase.from("leads").insert(payload);
+    const functionsBaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    if (!functionsBaseUrl) {
+      setFormError("Falta configurar VITE_SUPABASE_URL.");
+      setIsSubmitting(false);
+      return;
+    }
 
-    if (error) {
+    let response: Response;
+    try {
+      response = await fetch(`${functionsBaseUrl}/functions/v1/submitLead`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch {
+      setFormError("No pudimos guardar tu registro en este momento. Intenta nuevamente.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!response.ok) {
       setFormError("No pudimos guardar tu registro en este momento. Intenta nuevamente.");
       setIsSubmitting(false);
       return;
