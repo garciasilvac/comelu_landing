@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import heroIllustration from "./assets/illustrations/hero.png";
 import retrabajosIllustration from "./assets/illustrations/retrabajos.png";
+import { supabase } from "./lib/supabaseClient";
 
 type Role = "" | "Laboratorista" | "Supervisor" | "Dueño";
 type LabSize = "" | "1–3" | "4–10" | "10+";
@@ -150,6 +151,7 @@ function App() {
     dolor: "",
     intereses: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const firstInputRef = useRef<HTMLInputElement>(null);
 
@@ -328,29 +330,38 @@ function App() {
     return true;
   };
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSubmitted(false);
+    setFormError("");
 
     if (!validate()) return;
 
+    setIsSubmitting(true);
     const payload = {
-      ...form,
-      createdAt: new Date().toISOString(),
+      nombre: form.nombre.trim(),
+      email: form.email.trim(),
+      telefono_pais: form.telefonoPais,
+      telefono_numero: form.telefonoNumero.trim(),
+      rol: form.rol,
+      tamano: form.tamano,
+      dolor: form.dolor,
+      intereses: form.intereses,
+      checklist: form.checklist,
       market: "Chile",
       source: "landing_comelu",
     };
 
-    try {
-      const existing = localStorage.getItem("comelu_waitlist");
-      const parsed = existing ? (JSON.parse(existing) as unknown[]) : [];
-      localStorage.setItem("comelu_waitlist", JSON.stringify([...parsed, payload]));
-    } catch {
-      // keep non-blocking: localStorage can fail in private mode
+    const { error } = await supabase.from("leads").insert(payload);
+
+    if (error) {
+      setFormError("No pudimos guardar tu registro en este momento. Intenta nuevamente.");
+      setIsSubmitting(false);
+      return;
     }
 
-    console.log("Comelu waitlist lead", payload);
     setSubmitted(true);
+    setIsSubmitting(false);
     setForm(initialForm);
     setFieldErrors({
       nombre: "",
@@ -867,12 +878,17 @@ function App() {
 
               <input type="hidden" name="checklist" value={form.checklist ? "true" : "false"} />
 
+              {formError && <p className="text-sm text-rose-300">{formError}</p>}
               {submitted && <p className="text-sm text-emerald-300">Gracias. Te agregamos a la lista de espera de Comelu.</p>}
 
               <div className="flex flex-wrap items-center gap-3">
-                <button type="submit" className={`inline-flex w-full items-center justify-center sm:w-auto ${primaryButton}`}>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`inline-flex w-full items-center justify-center disabled:cursor-not-allowed disabled:opacity-75 sm:w-auto ${primaryButton}`}
+                >
                   <Send className="mr-2 h-4 w-4" />
-                  Unirme a la lista de espera
+                  {isSubmitting ? "Enviando..." : "Unirme a la lista de espera"}
                 </button>
                 <p className="text-sm text-slate-400">Sin spam. Solo te contactamos para el piloto/lanzamiento.</p>
               </div>
