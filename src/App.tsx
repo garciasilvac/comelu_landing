@@ -350,8 +350,9 @@ function App() {
     };
 
     const functionsBaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    if (!functionsBaseUrl) {
-      setFormError("Falta configurar VITE_SUPABASE_URL.");
+    const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    if (!functionsBaseUrl || !anonKey) {
+      setFormError("Falta configurar VITE_SUPABASE_URL o VITE_SUPABASE_ANON_KEY.");
       setIsSubmitting(false);
       return;
     }
@@ -360,7 +361,11 @@ function App() {
     try {
       response = await fetch(`${functionsBaseUrl}/functions/v1/submitLead`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          apikey: anonKey,
+          Authorization: `Bearer ${anonKey}`,
+        },
         body: JSON.stringify(payload),
       });
     } catch {
