@@ -364,16 +364,28 @@ function App() {
         headers: {
           "Content-Type": "application/json",
           apikey: anonKey,
+          Authorization: `Bearer ${anonKey}`,
         },
         body: JSON.stringify(payload),
       });
-    } catch {
+    } catch (error) {
+      if (import.meta.env.DEV) {
+        console.error("[submitLead] Network error while sending lead", error);
+      }
       setFormError("No pudimos guardar tu registro en este momento. Intenta nuevamente.");
       setIsSubmitting(false);
       return;
     }
 
     if (!response.ok) {
+      if (import.meta.env.DEV) {
+        const errorBody = await response.text().catch(() => "");
+        console.error("[submitLead] Non-OK response", {
+          status: response.status,
+          statusText: response.statusText,
+          body: errorBody,
+        });
+      }
       setFormError("No pudimos guardar tu registro en este momento. Intenta nuevamente.");
       setIsSubmitting(false);
       return;
