@@ -22,6 +22,51 @@ const CORS_HEADERS = {
 
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_REQUESTS_PER_WINDOW = 5;
+const RESEND_EMAILS_API = "https://api.resend.com/emails";
+const CONFIRMATION_SUBJECT = "Comelu: registro confirmado";
+const CONFIRMATION_TEXT_TEMPLATE = `Hola {{name}},
+
+Tu registro en la lista de espera de Comelu quedó confirmado.
+
+Te contactaremos pronto con los siguientes pasos.
+
+Este correo no recibe respuestas.`;
+const CONFIRMATION_HTML_TEMPLATE = `<!doctype html>
+<html lang="es">
+  <body style="margin:0;padding:24px;background:#05070a;font-family:Inter,Segoe UI,Arial,sans-serif;color:#e8edf4;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background:#0f141c;border:1px solid #1f2a38;border-radius:16px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,0.35);">
+            <tr>
+              <td style="font-size:12px;letter-spacing:0.14em;color:#7f91a7;text-transform:uppercase;padding-bottom:12px;">Comelu</td>
+            </tr>
+            <tr>
+              <td style="font-size:22px;line-height:1.3;font-weight:600;color:#f5f8fc;padding-bottom:12px;">
+                Registro confirmado
+              </td>
+            </tr>
+            <tr>
+              <td style="font-size:15px;line-height:1.6;color:#c8d3e0;padding-bottom:18px;">
+                Hola {{name}}, tu registro en la lista de espera quedó confirmado.
+              </td>
+            </tr>
+            <tr>
+              <td style="font-size:15px;line-height:1.6;color:#c8d3e0;padding-bottom:18px;">
+                Te contactaremos pronto con los siguientes pasos.
+              </td>
+            </tr>
+            <tr>
+              <td style="font-size:13px;line-height:1.5;color:#8fa1b8;border-top:1px solid #1f2a38;padding-top:14px;">
+                Este correo no recibe respuestas.
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
 
 type RateStore = Map<string, number[]>;
 // MVP-only limiter: this is per Edge instance and resets on cold starts/redeploys.
@@ -40,6 +85,86 @@ const json = (status: number, body: Record<string, unknown>) =>
 const asTrimmedString = (value: unknown) => {
   if (typeof value !== "string") return "";
   return value.trim();
+};
+
+const readBooleanEnv = (name: string, fallback = false) => {
+  const value = Deno.env.get(name);
+  if (!value) return fallback;
+
+  return ["1", "true", "yes", "on"].includes(value.toLowerCase());
+};
+
+const replaceNamePlaceholder = (template: string, name: string) => template.replaceAll("{{name}}", name);
+
+const getTemplateName = (rawName: string) => {
+  const trimmed = rawName.trim();
+  if (!trimmed) return "ahí";
+  return trimmed.split(/\s+/)[0] || "hola";
+};
+
+const buildConfirmationEmail = (rawName: string) => {
+  const name = getTemplateName(rawName);
+  return {
+    subject: CONFIRMATION_SUBJECT,
+    text: replaceNamePlaceholder(CONFIRMATION_TEXT_TEMPLATE, name),
+    html: replaceNamePlaceholder(CONFIRMATION_HTML_TEMPLATE, name),
+  };
+};
+
+const sendConfirmationEmail = async (input: { email: string; name: string }) => {
+  const emailDisabled = readBooleanEnv("EMAIL_DISABLED", true);
+  const from = Deno.env.get("EMAIL_FROM");
+  const { subject, text, html } = buildConfirmationEmail(input.name);
+  const htmlPreview = html.replace(/\s+/g, " ").slice(0, 220);
+
+  if (emailDisabled) {
+    console.info("[submitLead] EMAIL_DISABLED=true, would send email confirmation", {
+      to: input.email,
+      subject,
+      textPreview: text.slice(0, 220),
+      htmlPreview,
+    });
+    return;
+  }
+
+  const resendApiKey = Deno.env.get("RESEND_API_KEY");
+  if (!from || !resendApiKey) {
+    console.error("[submitLead] Missing EMAIL_FROM or RESEND_API_KEY. Skipping email send.", {
+      hasEmailFrom: Boolean(from),
+      hasResendApiKey: Boolean(resendApiKey),
+    });
+    return;
+  }
+
+  try {
+    const response = await fetch(RESEND_EMAILS_API, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${resendApiKey}`,
+      },
+      body: JSON.stringify({
+        from,
+        to: [input.email],
+        subject,
+        text,
+        html,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      console.error("[submitLead] Resend send failed.", {
+        status: response.status,
+        errorBody,
+      });
+      return;
+    }
+
+    console.info("[submitLead] Confirmation email sent.", { to: input.email });
+  } catch (error) {
+    console.error("[submitLead] Email send threw an error.", error);
+  }
 };
 
 const getClientIp = (request: Request) => {
