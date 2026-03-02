@@ -1,0 +1,2 @@
+[functions.submitLead]
+verify_jwt = false
