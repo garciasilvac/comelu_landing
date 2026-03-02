@@ -316,5 +316,10 @@ Deno.serve(async (request) => {
     return json(500, { ok: false, error: "No se pudo guardar el lead." });
   }
 
+  await sendConfirmationEmail({
+    email: payload.email,
+    name: payload.nombre,
+  });
+
   return json(200, { ok: true });
 });
