@@ -637,16 +637,16 @@ function App() {
           </p>
         </section>
 
-        <section id="lista-espera" className="section-block" data-reveal>
-          <div className="panel-frame p-6 sm:p-8" data-reveal data-delay={80}>
-            <h2 className="section-title" data-reveal data-delay={120}>
+        <section id="lista-espera" className="section-block">
+          <div className="panel-frame p-6 sm:p-8" data-reveal data-delay={0}>
+            <h2 className="section-title" data-reveal data-delay={20}>
               Lista de espera: sé de los primeros en probar Comelu
             </h2>
-            <p className="mt-3 max-w-3xl text-slate-300" data-reveal data-delay={170}>
+            <p className="mt-3 max-w-3xl text-slate-300" data-reveal data-delay={40}>
               Estamos armando un grupo piloto para laboratorios dentales en Chile. Déjanos tus datos y te contactamos cuando abramos nuevos cupos.
             </p>
 
-            <form className="mt-6 grid gap-5" onSubmit={onSubmit} noValidate data-reveal data-delay={220}>
+            <form className="mt-6 grid gap-5" onSubmit={onSubmit} noValidate data-reveal data-delay={60}>
               <div className="grid gap-2">
                 <label htmlFor="nombre" className="field-label">
                   Nombre
