@@ -130,10 +130,10 @@ const initialForm: FormState = {
 };
 
 const primaryButton =
-  "rounded-xl bg-gradient-to-r from-[#109d8f] to-[#22b8a8] px-5 py-3 text-sm font-semibold text-[#031016] shadow-[0_8px_24px_rgba(34,184,168,0.24)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(34,184,168,0.32)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]";
+  "interactive-cta rounded-xl bg-gradient-to-r from-[#109d8f] to-[#22b8a8] px-5 py-3 text-sm font-semibold text-[#031016] shadow-[0_8px_24px_rgba(34,184,168,0.24)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(34,184,168,0.32)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]";
 
 const secondaryButton =
-  "rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]";
+  "interactive-cta rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]";
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -465,7 +465,7 @@ function App() {
               ))}
               <button
                 type="button"
-                className="mt-1 rounded-xl bg-gradient-to-r from-[#109d8f] to-[#22b8a8] px-3 py-3 text-center text-sm font-semibold text-[#031016] shadow-[0_8px_24px_rgba(34,184,168,0.24)] transition duration-300 hover:shadow-[0_12px_30px_rgba(34,184,168,0.32)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]"
+                className="interactive-cta mt-1 rounded-xl bg-gradient-to-r from-[#109d8f] to-[#22b8a8] px-3 py-3 text-center text-sm font-semibold text-[#031016] shadow-[0_8px_24px_rgba(34,184,168,0.24)] transition duration-300 hover:shadow-[0_12px_30px_rgba(34,184,168,0.32)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]"
                 onClick={onWaitlistClick}
               >
                 Unirme a la lista de espera
@@ -595,7 +595,7 @@ function App() {
             Primera versión del software: lo esencial para operar
           </h2>
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
-            <article className="glass-card" data-reveal data-delay={0}>
+            <article className="glass-card interactive-card" data-reveal data-delay={0}>
               <ul className="space-y-3 text-sm text-slate-200">
                 <li>• Órdenes de trabajo (rápida y detallada)</li>
                 <li>• Archivos y adjuntos centralizados por orden</li>
@@ -605,7 +605,7 @@ function App() {
                 <li>• Notificaciones básicas (email + link de seguimiento)</li>
               </ul>
             </article>
-            <article className="glass-card" data-reveal data-delay={80}>
+            <article className="glass-card interactive-card" data-reveal data-delay={80}>
               <h3 className="font-semibold text-white">Aún no (por ahora)</h3>
               <ul className="mt-3 space-y-3 text-sm text-slate-300">
                 <li>• Integración automática con bancos / facturación</li>
@@ -955,7 +955,7 @@ function App() {
               return (
                 <article
                   key={item.q}
-                  className="overflow-hidden rounded-xl border border-white/15 bg-white/[0.04] backdrop-blur-sm transition hover:bg-white/[0.06]"
+                  className="interactive-card overflow-hidden rounded-xl border border-white/15 bg-white/[0.04] backdrop-blur-sm transition hover:bg-white/[0.06]"
                   data-reveal
                   data-delay={index * 80}
                 >
