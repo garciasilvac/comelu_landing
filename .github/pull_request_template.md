@@ -2,7 +2,8 @@
 
 **Type:** feat / fix / chore / refactor / docs / test / style  
 **Branch:** `<type>/<slug>`  
-**Worktree:** `../wt-<slug>`
+**Worktree:** `../wt-<slug>`  
+**Related issue (optional):** #
 
 ---
 
@@ -19,18 +20,28 @@
 
 ## 🧪 How to test locally
 
-### Setup
+### Option A — Using the worktree (recommended)
+
+    cd ../wt-<slug>
+    pnpm i
+    pnpm dev
+
+### Option B — Checking out the branch (no worktree)
 
     git fetch --all --prune
     git checkout <branch>
     pnpm i
-
-### Run
-
     pnpm dev
-    # (optional) pnpm lint
-    # (optional) pnpm test
-    # (optional) pnpm build
+
+### Production-like validation (when applicable)
+
+    pnpm build
+    pnpm preview
+
+### Optional checks (if available)
+
+    pnpm lint
+    pnpm test
 
 ### Manual checklist
 
@@ -39,6 +50,8 @@
 - [ ] Mobile responsive
 - [ ] No console errors
 - [ ] Accessibility OK (focus + reduced motion)
+- [ ] `pnpm build` passes
+- [ ] `pnpm preview` looks correct (production-like)
 
 ---
 
@@ -88,3 +101,4 @@ Confirm:
 
 - [ ] Commits are small and logically isolated
 - [ ] Safe to revert individually
+- [ ] Branch pushed (`git push -u origin <branch>`)
