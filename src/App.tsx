@@ -505,11 +505,11 @@ function App() {
                 </li>
               </ul>
 
-              <div className="hero-cta mt-8 flex flex-wrap items-center gap-3" data-reveal data-delay={460}>
-                <button type="button" onClick={onWaitlistClick} className={`${primaryButton} w-full justify-center sm:w-auto`}>
+              <div className="hero-cta mt-8 flex flex-wrap items-center gap-3">
+                <button type="button" onClick={onWaitlistClick} className={`${primaryButton} w-full justify-center sm:w-auto`} data-reveal data-delay={0}>
                   Unirme a la lista de espera
                 </button>
-                <button type="button" onClick={onChecklistClick} className={`${secondaryButton} w-full justify-center sm:w-auto`}>
+                <button type="button" onClick={onChecklistClick} className={`${secondaryButton} w-full justify-center sm:w-auto`} data-reveal data-delay={40}>
                   Recibir checklist gratis
                 </button>
               </div>
