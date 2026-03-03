@@ -130,10 +130,10 @@ const initialForm: FormState = {
 };
 
 const primaryButton =
-  "rounded-xl bg-gradient-to-r from-[#109d8f] to-[#22b8a8] px-5 py-3 text-sm font-semibold text-[#031016] shadow-[0_8px_24px_rgba(34,184,168,0.24)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(34,184,168,0.32)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]";
+  "interactive-cta rounded-xl bg-gradient-to-r from-[#109d8f] to-[#22b8a8] px-5 py-3 text-sm font-semibold text-[#031016] shadow-[0_8px_24px_rgba(34,184,168,0.24)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(34,184,168,0.32)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]";
 
 const secondaryButton =
-  "rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]";
+  "interactive-cta rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]";
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -465,7 +465,7 @@ function App() {
               ))}
               <button
                 type="button"
-                className="mt-1 rounded-xl bg-gradient-to-r from-[#109d8f] to-[#22b8a8] px-3 py-3 text-center text-sm font-semibold text-[#031016] shadow-[0_8px_24px_rgba(34,184,168,0.24)] transition duration-300 hover:shadow-[0_12px_30px_rgba(34,184,168,0.32)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]"
+                className="interactive-cta mt-1 rounded-xl bg-gradient-to-r from-[#109d8f] to-[#22b8a8] px-3 py-3 text-center text-sm font-semibold text-[#031016] shadow-[0_8px_24px_rgba(34,184,168,0.24)] transition duration-300 hover:shadow-[0_12px_30px_rgba(34,184,168,0.32)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]"
                 onClick={onWaitlistClick}
               >
                 Unirme a la lista de espera
@@ -476,36 +476,36 @@ function App() {
       </header>
 
       <main className="mx-auto w-full max-w-[1160px] px-4 pb-20 pt-10 sm:px-6 lg:px-8 lg:pt-16">
-        <section className="hero-panel panel-frame reveal">
+        <section className="hero-panel panel-frame" data-reveal>
           <div className="hero-grid">
-            <div>
-              <p className="mb-4 inline-flex rounded-full border border-[#2dd4bf]/40 bg-[#2dd4bf]/12 px-3 py-1 text-xs font-semibold tracking-wide text-[#81fff2]">
+            <div data-reveal data-delay={80}>
+              <p className="mb-4 inline-flex rounded-full border border-[#2dd4bf]/40 bg-[#2dd4bf]/12 px-3 py-1 text-xs font-semibold tracking-wide text-[#81fff2]" data-reveal data-delay={120}>
                 Hecho para laboratorios dentales en Chile
               </p>
-              <h1 className="max-w-4xl text-3xl font-semibold leading-tight text-white sm:text-4xl lg:text-5xl">
+              <h1 className="max-w-4xl text-3xl font-semibold leading-tight text-white sm:text-4xl lg:text-5xl" data-reveal data-delay={160}>
                 Software para órdenes, archivos y pagos del laboratorio dental.{" "}
                 <span className="text-gradient">Sin Excel ni WhatsApp desordenado.</span>
               </h1>
-              <p className="mt-5 max-w-3xl text-base text-slate-300 sm:text-lg">
+              <p className="mt-5 max-w-3xl text-base text-slate-300 sm:text-lg" data-reveal data-delay={220}>
                 Comelu centraliza pedidos, adjuntos, estados por etapa y cobros para laboratorios dentales en Chile, con trazabilidad por caso y seguimiento para cada cliente.
               </p>
 
-              <ul className="mt-6 grid gap-3 text-sm text-slate-200 sm:text-base">
-                <li className="flex items-start gap-2">
+              <ul className="mt-6 grid gap-3 text-sm text-slate-200 sm:text-base" data-reveal data-delay={280}>
+                <li className="flex items-start gap-2" data-reveal data-delay={320}>
                   <ShieldCheck className="mt-0.5 h-4 w-4 text-[#56f3e2]" />
                   <span>Estados por etapa: recepción → diseño → producción → despacho</span>
                 </li>
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2" data-reveal data-delay={360}>
                   <ShieldCheck className="mt-0.5 h-4 w-4 text-[#56f3e2]" />
                   <span>Archivos siempre asociados a la orden (escaneos, fotos, docs)</span>
                 </li>
-                <li className="flex items-start gap-2">
+                <li className="flex items-start gap-2" data-reveal data-delay={400}>
                   <ShieldCheck className="mt-0.5 h-4 w-4 text-[#56f3e2]" />
                   <span>Pagos y saldos: seguimiento simple y comprobantes</span>
                 </li>
               </ul>
 
-              <div className="hero-cta mt-8 flex flex-wrap items-center gap-3">
+              <div className="hero-cta mt-8 flex flex-wrap items-center gap-3" data-reveal data-delay={460}>
                 <button type="button" onClick={onWaitlistClick} className={`${primaryButton} w-full justify-center sm:w-auto`}>
                   Unirme a la lista de espera
                 </button>
@@ -516,7 +516,7 @@ function App() {
               <p className="mt-3 text-sm text-slate-400">Pilotos por cupos en Chile. Te avisamos primero.</p>
             </div>
 
-            <aside className="glass-card floating-card reveal" style={{ animationDelay: "120ms" }}>
+            <aside className="glass-card floating-card" data-reveal data-delay={140}>
               <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Operación en vivo</p>
               <h3 className="mt-2 text-xl font-semibold text-white">Control total del flujo diario</h3>
               <img src={heroIllustration} alt="Panel hero de Comelu" className="mt-3 h-[24.5rem] w-full rounded-lg object-cover" />
@@ -527,15 +527,18 @@ function App() {
           </div>
         </section>
 
-        <section id="problemas" className="section-block reveal">
-          <h2 className="section-title">Problemas operativos que hoy hacen perder tiempo (y plata)</h2>
+        <section id="problemas" className="section-block" data-reveal>
+          <h2 className="section-title" data-reveal data-delay={80}>
+            Problemas operativos que hoy hacen perder tiempo (y plata)
+          </h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {PROBLEMAS.map((item, index) => {
               return (
                 <article
                   key={item.title}
-                  className="glass-card interactive-card reveal min-h-[280px]"
-                  style={{ animationDelay: `${index * 90}ms` }}
+                  className="glass-card interactive-card min-h-[280px]"
+                  data-reveal
+                  data-delay={index * 80}
                 >
                   <h3 className="mt-3 text-lg font-semibold text-white">{item.title}</h3>
                   <p className="mt-1 text-sm text-slate-300">{item.description}</p>
@@ -550,10 +553,12 @@ function App() {
           </div>
         </section>
 
-        <section id="como-funciona" className="section-block reveal">
-          <h2 className="section-title">Cómo funciona el flujo del laboratorio dental en Comelu</h2>
+        <section id="como-funciona" className="section-block" data-reveal>
+          <h2 className="section-title" data-reveal data-delay={80}>
+            Cómo funciona el flujo del laboratorio dental en Comelu
+          </h2>
           <div className="mt-6 grid gap-4 lg:grid-cols-3">
-            <article className="glass-card interactive-card reveal" style={{ animationDelay: "0ms" }}>
+            <article className="glass-card interactive-card" data-reveal data-delay={0}>
               <div className="flex w-full items-start gap-3">
                 <div className="step-pill self-center">1</div>
                 <div className="flex-1">
@@ -562,7 +567,7 @@ function App() {
                 </div>
               </div>
             </article>
-            <article className="glass-card interactive-card reveal" style={{ animationDelay: "90ms" }}>
+            <article className="glass-card interactive-card" data-reveal data-delay={80}>
               <div className="flex w-full items-start gap-3">
                 <div className="step-pill self-center translate-y-px">
                   <span className="leading-none">2</span>
@@ -573,7 +578,7 @@ function App() {
                 </div>
               </div>
             </article>
-            <article className="glass-card interactive-card reveal" style={{ animationDelay: "180ms" }}>
+            <article className="glass-card interactive-card" data-reveal data-delay={160}>
               <div className="flex w-full items-start gap-3">
                 <div className="step-pill self-center">3</div>
                 <div className="flex-1">
@@ -585,10 +590,12 @@ function App() {
           </div>
         </section>
 
-        <section id="primera-version" className="section-block reveal">
-          <h2 className="section-title">Primera versión del software: lo esencial para operar</h2>
+        <section id="primera-version" className="section-block" data-reveal>
+          <h2 className="section-title" data-reveal data-delay={80}>
+            Primera versión del software: lo esencial para operar
+          </h2>
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
-            <article className="glass-card reveal" style={{ animationDelay: "0ms" }}>
+            <article className="glass-card interactive-card" data-reveal data-delay={0}>
               <ul className="space-y-3 text-sm text-slate-200">
                 <li>• Órdenes de trabajo (rápida y detallada)</li>
                 <li>• Archivos y adjuntos centralizados por orden</li>
@@ -598,7 +605,7 @@ function App() {
                 <li>• Notificaciones básicas (email + link de seguimiento)</li>
               </ul>
             </article>
-            <article className="glass-card reveal" style={{ animationDelay: "100ms" }}>
+            <article className="glass-card interactive-card" data-reveal data-delay={80}>
               <h3 className="font-semibold text-white">Aún no (por ahora)</h3>
               <ul className="mt-3 space-y-3 text-sm text-slate-300">
                 <li>• Integración automática con bancos / facturación</li>
@@ -609,29 +616,37 @@ function App() {
           </div>
         </section>
 
-        <section className="section-block reveal">
-          <h2 className="section-title">Próximas mejoras del sistema, definidas contigo</h2>
-          <p className="mt-3 max-w-3xl text-slate-300">
+        <section className="section-block" data-reveal>
+          <h2 className="section-title" data-reveal data-delay={80}>
+            Próximas mejoras del sistema, definidas contigo
+          </h2>
+          <p className="mt-3 max-w-3xl text-slate-300" data-reveal data-delay={140}>
             Partimos resolviendo lo más crítico: órdenes, archivos, estados y pagos. Luego sumamos automatizaciones, reportes e integraciones. Al unirte a la lista de espera, marcas tus prioridades y eso define qué sale antes.
           </p>
         </section>
 
-        <section className="section-block reveal">
-          <h2 className="section-title">Comelu nace desde la operación real del laboratorio dental</h2>
-          <p className="mt-3 max-w-3xl text-slate-300">
+        <section className="section-block" data-reveal>
+          <h2 className="section-title" data-reveal data-delay={80}>
+            Comelu nace desde la operación real del laboratorio dental
+          </h2>
+          <p className="mt-3 max-w-3xl text-slate-300" data-reveal data-delay={140}>
             Comelu está desarrollada por un trabajador de laboratorio dental, para laboratoristas, supervisores y dueños de laboratorios. Nace de problemas reales: pedidos incompletos, archivos perdidos, estados confusos y pagos sin seguimiento.
           </p>
-          <p className="mt-2 text-sm text-slate-400">Hecho para el día a día en Chile.</p>
+          <p className="mt-2 text-sm text-slate-400" data-reveal data-delay={180}>
+            Hecho para el día a día en Chile.
+          </p>
         </section>
 
-        <section id="lista-espera" className="section-block reveal">
-          <div className="panel-frame p-6 sm:p-8">
-            <h2 className="section-title">Lista de espera: sé de los primeros en probar Comelu</h2>
-            <p className="mt-3 max-w-3xl text-slate-300">
+        <section id="lista-espera" className="section-block" data-reveal>
+          <div className="panel-frame p-6 sm:p-8" data-reveal data-delay={80}>
+            <h2 className="section-title" data-reveal data-delay={120}>
+              Lista de espera: sé de los primeros en probar Comelu
+            </h2>
+            <p className="mt-3 max-w-3xl text-slate-300" data-reveal data-delay={170}>
               Estamos armando un grupo piloto para laboratorios dentales en Chile. Déjanos tus datos y te contactamos cuando abramos nuevos cupos.
             </p>
 
-            <form className="mt-6 grid gap-5" onSubmit={onSubmit} noValidate>
+            <form className="mt-6 grid gap-5" onSubmit={onSubmit} noValidate data-reveal data-delay={220}>
               <div className="grid gap-2">
                 <label htmlFor="nombre" className="field-label">
                   Nombre
@@ -927,8 +942,10 @@ function App() {
           </div>
         </section>
 
-        <section id="faq" className="section-block reveal">
-          <h2 className="section-title">FAQ</h2>
+        <section id="faq" className="section-block" data-reveal>
+          <h2 className="section-title" data-reveal data-delay={80}>
+            FAQ
+          </h2>
           <div className="mt-6 space-y-3">
             {FAQ.map((item, index) => {
               const isOpen = faqOpenIndex === index;
@@ -936,7 +953,12 @@ function App() {
               const panelId = `faq-panel-${index}`;
 
               return (
-                <article key={item.q} className="overflow-hidden rounded-xl border border-white/15 bg-white/[0.04] backdrop-blur-sm transition hover:bg-white/[0.06]">
+                <article
+                  key={item.q}
+                  className="interactive-card overflow-hidden rounded-xl border border-white/15 bg-white/[0.04] backdrop-blur-sm transition hover:bg-white/[0.06]"
+                  data-reveal
+                  data-delay={index * 80}
+                >
                   <h3>
                     <button
                       id={buttonId}
