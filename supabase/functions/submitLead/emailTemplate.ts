@@ -119,6 +119,23 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
   ]
     .map(([label, value]) => renderMetadataRow(label, value))
     .join("");
+  const notesSection = `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="width:100%;border:1px solid #1c2a3f;border-radius:12px;padding:12px 14px;background:#0a1322;">
+    <tr>
+      <td style="padding:0 0 8px;font-size:13px;font-weight:700;color:#87b7de;letter-spacing:0.06em;text-transform:uppercase;">Notas e intereses</td>
+    </tr>
+    <tr>
+      <td style="padding:0 0 6px;font-size:11px;line-height:1.4;font-weight:700;letter-spacing:0.08em;color:#6ea8d8;text-transform:uppercase;">Dolor principal</td>
+    </tr>
+    <tr>
+      <td style="padding:0 0 12px;font-size:14px;line-height:1.6;color:#d9e6f5;word-break:break-word;">${toHtmlValue(pain, MAX_LONG_FIELD_LENGTH)}</td>
+    </tr>
+    <tr>
+      <td style="padding:0 0 6px;font-size:11px;line-height:1.4;font-weight:700;letter-spacing:0.08em;color:#6ea8d8;text-transform:uppercase;">Intereses</td>
+    </tr>
+    <tr>
+      <td style="padding:0;font-size:14px;line-height:1.6;color:#d9e6f5;word-break:break-word;">${toHtmlValue(interests, MAX_LONG_FIELD_LENGTH)}</td>
+    </tr>
+  </table>`;
 
   const html = `<!doctype html>
 <html lang="es">
@@ -150,6 +167,11 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
                   </tr>
                   ${summaryRows}
                 </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 20px 20px;">
+                ${notesSection}
               </td>
             </tr>
             <tr>
@@ -186,6 +208,10 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
     `- Dolor principal: ${pain}`,
     `- Intereses: ${interests}`,
     `- Acepta checklist: ${checklist}`,
+    "",
+    "Notas e intereses:",
+    `- Dolor principal: ${pain}`,
+    `- Intereses: ${interests}`,
     "",
     "Metadata:",
     `- Fecha/Hora: ${toTextValue(metadata.timestamp, 120)}`,
