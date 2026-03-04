@@ -9,3 +9,4 @@ pnpm-debug.log*
 .env.local
 .vscode/
 supabase/.temp/
+supabase/functions/submitLead/.preview/
