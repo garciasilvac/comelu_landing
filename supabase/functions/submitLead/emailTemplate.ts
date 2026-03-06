@@ -99,13 +99,19 @@ const renderSummaryRow = (label: string, value: string) => {
   </tr>`;
 };
 
-const renderMetadataRow = (label: string, value: string) => {
-  return `<tr>
-    <td style="padding:8px 0 4px;font-size:11px;line-height:1.4;font-weight:700;letter-spacing:0.08em;color:#6ea8d8;text-transform:uppercase;">${escapeHtml(label)}</td>
-  </tr>
-  <tr>
-    <td style="padding:0 0 10px;font-size:13px;line-height:1.5;color:#acc0d9;word-break:break-word;">${value}</td>
-  </tr>`;
+const renderInterestsHtml = (values: string[]) => {
+  if (!values.length) return toHtmlValue(NA, 10);
+
+  const list = values
+    .map((item) => `<li style="margin:0 0 6px 16px;padding:0;color:#d9e6f5;">${toHtmlValue(item, 180)}</li>`)
+    .join("");
+
+  return `<ul style="margin:0;padding:0;list-style:disc inside;">${list}</ul>`;
+};
+
+const renderInterestsText = (values: string[]) => {
+  if (!values.length) return NA;
+  return values.map((item) => `• ${toTextValue(item, 180)}`).join("\n");
 };
 
 export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) => {
@@ -115,10 +121,7 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
   const role = toTextValue(payload.rol, 80);
   const size = toTextValue(payload.tamano, 80);
   const pain = toTextValue(mapPainLabel(payload.dolor), MAX_LONG_FIELD_LENGTH);
-  const interests = payload.intereses.length
-    ? payload.intereses.map((item) => toTextValue(mapInterestLabel(item), 140)).join(", ")
-    : NA;
-  const checklist = payload.checklist ? "Sí" : "No";
+  const interestLabels = payload.intereses.map((item) => mapInterestLabel(item)).filter(Boolean);
 
   const subject = `Comelu: registro confirmado — ${name}`;
   const summaryRows = [
@@ -128,40 +131,10 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
     ["Rol", toHtmlValue(role, 80)],
     ["Tamaño del laboratorio", toHtmlValue(size, 80)],
     ["Dolor principal", toHtmlValue(pain, MAX_LONG_FIELD_LENGTH)],
-    ["Intereses", toHtmlValue(interests, MAX_LONG_FIELD_LENGTH)],
-    ["Acepta checklist", toHtmlValue(checklist, 10)],
+    ["¿Qué te interesa más?", renderInterestsHtml(interestLabels)],
   ]
     .map(([label, value]) => renderSummaryRow(label, value))
     .join("");
-
-  const metadataRows = [
-    ["Fecha/Hora", toHtmlValue(metadata.timestamp, 120)],
-    ["Source", toHtmlValue(metadata.source, 120)],
-    ["Origin", toHtmlValue(metadata.origin, 180)],
-    ["Referrer", toHtmlValue(metadata.referrer, 220)],
-    ["User-Agent", toHtmlValue(metadata.userAgent, 280)],
-    ["IP", toHtmlValue(metadata.clientIp, 64)],
-    ["Lead ID", toHtmlValue(metadata.leadId, 120)],
-  ]
-    .map(([label, value]) => renderMetadataRow(label, value))
-    .join("");
-  const notesSection = `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="width:100%;border:1px solid #1c2a3f;border-radius:12px;padding:12px 14px;background:#0a1322;">
-    <tr>
-      <td style="padding:0 0 8px;font-size:13px;font-weight:700;color:#87b7de;letter-spacing:0.06em;text-transform:uppercase;">Notas e intereses</td>
-    </tr>
-    <tr>
-      <td style="padding:0 0 6px;font-size:11px;line-height:1.4;font-weight:700;letter-spacing:0.08em;color:#6ea8d8;text-transform:uppercase;">Dolor principal</td>
-    </tr>
-    <tr>
-      <td style="padding:0 0 12px;font-size:14px;line-height:1.6;color:#d9e6f5;word-break:break-word;">${toHtmlValue(pain, MAX_LONG_FIELD_LENGTH)}</td>
-    </tr>
-    <tr>
-      <td style="padding:0 0 6px;font-size:11px;line-height:1.4;font-weight:700;letter-spacing:0.08em;color:#6ea8d8;text-transform:uppercase;">Intereses</td>
-    </tr>
-    <tr>
-      <td style="padding:0;font-size:14px;line-height:1.6;color:#d9e6f5;word-break:break-word;">${toHtmlValue(interests, MAX_LONG_FIELD_LENGTH)}</td>
-    </tr>
-  </table>`;
 
   const html = `<!doctype html>
 <html lang="es">
@@ -196,21 +169,6 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
               </td>
             </tr>
             <tr>
-              <td style="padding:0 20px 20px;">
-                ${notesSection}
-              </td>
-            </tr>
-            <tr>
-              <td style="padding:0 20px 20px;">
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="width:100%;border:1px solid #1c2a3f;border-radius:12px;padding:12px 14px;background:#0a1322;">
-                  <tr>
-                    <td style="padding:0 0 8px;font-size:13px;font-weight:700;color:#87b7de;letter-spacing:0.06em;text-transform:uppercase;">Metadata</td>
-                  </tr>
-                  ${metadataRows}
-                </table>
-              </td>
-            </tr>
-            <tr>
               <td style="padding:14px 20px 18px;border-top:1px solid #1d2d46;font-size:12px;line-height:1.5;color:#8fa7c2;">
                 Correo generado automáticamente por el formulario de Comelu.
               </td>
@@ -235,21 +193,8 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
     `- Rol: ${role}`,
     `- Tamaño del laboratorio: ${size}`,
     `- Dolor principal: ${pain}`,
-    `- Intereses: ${interests}`,
-    `- Acepta checklist: ${checklist}`,
-    "",
-    "Notas e intereses:",
-    `- Dolor principal: ${pain}`,
-    `- Intereses: ${interests}`,
-    "",
-    "Metadata:",
-    `- Fecha/Hora: ${toTextValue(metadata.timestamp, 120)}`,
-    `- Source: ${toTextValue(metadata.source, 120)}`,
-    `- Origin: ${toTextValue(metadata.origin, 180)}`,
-    `- Referrer: ${toTextValue(metadata.referrer, 220)}`,
-    `- User-Agent: ${toTextValue(metadata.userAgent, 280)}`,
-    `- IP: ${toTextValue(metadata.clientIp, 64)}`,
-    `- Lead ID: ${toTextValue(metadata.leadId, 120)}`,
+    "- ¿Qué te interesa más?:",
+    renderInterestsText(interestLabels),
   ].join("\n");
 
   return { subject, html, text };
