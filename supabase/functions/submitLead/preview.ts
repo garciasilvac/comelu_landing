@@ -15,13 +15,6 @@ const preview = buildLeadEmailTemplate({
   },
   metadata: {
     timestamp: new Date().toISOString(),
-    source: "landing_comelu",
-    origin: "https://comelu.cl",
-    referrer: "https://comelu.cl/#contacto",
-    userAgent:
-      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
-    clientIp: "190.101.10.10",
-    leadId: "lead_preview_001",
   },
 });
 

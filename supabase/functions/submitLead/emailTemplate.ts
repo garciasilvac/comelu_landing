@@ -12,12 +12,6 @@ export type LeadEmailPayload = {
 
 export type LeadEmailMetadata = {
   timestamp: string;
-  source?: string;
-  origin?: string;
-  referrer?: string;
-  userAgent?: string;
-  clientIp?: string;
-  leadId?: string;
 };
 
 type LeadEmailInput = {
@@ -114,6 +108,22 @@ const renderInterestsText = (values: string[]) => {
   return values.map((item) => `• ${toTextValue(item, 180)}`).join("\n");
 };
 
+const formatSentAt = (value: string | undefined) => {
+  if (!value) return NA;
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return toTextValue(value, 120);
+  return parsed.toLocaleString("es-CL", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+    timeZone: "America/Santiago",
+  });
+};
+
 export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) => {
   const name = toTextValue(payload.nombre, 120);
   const email = toTextValue(payload.email, 180);
@@ -122,6 +132,7 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
   const size = toTextValue(payload.tamano, 80);
   const pain = toTextValue(mapPainLabel(payload.dolor), MAX_LONG_FIELD_LENGTH);
   const interestLabels = payload.intereses.map((item) => mapInterestLabel(item)).filter(Boolean);
+  const sentAt = formatSentAt(metadata.timestamp);
 
   const subject = `Comelu: registro confirmado — ${name}`;
   const summaryRows = [
@@ -169,8 +180,14 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
               </td>
             </tr>
             <tr>
-              <td style="padding:14px 20px 18px;border-top:1px solid #1d2d46;font-size:12px;line-height:1.5;color:#8fa7c2;">
-                Correo generado automáticamente por el formulario de Comelu.
+              <td style="padding:14px 20px 8px;border-top:1px solid #1d2d46;font-size:12px;line-height:1.5;color:#8fa7c2;">
+                Fecha y hora de envío: ${toHtmlValue(sentAt, 120)}
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 20px 18px;font-size:12px;line-height:1.55;color:#7f94ad;">
+                <a href="https://www.comelu.cl" style="color:#7fcfff;text-decoration:none;">https://www.comelu.cl</a><br/>
+                Comelu. Todos los derechos reservados.
               </td>
             </tr>
           </table>
@@ -195,6 +212,10 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
     `- Dolor principal: ${pain}`,
     "- ¿Qué te interesa más?:",
     renderInterestsText(interestLabels),
+    "",
+    `Fecha y hora de envío: ${sentAt}`,
+    "https://www.comelu.cl",
+    "Comelu. Todos los derechos reservados.",
   ].join("\n");
 
   return { subject, html, text };

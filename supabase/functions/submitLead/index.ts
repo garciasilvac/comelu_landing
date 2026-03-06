@@ -62,12 +62,6 @@ const sendLeadNotificationEmail = async (input: {
   to: string[];
   metadata: {
     timestamp: string;
-    source?: string;
-    origin?: string;
-    referrer?: string;
-    userAgent?: string;
-    clientIp?: string;
-    leadId?: string;
   };
 }) => {
   const emailDisabled = readBooleanEnv("EMAIL_DISABLED", true);
@@ -293,12 +287,6 @@ Deno.serve(async (request) => {
     payload,
     metadata: {
       timestamp: new Date().toISOString(),
-      source,
-      origin: request.headers.get("origin") ?? undefined,
-      referrer: request.headers.get("referer") ?? undefined,
-      userAgent: request.headers.get("user-agent") ?? undefined,
-      clientIp: ip,
-      leadId: insertedLead.id,
     },
   });
 
