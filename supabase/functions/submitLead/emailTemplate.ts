@@ -94,7 +94,7 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
     : NA;
   const checklist = payload.checklist ? "Sí" : "No";
 
-  const subject = `Nuevo lead — Comelu: ${name} / ${email}`;
+  const subject = `Comelu: registro confirmado — ${name}`;
   const summaryRows = [
     ["Nombre", toHtmlValue(name, 120)],
     ["Email", toHtmlValue(email, 180)],
@@ -151,10 +151,10 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
                     <td style="font-size:12px;font-weight:700;line-height:1.4;letter-spacing:0.12em;text-transform:uppercase;color:#4fd1c5;">Comelu</td>
                   </tr>
                   <tr>
-                    <td style="padding-top:8px;font-size:23px;line-height:1.35;font-weight:700;color:#eff6ff;">Nuevo lead recibido</td>
+                    <td style="padding-top:8px;font-size:23px;line-height:1.35;font-weight:700;color:#eff6ff;">Gracias por registrarte en Comelu</td>
                   </tr>
                   <tr>
-                    <td style="padding-top:8px;font-size:14px;line-height:1.6;color:#b8c8dd;">Se registró un nuevo contacto desde el landing. Revisa su resumen y metadata para seguimiento.</td>
+                    <td style="padding-top:8px;font-size:14px;line-height:1.6;color:#b8c8dd;">Recibimos correctamente tu información. Te contactaremos cuando la app esté lista para que puedas comenzar a usarla.</td>
                   </tr>
                 </table>
               </td>
@@ -163,7 +163,7 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
               <td style="padding:18px 20px;">
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="width:100%;border:1px solid #1c2a3f;border-radius:12px;overflow:hidden;background:#0a1322;">
                   <tr>
-                    <td colspan="2" style="padding:12px 12px 10px;font-size:13px;font-weight:700;color:#87b7de;letter-spacing:0.06em;text-transform:uppercase;border-bottom:1px solid #1c2a3f;">Resumen del lead</td>
+                    <td colspan="2" style="padding:12px 12px 10px;font-size:13px;font-weight:700;color:#87b7de;letter-spacing:0.06em;text-transform:uppercase;border-bottom:1px solid #1c2a3f;">Resumen de tu registro</td>
                   </tr>
                   ${summaryRows}
                 </table>
@@ -197,9 +197,12 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
 </html>`;
 
   const text = [
-    "Nuevo lead recibido - Comelu",
+    "Gracias por registrarte en Comelu.",
     "",
-    "Resumen del lead:",
+    "Recibimos correctamente tu información.",
+    "Te contactaremos cuando la app esté lista para que puedas comenzar a usarla.",
+    "",
+    "Resumen de tu registro:",
     `- Nombre: ${name}`,
     `- Email: ${email}`,
     `- Teléfono: ${phone}`,
