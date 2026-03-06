@@ -27,6 +27,20 @@ type LeadEmailInput = {
 
 const NA = "N/A";
 const MAX_LONG_FIELD_LENGTH = 420;
+const PAIN_LABELS: Record<string, string> = {
+  "Información incompleta": "Información incompleta",
+  "Archivos perdidos": "Archivos perdidos",
+  "Estados confusos": "Estados confusos",
+  "Pagos sin trazabilidad": "Pagos sin trazabilidad",
+};
+const INTEREST_LABELS: Record<string, string> = {
+  "Órdenes + estados por etapa": "Órdenes + estados por etapa",
+  "Archivos adjuntos por caso": "Archivos adjuntos por caso",
+  "Pagos/saldos + comprobantes (transferencia)": "Pagos/saldos + comprobantes (transferencia)",
+  "Notificaciones a clientes": "Notificaciones a clientes",
+  "Reportes básicos (atrasos, carga de trabajo)": "Reportes básicos (atrasos, carga de trabajo)",
+  "Acceso para clientes (link de seguimiento)": "Acceso para clientes (link de seguimiento)",
+};
 
 const escapeHtml = (value: string) =>
   value
@@ -52,6 +66,18 @@ const toBounded = (value: string | null | undefined, maxLength = 120) => {
 const toHtmlValue = (value: string | null | undefined, maxLength = 120) => escapeHtml(toBounded(value, maxLength));
 
 const toTextValue = (value: string | null | undefined, maxLength = 120) => toBounded(value, maxLength);
+
+const mapPainLabel = (value: string) => {
+  const normalized = value.trim();
+  if (!normalized) return NA;
+  return PAIN_LABELS[normalized] ?? normalized;
+};
+
+const mapInterestLabel = (value: string) => {
+  const normalized = value.trim();
+  if (!normalized) return NA;
+  return INTEREST_LABELS[normalized] ?? normalized;
+};
 
 const formatPhone = (countryCode: string, number: string) => {
   const code = normalizeValue(countryCode);
@@ -88,9 +114,9 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
   const phone = formatPhone(payload.telefonoPais, payload.telefonoNumero);
   const role = toTextValue(payload.rol, 80);
   const size = toTextValue(payload.tamano, 80);
-  const pain = toTextValue(payload.dolor, MAX_LONG_FIELD_LENGTH);
+  const pain = toTextValue(mapPainLabel(payload.dolor), MAX_LONG_FIELD_LENGTH);
   const interests = payload.intereses.length
-    ? payload.intereses.map((item) => toTextValue(item, 140)).join(", ")
+    ? payload.intereses.map((item) => toTextValue(mapInterestLabel(item), 140)).join(", ")
     : NA;
   const checklist = payload.checklist ? "Sí" : "No";
 
