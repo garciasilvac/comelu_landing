@@ -22,18 +22,18 @@ type LeadEmailInput = {
 const NA = "N/A";
 const MAX_LONG_FIELD_LENGTH = 420;
 const PAIN_LABELS: Record<string, string> = {
-  "Información incompleta": "Información incompleta",
-  "Archivos perdidos": "Archivos perdidos",
-  "Estados confusos": "Estados confusos",
-  "Pagos sin trazabilidad": "Pagos sin trazabilidad",
+  "Información incompleta al iniciar órdenes": "Información incompleta al iniciar órdenes",
+  "Archivos repartidos entre varios canales": "Archivos repartidos entre varios canales",
+  "Estados poco claros del trabajo protésico": "Estados poco claros del trabajo protésico",
+  "Pagos y comprobantes sin seguimiento simple": "Pagos y comprobantes sin seguimiento simple",
 };
 const INTEREST_LABELS: Record<string, string> = {
-  "Órdenes + estados por etapa": "Órdenes + estados por etapa",
-  "Archivos adjuntos por caso": "Archivos adjuntos por caso",
-  "Pagos/saldos + comprobantes (transferencia)": "Pagos/saldos + comprobantes (transferencia)",
-  "Notificaciones a clientes": "Notificaciones a clientes",
-  "Reportes básicos (atrasos, carga de trabajo)": "Reportes básicos (atrasos, carga de trabajo)",
-  "Acceso para clientes (link de seguimiento)": "Acceso para clientes (link de seguimiento)",
+  "Gestión de órdenes de trabajo": "Gestión de órdenes de trabajo",
+  "Archivos y documentos por caso": "Archivos y documentos por caso",
+  "Estados y seguimiento operativo": "Estados y seguimiento operativo",
+  "Pagos, saldos y comprobantes": "Pagos, saldos y comprobantes",
+  "Reportes y métricas operativas": "Reportes y métricas operativas",
+  "Automatizaciones futuras": "Automatizaciones futuras",
 };
 
 const escapeHtml = (value: string) =>

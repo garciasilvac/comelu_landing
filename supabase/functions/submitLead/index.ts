@@ -184,23 +184,27 @@ const validatePayload = (input: unknown): { valid: true; payload: LeadPayload } 
   if (!emailRegex.test(payload.email)) return { valid: false, message: "Formato de email inválido." };
   if (payload.email.length > 254) return { valid: false, message: "El email excede el máximo permitido." };
 
-  if (!payload.telefonoPais) return { valid: false, message: "telefonoPais es obligatorio." };
   if (payload.telefonoPais.length > 10) return { valid: false, message: "telefonoPais excede el máximo permitido." };
 
-  if (!payload.telefonoNumero) return { valid: false, message: "telefonoNumero es obligatorio." };
   if (payload.telefonoNumero.length > 24) return { valid: false, message: "telefonoNumero excede el máximo permitido." };
 
   if (!payload.rol) return { valid: false, message: "rol es obligatorio." };
   if (payload.rol.length > 40) return { valid: false, message: "rol excede el máximo permitido." };
 
-  if (!payload.tamano) return { valid: false, message: "tamano es obligatorio." };
   if (payload.tamano.length > 20) return { valid: false, message: "tamano excede el máximo permitido." };
 
-  if (!payload.dolor) return { valid: false, message: "dolor es obligatorio." };
   if (payload.dolor.length > 120) return { valid: false, message: "dolor excede el máximo permitido." };
 
-  if (payload.intereses.length < 1 || payload.intereses.length > 3) {
-    return { valid: false, message: "intereses debe tener entre 1 y 3 opciones." };
+  if (payload.telefonoPais && !payload.telefonoNumero) {
+    return { valid: false, message: "telefonoNumero es obligatorio cuando se informa telefonoPais." };
+  }
+
+  if (!payload.telefonoPais && payload.telefonoNumero) {
+    return { valid: false, message: "telefonoPais es obligatorio cuando se informa telefonoNumero." };
+  }
+
+  if (payload.intereses.length > 3) {
+    return { valid: false, message: "intereses debe tener hasta 3 opciones." };
   }
 
   if (payload.intereses.some((item) => item.length > 120)) {
