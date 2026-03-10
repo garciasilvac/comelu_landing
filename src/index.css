@@ -259,6 +259,10 @@ footer {
   min-height: 10.5rem;
 }
 
+.placeholder-compact .placeholder-label {
+  min-height: 2.2rem;
+}
+
 .placeholder-audience {
   min-height: 12rem;
 }

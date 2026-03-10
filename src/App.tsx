@@ -24,12 +24,6 @@ type Role =
   | "Técnico dental";
 
 type LabSize = "" | "1–3 personas" | "4–10 personas" | "11+ personas";
-type MainPain =
-  | ""
-  | "Información incompleta al iniciar órdenes"
-  | "Archivos repartidos entre varios canales"
-  | "Estados poco claros del trabajo protésico"
-  | "Pagos y comprobantes sin seguimiento simple";
 
 type Interest =
   | "Gestión de órdenes de trabajo"
@@ -46,7 +40,6 @@ type FormState = {
   telefonoNumero: string;
   rol: Role;
   tamano: LabSize;
-  dolor: MainPain;
   intereses: Interest[];
   checklist: boolean;
 };
@@ -58,7 +51,6 @@ type FieldErrors = {
   telefonoNumero: string;
   rol: string;
   tamano: string;
-  dolor: string;
   intereses: string;
 };
 
@@ -227,7 +219,6 @@ const initialForm: FormState = {
   telefonoNumero: "",
   rol: "",
   tamano: "",
-  dolor: "",
   intereses: [],
   checklist: false,
 };
@@ -248,7 +239,7 @@ function SectionIntro({
   description: string;
 }) {
   return (
-    <div className="max-w-3xl" data-reveal data-delay={80}>
+    <div className="mx-auto max-w-3xl text-center" data-reveal data-delay={80}>
       {eyebrow ? (
         <p className="section-eyebrow" data-reveal data-delay={100}>
           {eyebrow}
@@ -309,7 +300,6 @@ function App() {
     telefonoNumero: "",
     rol: "",
     tamano: "",
-    dolor: "",
     intereses: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -475,7 +465,6 @@ function App() {
       ...validateTelefono(form.telefonoPais, form.telefonoNumero),
       rol: form.rol ? "" : "Selecciona una opción.",
       tamano: "",
-      dolor: "",
       intereses: "",
     };
 
@@ -525,7 +514,6 @@ function App() {
       telefonoNumero: form.telefonoNumero.trim(),
       rol: form.rol,
       tamano: form.tamano,
-      dolor: form.dolor,
       intereses: form.intereses,
       checklist: form.checklist,
     };
@@ -582,7 +570,6 @@ function App() {
       telefonoNumero: "",
       rol: "",
       tamano: "",
-      dolor: "",
       intereses: "",
     });
   };
@@ -871,45 +858,9 @@ function App() {
                     <div className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-stretch">
                       <div className="glass-card flex h-full flex-col justify-between">
                         <div>
-                          <div className="step-pill">{item.step}</div>
+                          <div className="step-pill mx-auto">{item.step}</div>
                           <h3 className="mt-6 text-2xl font-semibold text-white">{item.title}</h3>
                           <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">{item.description}</p>
-                        </div>
-                        <div className="mt-8 space-y-4">
-                          <div className="carousel-progress" aria-label={`Indicador del paso ${index + 1}`}>
-                            {HOW_IT_WORKS.map((progressItem, progressIndex) => (
-                              <button
-                                key={progressItem.step}
-                                type="button"
-                                onClick={() => goToHowStep(progressIndex)}
-                                className={`carousel-progress-segment ${progressIndex === currentHowIndex ? "is-active" : ""}`}
-                                aria-label={`Ir al paso ${progressItem.step}`}
-                                aria-current={progressIndex === currentHowIndex ? "step" : undefined}
-                              >
-                                <span
-                                  className={`carousel-progress-fill ${
-                                    progressIndex === currentHowIndex && allowCarouselMotion ? "is-animated" : ""
-                                  }`}
-                                />
-                              </button>
-                            ))}
-                          </div>
-                          <div className="flex flex-wrap gap-2 text-xs text-slate-400">
-                            {HOW_IT_WORKS.map((progressItem, progressIndex) => (
-                              <button
-                                key={`${progressItem.step}-label`}
-                                type="button"
-                                onClick={() => goToHowStep(progressIndex)}
-                                className={`rounded-full border px-3 py-1.5 transition ${
-                                  progressIndex === currentHowIndex
-                                    ? "border-[#2dd4bf]/50 bg-[#2dd4bf]/10 text-[#8efaf0]"
-                                    : "border-white/10 bg-white/5 text-slate-400 hover:border-white/20 hover:text-slate-200"
-                                }`}
-                              >
-                                Paso {progressItem.step}
-                              </button>
-                            ))}
-                          </div>
                         </div>
                       </div>
                       <div className="glass-card flex h-full items-center">
@@ -924,6 +875,27 @@ function App() {
                       </div>
                     </div>
                   </article>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <div className="carousel-progress" aria-label={`Indicador del paso ${currentHowIndex + 1}`}>
+                {HOW_IT_WORKS.map((progressItem, progressIndex) => (
+                  <button
+                    key={progressItem.step}
+                    type="button"
+                    onClick={() => goToHowStep(progressIndex)}
+                    className={`carousel-progress-segment ${progressIndex === currentHowIndex ? "is-active" : ""}`}
+                    aria-label={`Ir al paso ${progressItem.step}`}
+                    aria-current={progressIndex === currentHowIndex ? "step" : undefined}
+                  >
+                    <span
+                      className={`carousel-progress-fill ${
+                        progressIndex === currentHowIndex && allowCarouselMotion ? "is-animated" : ""
+                      }`}
+                    />
+                  </button>
                 ))}
               </div>
             </div>
@@ -953,7 +925,7 @@ function App() {
               </ul>
             </article>
             <article className="glass-card interactive-card" data-reveal data-delay={80}>
-              <h3 className="text-lg font-semibold text-white">Qué puede venir después</h3>
+              <h3 className="text-lg font-semibold text-white">Más adelante.</h3>
               <ul className="mt-4 space-y-3 text-sm text-slate-300">
                 {FUTURE_FEATURES.map((item) => (
                   <li key={item} className="flex items-start gap-3">
@@ -1227,38 +1199,6 @@ function App() {
                         </option>
                         <option className="bg-[#0b1222] text-slate-100" value="11+ personas">
                           11+ personas
-                        </option>
-                      </select>
-                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                    </div>
-                  </div>
-
-                  <div className="grid gap-2">
-                    <label htmlFor="dolor" className="field-label">
-                      Dolor principal
-                    </label>
-                    <div className="relative">
-                      <select
-                        id="dolor"
-                        name="dolor"
-                        value={form.dolor}
-                        onChange={(e) => setForm((prev) => ({ ...prev, dolor: e.target.value as MainPain }))}
-                        className="field w-full appearance-none border-white/25 bg-gradient-to-b from-white/10 to-white/[0.03] pr-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-                      >
-                        <option className="bg-[#0b1222] text-slate-100" value="">
-                          Selecciona
-                        </option>
-                        <option className="bg-[#0b1222] text-slate-100" value="Información incompleta al iniciar órdenes">
-                          Información incompleta al iniciar órdenes
-                        </option>
-                        <option className="bg-[#0b1222] text-slate-100" value="Archivos repartidos entre varios canales">
-                          Archivos repartidos entre varios canales
-                        </option>
-                        <option className="bg-[#0b1222] text-slate-100" value="Estados poco claros del trabajo protésico">
-                          Estados poco claros del trabajo protésico
-                        </option>
-                        <option className="bg-[#0b1222] text-slate-100" value="Pagos y comprobantes sin seguimiento simple">
-                          Pagos y comprobantes sin seguimiento simple
                         </option>
                       </select>
                       <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
