@@ -3,13 +3,11 @@ import {
   ArrowRight,
   CheckCircle2,
   ChevronDown,
-  ClipboardCheck,
   Files,
   FlaskConical,
   Menu,
   Send,
   Stethoscope,
-  Wallet,
   Workflow,
   X,
 } from "lucide-react";
@@ -84,28 +82,24 @@ const PROBLEM_CARDS = [
     description:
       "Faltan fotos, indicaciones, escaneos o detalles clínicos, y el caso parte con vacíos que después generan correcciones y retrasos.",
     placeholder: "Placeholder problema 1: caso iniciado con datos faltantes",
-    icon: ClipboardCheck,
   },
   {
     title: "Archivos del caso repartidos entre WhatsApp, correo y teléfono",
     description:
       "Las imágenes, documentos y mensajes quedan dispersos y después cuesta saber qué corresponde realmente a cada trabajo.",
     placeholder: "Placeholder problema 2: múltiples canales desordenados",
-    icon: Files,
   },
   {
     title: "Poca claridad sobre el estado del trabajo protésico",
     description:
       "Hay casos urgentes, atrasados o en producción, pero no siempre está claro en qué etapa va cada uno ni quién lo tiene asignado.",
     placeholder: "Placeholder problema 3: tablero o flujo de estados",
-    icon: Workflow,
   },
   {
     title: "Pagos y comprobantes sin seguimiento simple",
     description:
       "Después cuesta revisar qué se pagó, qué falta por cobrar y qué comprobante corresponde a cada orden.",
     placeholder: "Placeholder problema 4: saldo, comprobante o cobro vinculado al caso",
-    icon: Wallet,
   },
 ] as const;
 
@@ -115,24 +109,28 @@ const AUDIENCE_BLOCKS = [
     description:
       "Para gestionar órdenes de trabajo, archivos, estados y pagos del laboratorio dental desde un solo lugar.",
     icon: FlaskConical,
+    placeholder: "Placeholder cliente 1: laboratorio dental",
   },
   {
     title: "Laboratoristas y supervisores",
     description:
       "Para saber qué trabajo entró, en qué etapa va cada caso y qué prioridad tiene.",
     icon: Workflow,
+    placeholder: "Placeholder cliente 2: laboratorista o supervisor",
   },
   {
     title: "Clínicas dentales con laboratorio propio",
     description:
       "Para organizar la producción interna de soluciones protésicas con más trazabilidad y menos seguimiento manual.",
     icon: Stethoscope,
+    placeholder: "Placeholder cliente 3: clínica con laboratorio propio",
   },
   {
     title: "Dentistas y técnicos dentales",
     description:
       "También puede ser relevante para dentistas y técnicos odontológicos que trabajan coordinadamente con laboratorios y quieren seguir de cerca una gestión más ordenada del caso.",
     icon: Files,
+    placeholder: "Placeholder cliente 4: dentista o técnico dental",
   },
 ] as const;
 
@@ -273,7 +271,7 @@ function PlaceholderVisual({
   label: string;
   title: string;
   detail: string;
-  variant?: "default" | "hero" | "compact";
+  variant?: "default" | "hero" | "compact" | "audience";
 }) {
   return (
     <div
@@ -641,14 +639,13 @@ function App() {
                 Software para gestión de laboratorios dentales: órdenes, archivos, estados y pagos en un solo lugar
               </h1>
               <p className="mt-5 max-w-3xl text-base text-slate-300 sm:text-lg" data-reveal data-delay={220}>
-                Comelu es un software para laboratorios dentales, laboratoristas y clínicas dentales con laboratorio
-                propio que necesitan organizar órdenes de trabajo, archivos, seguimiento de casos y pagos sin depender
-                de Excel, WhatsApp o mensajes sueltos.
+                Comelu es un software fácil e intuitivo para laboratorios dentales, laboratoristas y clínicas dentales
+                con laboratorio propio. Ordena órdenes, archivos, estados y pagos sin depender de Excel, WhatsApp o
+                mensajes sueltos.
               </p>
               <p className="mt-4 max-w-3xl text-sm text-slate-400 sm:text-base" data-reveal data-delay={260}>
-                Pensado para la operación real del laboratorio dental en Chile: centraliza la información de cada caso,
-                mejora la visibilidad del trabajo en curso y ayuda a reducir retrabajos, pérdidas de tiempo y desorden
-                operativo.
+                Pensado para la operación real del laboratorio dental en Chile: centraliza cada caso y da visibilidad
+                clara del trabajo en curso sin sumar complejidad innecesaria.
               </p>
 
               <ul className="mt-6 grid gap-3 text-sm text-slate-200 sm:text-base" data-reveal data-delay={300}>
@@ -660,7 +657,7 @@ function App() {
                 ))}
               </ul>
 
-              <div className="hero-cta mt-8 flex flex-wrap items-center gap-3">
+              <div className="hero-cta mt-8 flex flex-wrap items-center justify-center gap-3">
                 <button
                   type="button"
                   onClick={onWaitlistClick}
@@ -680,7 +677,7 @@ function App() {
                   Ver cómo funciona el software
                 </button>
               </div>
-              <p className="mt-3 text-sm text-slate-400">
+              <p className="mt-3 text-center text-sm text-slate-400">
                 Déjanos tus datos y te contactaremos cuando abramos los primeros accesos.
               </p>
             </div>
@@ -721,20 +718,14 @@ function App() {
           />
           <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {PROBLEM_CARDS.map((item, index) => {
-              const Icon = item.icon;
               return (
                 <article
                   key={item.title}
-                  className="glass-card interactive-card flex h-full flex-col"
+                  className="glass-card interactive-card problem-card flex h-full flex-col"
                   data-reveal
                   data-delay={index * 80}
                 >
-                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-[#2dd4bf]/35 bg-[#2dd4bf]/10 text-[#8efaf0]">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <h3 className="mt-4 text-lg font-semibold text-white">{item.title}</h3>
-                  <p className="mt-2 text-sm text-slate-300">{item.description}</p>
-                  <div className="mt-5">
+                  <div className="problem-card-visual">
                     <PlaceholderVisual
                       label={item.placeholder}
                       title="Imagen pendiente"
@@ -742,11 +733,13 @@ function App() {
                       variant="compact"
                     />
                   </div>
+                  <h3 className="problem-card-title mt-5 text-lg font-semibold text-white">{item.title}</h3>
+                  <p className="problem-card-description mt-3 text-sm text-slate-300">{item.description}</p>
                 </article>
               );
             })}
           </div>
-          <div className="mt-8" data-reveal data-delay={140}>
+          <div className="section-cta-row mt-8" data-reveal data-delay={140}>
             <button type="button" onClick={onWaitlistClick} className={primaryButton}>
               Quiero ordenar la gestión del laboratorio
             </button>
@@ -764,11 +757,17 @@ function App() {
               return (
                 <article
                   key={item.title}
-                  className="glass-card interactive-card"
+                  className="glass-card interactive-card flex h-full flex-col"
                   data-reveal
                   data-delay={index * 80}
                 >
-                  <div className="flex items-start gap-4">
+                  <PlaceholderVisual
+                    label={item.placeholder}
+                    title="Imagen del cliente potencial"
+                    detail="Reemplazar con visual editorial del perfil descrito."
+                    variant="audience"
+                  />
+                  <div className="mt-5 flex items-start gap-4">
                     <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-white/5 text-[#8efaf0]">
                       <Icon className="h-5 w-5" />
                     </span>
@@ -781,7 +780,7 @@ function App() {
               );
             })}
           </div>
-          <div className="mt-8" data-reveal data-delay={140}>
+          <div className="section-cta-row mt-8" data-reveal data-delay={140}>
             <button type="button" onClick={onWaitlistClick} className={primaryButton}>
               Quiero recibir novedades del lanzamiento
             </button>
@@ -797,17 +796,11 @@ function App() {
             {HOW_IT_WORKS.map((item, index) => (
               <article
                 key={item.title}
-                className="glass-card interactive-card flex h-full flex-col"
+                className="glass-card interactive-card how-card flex h-full flex-col"
                 data-reveal
                 data-delay={index * 70}
               >
-                <div className="flex items-start gap-3">
-                  <div className="step-pill">{item.step}</div>
-                  <div>
-                    <h3 className="text-base font-semibold text-white">{item.title}</h3>
-                    <p className="mt-2 text-sm text-slate-300">{item.description}</p>
-                  </div>
-                </div>
+                <div className="step-pill">{item.step}</div>
                 <div className="mt-5">
                   <PlaceholderVisual
                     label={item.placeholder}
@@ -816,10 +809,12 @@ function App() {
                     variant="compact"
                   />
                 </div>
+                <h3 className="how-card-title mt-5 text-base font-semibold text-white">{item.title}</h3>
+                <p className="how-card-description mt-3 text-sm text-slate-300">{item.description}</p>
               </article>
             ))}
           </div>
-          <div className="mt-8" data-reveal data-delay={140}>
+          <div className="section-cta-row mt-8" data-reveal data-delay={140}>
             <button type="button" onClick={onWaitlistClick} className={primaryButton}>
               Quiero ver una herramienta así en mi laboratorio
             </button>
@@ -855,7 +850,7 @@ function App() {
               </ul>
             </article>
           </div>
-          <div className="mt-8" data-reveal data-delay={140}>
+          <div className="section-cta-row mt-8" data-reveal data-delay={140}>
             <button type="button" onClick={onWaitlistClick} className={primaryButton}>
               Quiero estar entre los primeros interesados
             </button>
@@ -867,48 +862,33 @@ function App() {
             title="Comelu nace desde la operación real del laboratorio dental"
             description="Comelu no busca ser un software dental genérico. Nace con foco específico en la gestión del laboratorio dental: órdenes de trabajo, archivos, seguimiento, pagos y coordinación diaria."
           />
-          <div className="mt-6 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-            <div data-reveal data-delay={80}>
-              <p className="section-copy">
-                La meta es construir una herramienta simple, clara y útil para laboratorios dentales en Chile, basada
-                en problemas reales del flujo protésico y no en funciones desconectadas de la operación.
-              </p>
-            </div>
-            <div data-reveal data-delay={120}>
+          <div className="mt-6 grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
+            <div data-reveal data-delay={80} className="h-full">
               <PlaceholderVisual
                 label="Placeholder credibilidad o contexto de laboratorio"
                 title="Imagen de credibilidad"
                 detail="Espacio para entorno de laboratorio dental o composición entre interfaz y contexto real."
               />
             </div>
+            <div data-reveal data-delay={120} className="glass-card flex h-full flex-col justify-center">
+              <p className="section-copy">
+                La meta es construir una herramienta simple, clara y útil para laboratorios dentales en Chile, basada
+                en problemas reales del flujo protésico y no en funciones desconectadas de la operación.
+              </p>
+            </div>
           </div>
-          <div className="mt-8" data-reveal data-delay={160}>
+          <div className="section-cta-row mt-8" data-reveal data-delay={160}>
             <button type="button" onClick={onWaitlistClick} className={primaryButton}>
               Quiero sumarme al lanzamiento temprano
             </button>
           </div>
         </section>
 
-        <section className="section-block scroll-mt-28" data-reveal>
-          <div className="cta-panel panel-frame p-6 sm:p-8" data-reveal data-delay={0}>
-            <SectionIntro
-              eyebrow="Lista de espera"
-              title="Únete a la lista de espera y ayúdanos a priorizar el software para laboratorio dental que realmente necesita el rubro"
-              description="Si te sumas ahora, además de enterarte del lanzamiento, nos ayudas a entender qué problemas pesan más en la gestión de laboratorios dentales, clínicas con laboratorio propio y equipos que trabajan con órdenes de trabajo protésicas."
-            />
-            <div className="mt-6" data-reveal data-delay={120}>
-              <button type="button" onClick={onWaitlistClick} className={primaryButton}>
-                Quiero estar en la lista de espera
-              </button>
-            </div>
-          </div>
-        </section>
-
         <section id="lista-espera" className="section-block scroll-mt-28">
           <div className="panel-frame p-6 sm:p-8" data-reveal data-delay={0}>
             <SectionIntro
-              title="Lista de espera para Comelu, software para gestión de laboratorios dentales"
-              description="Déjanos tus datos para contactarte cuando abramos los primeros accesos y seguir construyendo una herramienta más útil para laboratorios dentales, laboratoristas y clínicas dentales con laboratorio propio."
+              title="Únete a la lista de espera y ayúdanos a priorizar el software para laboratorio dental que realmente necesita el rubro"
+              description="Déjanos tus datos para obtener descuentos especiales de lanzamiento que ofreceremos a nuestros primeros clientes"
             />
 
             <form className="mt-8 grid gap-8" onSubmit={onSubmit} noValidate data-reveal data-delay={60}>
@@ -1034,7 +1014,7 @@ function App() {
                   </p>
                 </div>
 
-                <div className="grid gap-4 lg:grid-cols-2">
+                <div className="grid items-start gap-4 lg:grid-cols-2">
                   <div className="phone-field grid gap-2">
                     <label htmlFor="telefono-pais" className="field-label">
                       Teléfono
@@ -1110,7 +1090,7 @@ function App() {
                     ) : null}
                   </div>
 
-                  <div className="grid gap-2">
+                  <div className="grid gap-2 self-start">
                     <label htmlFor="tamano" className="field-label">
                       Tamaño del laboratorio / equipo
                     </label>
@@ -1212,7 +1192,7 @@ function App() {
                 </p>
               ) : null}
 
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center justify-center gap-3">
                 <button
                   type="submit"
                   disabled={isSubmitting}
@@ -1265,36 +1245,14 @@ function App() {
                     id={panelId}
                     role="region"
                     aria-labelledby={buttonId}
-                    hidden={!isOpen}
-                    className="border-t border-white/10 px-5 py-4 text-sm text-slate-300"
+                    aria-hidden={!isOpen}
+                    className={`faq-panel text-sm text-slate-300 ${isOpen ? "is-open" : ""}`}
                   >
-                    {item.a}
+                    <div className="faq-panel-inner border-t border-white/10 px-5 py-4">{item.a}</div>
                   </div>
                 </article>
               );
             })}
-          </div>
-          <div className="mt-8" data-reveal data-delay={140}>
-            <button type="button" onClick={onWaitlistClick} className={primaryButton}>
-              Sumarme a la lista
-            </button>
-          </div>
-        </section>
-
-        <section className="section-block scroll-mt-28" data-reveal>
-          <div className="panel-frame p-6 sm:p-8" data-reveal data-delay={0}>
-            <SectionIntro
-              title="Software para laboratorios dentales en Chile: menos desorden, más control del trabajo"
-              description="Si trabajas en un laboratorio dental, eres laboratorista o formas parte de una clínica dental con laboratorio propio, Comelu quiere ayudarte a gestionar mejor órdenes de trabajo, archivos, estados y pagos desde el primer día."
-            />
-            <div className="mt-6 flex flex-wrap gap-3" data-reveal data-delay={120}>
-              <button type="button" onClick={onWaitlistClick} className={primaryButton}>
-                Unirme a la lista de espera
-              </button>
-              <button type="button" onClick={onHowItWorksClick} className={secondaryButton}>
-                Ver cómo funciona
-              </button>
-            </div>
           </div>
         </section>
       </main>
@@ -1316,9 +1274,6 @@ function App() {
             <button type="button" onClick={onWaitlistClick} className="transition hover:text-white">
               Lista de espera
             </button>
-            <a href="mailto:contacto@comelu.cl" className="transition hover:text-white">
-              contacto@comelu.cl
-            </a>
           </div>
         </div>
       </footer>
