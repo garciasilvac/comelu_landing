@@ -1,8 +1,10 @@
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   CheckCircle2,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Files,
   FlaskConical,
   Menu,
@@ -296,6 +298,8 @@ function PlaceholderVisual({
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [faqOpenIndex, setFaqOpenIndex] = useState<number | null>(0);
+  const [currentHowIndex, setCurrentHowIndex] = useState(0);
+  const [allowCarouselMotion, setAllowCarouselMotion] = useState(true);
   const [form, setForm] = useState<FormState>(initialForm);
   const [formError, setFormError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({
@@ -313,6 +317,28 @@ function App() {
   const firstInputRef = useRef<HTMLInputElement>(null);
 
   const year = new Date().getFullYear();
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateMotionPreference = () => {
+      setAllowCarouselMotion(!mediaQuery.matches);
+    };
+
+    updateMotionPreference();
+    mediaQuery.addEventListener("change", updateMotionPreference);
+
+    return () => mediaQuery.removeEventListener("change", updateMotionPreference);
+  }, []);
+
+  useEffect(() => {
+    if (!allowCarouselMotion) return undefined;
+
+    const intervalId = window.setInterval(() => {
+      setCurrentHowIndex((prev) => (prev + 1) % HOW_IT_WORKS.length);
+    }, 8000);
+
+    return () => window.clearInterval(intervalId);
+  }, [allowCarouselMotion]);
 
   const scrollTo = (id: string, focusInput = false) => {
     const section = document.getElementById(id);
@@ -336,6 +362,18 @@ function App() {
   const onHowItWorksClick = () => {
     scrollTo("como-funciona");
     setMobileMenuOpen(false);
+  };
+
+  const goToHowStep = (index: number) => {
+    setCurrentHowIndex(index);
+  };
+
+  const goToPreviousHowStep = () => {
+    setCurrentHowIndex((prev) => (prev === 0 ? HOW_IT_WORKS.length - 1 : prev - 1));
+  };
+
+  const goToNextHowStep = () => {
+    setCurrentHowIndex((prev) => (prev + 1) % HOW_IT_WORKS.length);
   };
 
   const toggleInterest = (interest: Interest, checked: boolean) => {
@@ -792,27 +830,103 @@ function App() {
             title="Cómo funciona Comelu para gestionar órdenes de trabajo dentales"
             description="El software concentra en un solo flujo lo que hoy suele repartirse entre mensajes, planillas, archivos y seguimiento manual."
           />
-          <div className="mt-8 grid gap-4 lg:grid-cols-5">
-            {HOW_IT_WORKS.map((item, index) => (
-              <article
-                key={item.title}
-                className="glass-card interactive-card how-card flex h-full flex-col"
-                data-reveal
-                data-delay={index * 70}
+          <div className="how-carousel panel-frame mt-8 overflow-hidden p-4 sm:p-6" data-reveal data-delay={80}>
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="section-eyebrow mb-2">Flujo guiado</p>
+                <p className="text-sm text-slate-400">
+                  Paso {currentHowIndex + 1} de {HOW_IT_WORKS.length}
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={goToPreviousHowStep}
+                  aria-label="Ver paso anterior"
+                  className="carousel-arrow"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={goToNextHowStep}
+                  aria-label="Ver paso siguiente"
+                  className="carousel-arrow"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-6 overflow-hidden">
+              <div
+                className="flex"
+                style={{
+                  transform: `translateX(-${currentHowIndex * 100}%)`,
+                  transition: allowCarouselMotion ? "transform 520ms cubic-bezier(0.22, 1, 0.36, 1)" : "none",
+                }}
               >
-                <div className="step-pill">{item.step}</div>
-                <div className="mt-5">
-                  <PlaceholderVisual
-                    label={item.placeholder}
-                    title={`Mini visual ${item.step}`}
-                    detail="Reemplazar con visual final del flujo correspondiente."
-                    variant="compact"
-                  />
-                </div>
-                <h3 className="how-card-title mt-5 text-base font-semibold text-white">{item.title}</h3>
-                <p className="how-card-description mt-3 text-sm text-slate-300">{item.description}</p>
-              </article>
-            ))}
+                {HOW_IT_WORKS.map((item, index) => (
+                  <article key={item.title} className="min-w-full">
+                    <div className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-stretch">
+                      <div className="glass-card flex h-full flex-col justify-between">
+                        <div>
+                          <div className="step-pill">{item.step}</div>
+                          <h3 className="mt-6 text-2xl font-semibold text-white">{item.title}</h3>
+                          <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">{item.description}</p>
+                        </div>
+                        <div className="mt-8 space-y-4">
+                          <div className="carousel-progress" aria-label={`Indicador del paso ${index + 1}`}>
+                            {HOW_IT_WORKS.map((progressItem, progressIndex) => (
+                              <button
+                                key={progressItem.step}
+                                type="button"
+                                onClick={() => goToHowStep(progressIndex)}
+                                className={`carousel-progress-segment ${progressIndex === currentHowIndex ? "is-active" : ""}`}
+                                aria-label={`Ir al paso ${progressItem.step}`}
+                                aria-current={progressIndex === currentHowIndex ? "step" : undefined}
+                              >
+                                <span
+                                  className={`carousel-progress-fill ${
+                                    progressIndex === currentHowIndex && allowCarouselMotion ? "is-animated" : ""
+                                  }`}
+                                />
+                              </button>
+                            ))}
+                          </div>
+                          <div className="flex flex-wrap gap-2 text-xs text-slate-400">
+                            {HOW_IT_WORKS.map((progressItem, progressIndex) => (
+                              <button
+                                key={`${progressItem.step}-label`}
+                                type="button"
+                                onClick={() => goToHowStep(progressIndex)}
+                                className={`rounded-full border px-3 py-1.5 transition ${
+                                  progressIndex === currentHowIndex
+                                    ? "border-[#2dd4bf]/50 bg-[#2dd4bf]/10 text-[#8efaf0]"
+                                    : "border-white/10 bg-white/5 text-slate-400 hover:border-white/20 hover:text-slate-200"
+                                }`}
+                              >
+                                Paso {progressItem.step}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="glass-card flex h-full items-center">
+                        <div className="w-full">
+                          <PlaceholderVisual
+                            label={item.placeholder}
+                            title={`Mini visual ${item.step}`}
+                            detail="Reemplazar con visual final del flujo correspondiente."
+                            variant="hero"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
           </div>
           <div className="section-cta-row mt-8" data-reveal data-delay={140}>
             <button type="button" onClick={onWaitlistClick} className={primaryButton}>

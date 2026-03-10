@@ -328,6 +328,70 @@ footer {
   min-height: 11.5rem;
 }
 
+.how-carousel {
+  background:
+    linear-gradient(145deg, rgba(12, 20, 39, 0.94), rgba(7, 14, 28, 0.82)),
+    radial-gradient(circle at 82% 20%, rgba(45, 212, 191, 0.14), transparent 28%);
+}
+
+.carousel-arrow {
+  display: inline-flex;
+  height: 2.9rem;
+  width: 2.9rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    background-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.carousel-arrow:hover,
+.carousel-arrow:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(129, 255, 242, 0.32);
+  background: rgba(45, 212, 191, 0.1);
+  box-shadow: 0 0 20px rgba(34, 184, 168, 0.14);
+  outline: none;
+}
+
+.carousel-progress {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.carousel-progress-segment {
+  position: relative;
+  overflow: hidden;
+  height: 0.42rem;
+  width: 100%;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.carousel-progress-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(129, 255, 242, 0.88), rgba(34, 184, 168, 0.8));
+  box-shadow: 0 0 12px rgba(34, 184, 168, 0.22);
+}
+
+.carousel-progress-segment.is-active .carousel-progress-fill {
+  width: 100%;
+}
+
+.carousel-progress-fill.is-animated {
+  animation: carouselProgress 8s linear;
+}
+
 .problem-card-title,
 .how-card-title {
   line-height: 1.4;
@@ -452,6 +516,16 @@ footer {
   }
 }
 
+@keyframes carouselProgress {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -475,6 +549,15 @@ footer {
   .interactive-card,
   .interactive-cta {
     transition: none;
+  }
+
+  .carousel-arrow,
+  .faq-panel {
+    transition: none;
+  }
+
+  .carousel-progress-fill.is-animated {
+    animation: none;
   }
 
   .interactive-card:hover,
