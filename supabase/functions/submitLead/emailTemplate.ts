@@ -5,7 +5,6 @@ export type LeadEmailPayload = {
   telefonoNumero: string;
   rol: string;
   tamano: string;
-  dolor: string;
   intereses: string[];
   checklist: boolean;
 };
@@ -20,20 +19,13 @@ type LeadEmailInput = {
 };
 
 const NA = "N/A";
-const MAX_LONG_FIELD_LENGTH = 420;
-const PAIN_LABELS: Record<string, string> = {
-  "Información incompleta": "Información incompleta",
-  "Archivos perdidos": "Archivos perdidos",
-  "Estados confusos": "Estados confusos",
-  "Pagos sin trazabilidad": "Pagos sin trazabilidad",
-};
 const INTEREST_LABELS: Record<string, string> = {
-  "Órdenes + estados por etapa": "Órdenes + estados por etapa",
-  "Archivos adjuntos por caso": "Archivos adjuntos por caso",
-  "Pagos/saldos + comprobantes (transferencia)": "Pagos/saldos + comprobantes (transferencia)",
-  "Notificaciones a clientes": "Notificaciones a clientes",
-  "Reportes básicos (atrasos, carga de trabajo)": "Reportes básicos (atrasos, carga de trabajo)",
-  "Acceso para clientes (link de seguimiento)": "Acceso para clientes (link de seguimiento)",
+  "Gestión de órdenes de trabajo": "Gestión de órdenes de trabajo",
+  "Archivos y documentos por caso": "Archivos y documentos por caso",
+  "Estados y seguimiento operativo": "Estados y seguimiento operativo",
+  "Pagos, saldos y comprobantes": "Pagos, saldos y comprobantes",
+  "Reportes y métricas operativas": "Reportes y métricas operativas",
+  "Automatizaciones futuras": "Automatizaciones futuras",
 };
 
 const escapeHtml = (value: string) =>
@@ -60,12 +52,6 @@ const toBounded = (value: string | null | undefined, maxLength = 120) => {
 const toHtmlValue = (value: string | null | undefined, maxLength = 120) => escapeHtml(toBounded(value, maxLength));
 
 const toTextValue = (value: string | null | undefined, maxLength = 120) => toBounded(value, maxLength);
-
-const mapPainLabel = (value: string) => {
-  const normalized = value.trim();
-  if (!normalized) return NA;
-  return PAIN_LABELS[normalized] ?? normalized;
-};
 
 const mapInterestLabel = (value: string) => {
   const normalized = value.trim();
@@ -130,7 +116,6 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
   const phone = formatPhone(payload.telefonoPais, payload.telefonoNumero);
   const role = toTextValue(payload.rol, 80);
   const size = toTextValue(payload.tamano, 80);
-  const pain = toTextValue(mapPainLabel(payload.dolor), MAX_LONG_FIELD_LENGTH);
   const interestLabels = payload.intereses.map((item) => mapInterestLabel(item)).filter(Boolean);
   const sentAt = formatSentAt(metadata.timestamp);
 
@@ -141,7 +126,6 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
     ["Teléfono", toHtmlValue(phone, 60)],
     ["Rol", toHtmlValue(role, 80)],
     ["Tamaño del laboratorio", toHtmlValue(size, 80)],
-    ["Dolor principal", toHtmlValue(pain, MAX_LONG_FIELD_LENGTH)],
     ["¿Qué te interesa más?", renderInterestsHtml(interestLabels)],
   ]
     .map(([label, value]) => renderSummaryRow(label, value))
@@ -209,7 +193,6 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
     `- Teléfono: ${phone}`,
     `- Rol: ${role}`,
     `- Tamaño del laboratorio: ${size}`,
-    `- Dolor principal: ${pain}`,
     "- ¿Qué te interesa más?:",
     renderInterestsText(interestLabels),
     "",

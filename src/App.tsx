@@ -1,34 +1,37 @@
-import { FormEvent, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import {
+  ArrowRight,
+  CheckCircle2,
   ChevronDown,
-  ClipboardCheck,
+  ChevronLeft,
+  ChevronRight,
   Files,
+  FlaskConical,
   Menu,
   Send,
-  ShieldCheck,
-  Wallet,
+  Stethoscope,
   Workflow,
   X,
 } from "lucide-react";
-import heroIllustration from "./assets/illustrations/hero.png";
-import retrabajosIllustration from "./assets/illustrations/retrabajos.png";
 
-type Role = "" | "Laboratorista" | "Supervisor" | "Dueño";
-type LabSize = "" | "1–3" | "4–10" | "10+";
-type MainPain =
+type Role =
   | ""
-  | "Información incompleta"
-  | "Archivos perdidos"
-  | "Estados confusos"
-  | "Pagos sin trazabilidad";
+  | "Laboratorio dental"
+  | "Laboratorista"
+  | "Supervisor"
+  | "Clínica con laboratorio propio"
+  | "Dentista"
+  | "Técnico dental";
+
+type LabSize = "" | "1–3 personas" | "4–10 personas" | "11+ personas";
 
 type Interest =
-  | "Órdenes + estados por etapa"
-  | "Archivos adjuntos por caso"
-  | "Pagos/saldos + comprobantes (transferencia)"
-  | "Notificaciones a clientes"
-  | "Reportes básicos (atrasos, carga de trabajo)"
-  | "Acceso para clientes (link de seguimiento)";
+  | "Gestión de órdenes de trabajo"
+  | "Archivos y documentos por caso"
+  | "Estados y seguimiento operativo"
+  | "Pagos, saldos y comprobantes"
+  | "Reportes y métricas operativas"
+  | "Automatizaciones futuras";
 
 type FormState = {
   nombre: string;
@@ -37,7 +40,6 @@ type FormState = {
   telefonoNumero: string;
   rol: Role;
   tamano: LabSize;
-  dolor: MainPain;
   intereses: Interest[];
   checklist: boolean;
 };
@@ -49,97 +51,248 @@ type FieldErrors = {
   telefonoNumero: string;
   rol: string;
   tamano: string;
-  dolor: string;
   intereses: string;
 };
 
 type InlineValidatableField = "nombre" | "email" | "telefonoPais" | "telefonoNumero";
 
 const NAV_LINKS = [
-  { id: "problemas", label: "Problemas" },
   { id: "como-funciona", label: "Cómo funciona" },
+  { id: "que-resuelve", label: "Qué resuelve" },
   { id: "primera-version", label: "Primera versión" },
   { id: "faq", label: "FAQ" },
-];
+] as const;
 
-const PROBLEMAS = [
+const HERO_BULLETS = [
+  "Órdenes de trabajo dentales en un solo lugar",
+  "Archivos, fotos y documentos asociados a cada caso",
+  "Seguimiento claro por estado o etapa",
+  "Pagos, saldos y comprobantes vinculados al trabajo",
+] as const;
+
+const PROBLEM_CARDS = [
   {
-    title: "Información incompleta",
-    description: "Retrabajos y vueltas innecesarias",
-    icon: ClipboardCheck,
+    title: "Información incompleta al iniciar una orden de trabajo dental",
+    description:
+      "Faltan fotos, indicaciones, escaneos o detalles clínicos, y el caso parte con vacíos que después generan correcciones y retrasos.",
+    placeholder: "Placeholder problema 1: caso iniciado con datos faltantes",
   },
   {
-    title: "Archivos perdidos",
-    description: "Fotos, escaneos e indicaciones en mil chats",
-    icon: Files,
+    title: "Archivos del caso repartidos entre WhatsApp, correo y teléfono",
+    description:
+      "Las imágenes, documentos y mensajes quedan dispersos y después cuesta saber qué corresponde realmente a cada trabajo.",
+    placeholder: "Placeholder problema 2: múltiples canales desordenados",
   },
   {
-    title: "Estados confusos",
-    description: "Nadie sabe con certeza ‘en qué va’ cada caso",
+    title: "Poca claridad sobre el estado del trabajo protésico",
+    description:
+      "Hay casos urgentes, atrasados o en producción, pero no siempre está claro en qué etapa va cada uno ni quién lo tiene asignado.",
+    placeholder: "Placeholder problema 3: tablero o flujo de estados",
+  },
+  {
+    title: "Pagos y comprobantes sin seguimiento simple",
+    description:
+      "Después cuesta revisar qué se pagó, qué falta por cobrar y qué comprobante corresponde a cada orden.",
+    placeholder: "Placeholder problema 4: saldo, comprobante o cobro vinculado al caso",
+  },
+] as const;
+
+const AUDIENCE_BLOCKS = [
+  {
+    title: "Laboratorios dentales",
+    description:
+      "Para gestionar órdenes de trabajo, archivos, estados y pagos del laboratorio dental desde un solo lugar.",
+    icon: FlaskConical,
+    placeholder: "Placeholder cliente 1: laboratorio dental",
+  },
+  {
+    title: "Laboratoristas y supervisores",
+    description:
+      "Para saber qué trabajo entró, en qué etapa va cada caso y qué prioridad tiene.",
     icon: Workflow,
+    placeholder: "Placeholder cliente 2: laboratorista o supervisor",
   },
   {
-    title: "Pagos sin trazabilidad",
-    description: "Saldos y comprobantes dispersos",
-    icon: Wallet,
+    title: "Clínicas dentales con laboratorio propio",
+    description:
+      "Para organizar la producción interna de soluciones protésicas con más trazabilidad y menos seguimiento manual.",
+    icon: Stethoscope,
+    placeholder: "Placeholder cliente 3: clínica con laboratorio propio",
+  },
+  {
+    title: "Dentistas y técnicos dentales",
+    description:
+      "También puede ser relevante para dentistas y técnicos odontológicos que trabajan coordinadamente con laboratorios y quieren seguir de cerca una gestión más ordenada del caso.",
+    icon: Files,
+    placeholder: "Placeholder cliente 4: dentista o técnico dental",
+  },
+] as const;
+
+const HOW_IT_WORKS = [
+  {
+    step: "1",
+    title: "Recibes la orden de trabajo dental",
+    description: "Registras el caso con la información principal para comenzar.",
+    placeholder: "Placeholder paso 1: formulario o alta de caso",
+  },
+  {
+    step: "2",
+    title: "Adjuntas archivos, fotos, escaneos e indicaciones",
+    description: "Todo queda asociado al mismo trabajo.",
+    placeholder: "Placeholder paso 2: archivos adjuntos o documentos",
+  },
+  {
+    step: "3",
+    title: "Organizas el caso por estado o etapa",
+    description: "El equipo puede ver en qué va cada trabajo y qué sigue.",
+    placeholder: "Placeholder paso 3: workflow o estados",
+  },
+  {
+    step: "4",
+    title: "Haces seguimiento del trabajo en curso",
+    description: "Menos mensajes sueltos y más visibilidad operativa.",
+    placeholder: "Placeholder paso 4: listado o tablero de seguimiento",
+  },
+  {
+    step: "5",
+    title: "Registras pago, saldo o comprobante",
+    description: "El cierre del caso también queda ordenado.",
+    placeholder: "Placeholder paso 5: resumen de pago o saldo",
+  },
+] as const;
+
+const INITIAL_FEATURES = [
+  "Gestión de órdenes de trabajo",
+  "Archivos asociados a cada caso",
+  "Estados del trabajo",
+  "Pagos, saldos y comprobantes",
+  "Vista clara del trabajo en curso",
+] as const;
+
+const FUTURE_FEATURES = [
+  "Automatizaciones",
+  "Reportes más avanzados",
+  "Métricas operativas",
+  "Nuevas funciones priorizadas con feedback real del rubro",
+] as const;
+
+const FAQ_ITEMS = [
+  {
+    q: "¿Qué es Comelu?",
+    a: "Comelu es un software para gestión de laboratorios dentales que busca ordenar órdenes de trabajo, archivos, estados y pagos en un solo lugar.",
+  },
+  {
+    q: "¿Para quién está pensado?",
+    a: "Para laboratorios dentales, laboratoristas y clínicas dentales con laboratorio propio. También puede ser relevante para dentistas y técnicos dentales que coordinan trabajos con laboratorios.",
+  },
+  {
+    q: "¿Comelu ya está disponible?",
+    a: "Todavía no. Hoy estamos reuniendo interesados para contactar cuando abramos los primeros accesos y seguir priorizando funcionalidades.",
+  },
+  {
+    q: "¿Sirve si hoy trabajamos con Excel y WhatsApp?",
+    a: "Sí. Uno de los objetivos principales de Comelu es reemplazar el desorden de planillas, mensajes y archivos dispersos por un flujo más centralizado y claro.",
+  },
+  {
+    q: "¿Sirve para laboratorios pequeños?",
+    a: "Sí. La idea es que sea útil tanto para laboratorios pequeños como para equipos más estructurados, siempre con foco en ordenar la operación diaria.",
+  },
+  {
+    q: "¿Sirve para clínicas dentales con laboratorio interno?",
+    a: "Sí. Comelu también apunta a clínicas dentales que producen internamente trabajos protésicos y necesitan más control operativo.",
   },
 ] as const;
 
 const INTERESES: Interest[] = [
-  "Órdenes + estados por etapa",
-  "Archivos adjuntos por caso",
-  "Pagos/saldos + comprobantes (transferencia)",
-  "Notificaciones a clientes",
-  "Reportes básicos (atrasos, carga de trabajo)",
-  "Acceso para clientes (link de seguimiento)",
+  "Gestión de órdenes de trabajo",
+  "Archivos y documentos por caso",
+  "Estados y seguimiento operativo",
+  "Pagos, saldos y comprobantes",
+  "Reportes y métricas operativas",
+  "Automatizaciones futuras",
 ];
-
-const FAQ = [
-  {
-    q: "¿Sirve para laboratorios pequeños?",
-    a: "Sí. Parte simple y escala por etapas.",
-  },
-  {
-    q: "¿Puedo recibir órdenes desde clientes?",
-    a: "Sí, con un link/formulario de recepción.",
-  },
-  {
-    q: "¿Cómo se maneja el pago por transferencia?",
-    a: "Registro de pago, comprobante y saldo por orden/cliente.",
-  },
-  {
-    q: "¿Qué pasa con los archivos?",
-    a: "Quedan asociados a la orden para evitar pérdidas.",
-  },
-  {
-    q: "¿Cuándo lanzan?",
-    a: "Pilotos por cupos en Chile. Únete a la lista de espera para ser de los primeros.",
-  },
-] as const;
 
 const initialForm: FormState = {
   nombre: "",
   email: "",
-  telefonoPais: "+56",
+  telefonoPais: "",
   telefonoNumero: "",
   rol: "",
   tamano: "",
-  dolor: "",
   intereses: [],
   checklist: false,
 };
 
 const primaryButton =
-  "interactive-cta rounded-xl bg-gradient-to-r from-[#109d8f] to-[#22b8a8] px-5 py-3 text-sm font-semibold text-[#031016] shadow-[0_8px_24px_rgba(34,184,168,0.24)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(34,184,168,0.32)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]";
+  "interactive-cta inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#109d8f] to-[#22b8a8] px-5 py-3 text-sm font-semibold text-[#031016] shadow-[0_8px_24px_rgba(34,184,168,0.24)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(34,184,168,0.32)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]";
 
 const secondaryButton =
-  "interactive-cta rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]";
+  "interactive-cta inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]";
+
+function SectionIntro({
+  eyebrow,
+  title,
+  description,
+}: {
+  eyebrow?: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="mx-auto max-w-3xl text-center" data-reveal data-delay={80}>
+      {eyebrow ? (
+        <p className="section-eyebrow" data-reveal data-delay={100}>
+          {eyebrow}
+        </p>
+      ) : null}
+      <h2 className="section-title" data-reveal data-delay={120}>
+        {title}
+      </h2>
+      <p className="section-copy mt-3" data-reveal data-delay={160}>
+        {description}
+      </p>
+    </div>
+  );
+}
+
+function PlaceholderVisual({
+  label,
+  title,
+  detail,
+  variant = "default",
+}: {
+  label: string;
+  title: string;
+  detail: string;
+  variant?: "default" | "hero" | "compact" | "audience";
+}) {
+  return (
+    <div
+      className={`placeholder-card placeholder-${variant}`}
+      role="img"
+      aria-label={label}
+      data-reveal
+      data-delay={120}
+    >
+      <p className="placeholder-label">{label}</p>
+      <p className="placeholder-title">{title}</p>
+      <p className="placeholder-detail">{detail}</p>
+      <div className="placeholder-lines" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+    </div>
+  );
+}
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [faqOpenIndex, setFaqOpenIndex] = useState<number | null>(0);
+  const [currentHowIndex, setCurrentHowIndex] = useState(0);
+  const [allowCarouselMotion, setAllowCarouselMotion] = useState(true);
   const [form, setForm] = useState<FormState>(initialForm);
-  const [formError, setFormError] = useState<string>("");
+  const [formError, setFormError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({
     nombre: "",
     email: "",
@@ -147,47 +300,70 @@ function App() {
     telefonoNumero: "",
     rol: "",
     tamano: "",
-    dolor: "",
     intereses: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const firstInputRef = useRef<HTMLInputElement>(null);
 
-  const year = useMemo(() => new Date().getFullYear(), []);
+  const year = new Date().getFullYear();
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateMotionPreference = () => {
+      setAllowCarouselMotion(!mediaQuery.matches);
+    };
+
+    updateMotionPreference();
+    mediaQuery.addEventListener("change", updateMotionPreference);
+
+    return () => mediaQuery.removeEventListener("change", updateMotionPreference);
+  }, []);
+
+  useEffect(() => {
+    if (!allowCarouselMotion) return undefined;
+
+    const intervalId = window.setInterval(() => {
+      setCurrentHowIndex((prev) => (prev + 1) % HOW_IT_WORKS.length);
+    }, 8000);
+
+    return () => window.clearInterval(intervalId);
+  }, [allowCarouselMotion]);
 
   const scrollTo = (id: string, focusInput = false) => {
     const section = document.getElementById(id);
     if (!section) return;
 
-    section.scrollIntoView({ behavior: "smooth", block: "start" });
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    section.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
 
     if (focusInput) {
       window.setTimeout(() => {
         firstInputRef.current?.focus();
-      }, 420);
+      }, reduceMotion ? 0 : 420);
     }
-  };
-
-  const onChecklistClick = () => {
-    setForm((prev) => {
-      const withInterest: Interest[] = prev.intereses.includes("Órdenes + estados por etapa")
-        ? prev.intereses
-        : [...prev.intereses, "Órdenes + estados por etapa"];
-
-      return {
-        ...prev,
-        checklist: true,
-        intereses: withInterest,
-      };
-    });
-
-    scrollTo("lista-espera", true);
   };
 
   const onWaitlistClick = () => {
     scrollTo("lista-espera", true);
     setMobileMenuOpen(false);
+  };
+
+  const onHowItWorksClick = () => {
+    scrollTo("como-funciona");
+    setMobileMenuOpen(false);
+  };
+
+  const goToHowStep = (index: number) => {
+    setCurrentHowIndex(index);
+  };
+
+  const goToPreviousHowStep = () => {
+    setCurrentHowIndex((prev) => (prev === 0 ? HOW_IT_WORKS.length - 1 : prev - 1));
+  };
+
+  const goToNextHowStep = () => {
+    setCurrentHowIndex((prev) => (prev + 1) % HOW_IT_WORKS.length);
   };
 
   const toggleInterest = (interest: Interest, checked: boolean) => {
@@ -215,24 +391,34 @@ function App() {
   };
 
   const validateTelefono = (pais: string, numero: string) => {
+    const paisTrimmed = pais.trim();
     const numeroTrimmed = numero.trim();
-    if (!pais) {
+
+    if (!paisTrimmed && !numeroTrimmed) {
       return {
-        telefonoPais: "Selecciona un código de país.",
+        telefonoPais: "",
         telefonoNumero: "",
       };
     }
+
+    if (!paisTrimmed) {
+      return {
+        telefonoPais: "Selecciona un código de país si vas a dejar tu teléfono.",
+        telefonoNumero: "",
+      };
+    }
+
     if (!numeroTrimmed) {
       return {
         telefonoPais: "",
-        telefonoNumero: "Ingresa tu número de teléfono.",
+        telefonoNumero: "Ingresa tu número de teléfono o deja ambos campos vacíos.",
       };
     }
 
     const digitsOnly = numeroTrimmed.replace(/\D/g, "");
-    const countryDigits = pais.replace(/\D/g, "");
+    const countryDigits = paisTrimmed.replace(/\D/g, "");
     const totalDigits = countryDigits.length + digitsOnly.length;
-    const combined = `${pais}${digitsOnly}`;
+    const combined = `${paisTrimmed}${digitsOnly}`;
     const e164Regex = /^\+[1-9]\d+$/;
 
     if (!e164Regex.test(combined) || totalDigits !== 11) {
@@ -278,9 +464,8 @@ function App() {
       email: validateEmail(form.email),
       ...validateTelefono(form.telefonoPais, form.telefonoNumero),
       rol: form.rol ? "" : "Selecciona una opción.",
-      tamano: form.tamano ? "" : "Selecciona una opción.",
-      dolor: form.dolor ? "" : "Selecciona una opción.",
-      intereses: form.intereses.length > 0 ? "" : "Selecciona al menos una opción.",
+      tamano: "",
+      intereses: "",
     };
 
     setFieldErrors(nextErrors);
@@ -310,21 +495,6 @@ function App() {
       return false;
     }
 
-    if (nextErrors.tamano) {
-      setFormError("Selecciona el tamaño del laboratorio antes de enviar.");
-      return false;
-    }
-
-    if (nextErrors.dolor) {
-      setFormError("Selecciona el dolor principal antes de enviar.");
-      return false;
-    }
-
-    if (nextErrors.intereses) {
-      setFormError("Selecciona al menos una opción en “Qué te interesa más”.");
-      return false;
-    }
-
     setFormError("");
     return true;
   };
@@ -340,11 +510,10 @@ function App() {
     const payload = {
       nombre: form.nombre.trim(),
       email: form.email.trim(),
-      telefonoPais: form.telefonoPais,
+      telefonoPais: form.telefonoPais.trim(),
       telefonoNumero: form.telefonoNumero.trim(),
       rol: form.rol,
       tamano: form.tamano,
-      dolor: form.dolor,
       intereses: form.intereses,
       checklist: form.checklist,
     };
@@ -401,7 +570,6 @@ function App() {
       telefonoNumero: "",
       rol: "",
       tamano: "",
-      dolor: "",
       intereses: "",
     });
   };
@@ -412,18 +580,24 @@ function App() {
       <div className="ambient ambient-b" aria-hidden="true" />
       <div className="ambient ambient-c" aria-hidden="true" />
 
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#070c19]/65 backdrop-blur-xl">
-        <div className="mx-auto flex w-full max-w-[1160px] items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-          <a href="#" className="text-lg font-semibold tracking-tight text-white">
-            Comelu
+      <header className="sticky top-0 z-50 border-b border-slate-900/10 bg-[#edf5ff]/88 backdrop-blur-xl">
+        <div className="mx-auto flex w-full max-w-[1160px] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+          <a href="#" className="flex items-center gap-3 text-slate-950">
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#0a1629] text-sm font-semibold text-[#8efaf0]">
+              C
+            </span>
+            <span>
+              <span className="block text-lg font-semibold tracking-tight">Comelu</span>
+              <span className="block text-xs text-slate-600">Software para laboratorios dentales en Chile</span>
+            </span>
           </a>
 
-          <nav className="hidden items-center gap-7 text-sm text-slate-300 lg:flex" aria-label="Navegación principal">
+          <nav className="hidden items-center gap-7 text-sm text-slate-700 lg:flex" aria-label="Navegación principal">
             {NAV_LINKS.map((link) => (
               <button
                 key={link.id}
                 type="button"
-                className="transition duration-300 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]"
+                className="transition duration-300 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#109d8f] focus-visible:ring-offset-2 focus-visible:ring-offset-[#edf5ff]"
                 onClick={() => scrollTo(link.id)}
               >
                 {link.label}
@@ -432,14 +606,14 @@ function App() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <button type="button" onClick={onWaitlistClick} className={primaryButton}>
+            <button type="button" onClick={onWaitlistClick} className={`${primaryButton} hidden sm:inline-flex`}>
               Unirme a la lista de espera
             </button>
             <button
               type="button"
               aria-label="Abrir menú"
               aria-expanded={mobileMenuOpen}
-              className="inline-flex h-[46px] w-[46px] items-center justify-center rounded-lg border border-white/20 bg-white/5 p-0 text-white transition hover:bg-white/10 lg:hidden"
+              className="inline-flex h-[46px] w-[46px] items-center justify-center rounded-lg border border-slate-900/10 bg-white/70 p-0 text-slate-900 transition hover:bg-white lg:hidden"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -447,14 +621,14 @@ function App() {
           </div>
         </div>
 
-        {mobileMenuOpen && (
-          <div className="border-t border-white/10 bg-[#070c19]/95 px-4 py-3 lg:hidden">
+        {mobileMenuOpen ? (
+          <div className="border-t border-slate-900/10 bg-[#edf5ff]/95 px-4 py-3 lg:hidden">
             <div className="mx-auto flex max-w-[1160px] flex-col gap-2">
               {NAV_LINKS.map((link) => (
                 <button
                   key={link.id}
                   type="button"
-                  className="rounded-md px-2 py-2 text-left text-sm text-slate-200 transition hover:bg-white/10"
+                  className="rounded-md px-2 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-950/5"
                   onClick={() => {
                     scrollTo(link.id);
                     setMobileMenuOpen(false);
@@ -463,491 +637,640 @@ function App() {
                   {link.label}
                 </button>
               ))}
-              <button
-                type="button"
-                className="interactive-cta mt-1 rounded-xl bg-gradient-to-r from-[#109d8f] to-[#22b8a8] px-3 py-3 text-center text-sm font-semibold text-[#031016] shadow-[0_8px_24px_rgba(34,184,168,0.24)] transition duration-300 hover:shadow-[0_12px_30px_rgba(34,184,168,0.32)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]"
-                onClick={onWaitlistClick}
-              >
+              <button type="button" className={`${primaryButton} mt-1`} onClick={onWaitlistClick}>
                 Unirme a la lista de espera
               </button>
             </div>
           </div>
-        )}
+        ) : null}
       </header>
 
       <main className="mx-auto w-full max-w-[1160px] px-4 pb-20 pt-10 sm:px-6 lg:px-8 lg:pt-16">
-        <section className="hero-panel panel-frame" data-reveal>
+        <section className="hero-panel panel-frame scroll-mt-28" data-reveal>
           <div className="hero-grid">
             <div data-reveal data-delay={80}>
-              <p className="mb-4 inline-flex rounded-full border border-[#2dd4bf]/40 bg-[#2dd4bf]/12 px-3 py-1 text-xs font-semibold tracking-wide text-[#81fff2]" data-reveal data-delay={120}>
-                Hecho para laboratorios dentales en Chile
+              <p
+                className="mb-4 inline-flex rounded-full border border-[#2dd4bf]/40 bg-[#2dd4bf]/12 px-3 py-1 text-xs font-semibold tracking-wide text-[#81fff2]"
+                data-reveal
+                data-delay={120}
+              >
+                Software para laboratorios dentales en Chile
               </p>
-              <h1 className="max-w-4xl text-3xl font-semibold leading-tight text-white sm:text-4xl lg:text-5xl" data-reveal data-delay={160}>
-                Software para órdenes, archivos y pagos del laboratorio dental.{" "}
-                <span className="text-gradient">Sin Excel ni WhatsApp desordenado.</span>
+              <h1
+                className="max-w-4xl text-3xl font-semibold leading-tight text-white sm:text-4xl lg:text-5xl"
+                data-reveal
+                data-delay={160}
+              >
+                Software para gestión de laboratorios dentales: órdenes, archivos, estados y pagos en un solo lugar
               </h1>
               <p className="mt-5 max-w-3xl text-base text-slate-300 sm:text-lg" data-reveal data-delay={220}>
-                Comelu centraliza pedidos, adjuntos, estados por etapa y cobros para laboratorios dentales en Chile, con trazabilidad por caso y seguimiento para cada cliente.
+                Comelu es un software fácil e intuitivo para laboratorios dentales, laboratoristas y clínicas dentales
+                con laboratorio propio. Ordena órdenes, archivos, estados y pagos sin depender de Excel, WhatsApp o
+                mensajes sueltos.
+              </p>
+              <p className="mt-4 max-w-3xl text-sm text-slate-400 sm:text-base" data-reveal data-delay={260}>
+                Pensado para la operación real del laboratorio dental en Chile: centraliza cada caso y da visibilidad
+                clara del trabajo en curso sin sumar complejidad innecesaria.
               </p>
 
-              <ul className="mt-6 grid gap-3 text-sm text-slate-200 sm:text-base" data-reveal data-delay={280}>
-                <li className="flex items-start gap-2" data-reveal data-delay={320}>
-                  <ShieldCheck className="mt-0.5 h-4 w-4 text-[#56f3e2]" />
-                  <span>Estados por etapa: recepción → diseño → producción → despacho</span>
-                </li>
-                <li className="flex items-start gap-2" data-reveal data-delay={360}>
-                  <ShieldCheck className="mt-0.5 h-4 w-4 text-[#56f3e2]" />
-                  <span>Archivos siempre asociados a la orden (escaneos, fotos, docs)</span>
-                </li>
-                <li className="flex items-start gap-2" data-reveal data-delay={400}>
-                  <ShieldCheck className="mt-0.5 h-4 w-4 text-[#56f3e2]" />
-                  <span>Pagos y saldos: seguimiento simple y comprobantes</span>
-                </li>
+              <ul className="mt-6 grid gap-3 text-sm text-slate-200 sm:text-base" data-reveal data-delay={300}>
+                {HERO_BULLETS.map((item, index) => (
+                  <li key={item} className="flex items-start gap-2" data-reveal data-delay={320 + index * 40}>
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#56f3e2]" />
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
 
-              <div className="hero-cta mt-8 flex flex-wrap items-center gap-3">
-                <button type="button" onClick={onWaitlistClick} className={`${primaryButton} w-full justify-center sm:w-auto`} data-reveal data-delay={0}>
+              <div className="hero-cta mt-8 flex flex-wrap items-center justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={onWaitlistClick}
+                  className={`${primaryButton} w-full sm:w-auto`}
+                  data-reveal
+                  data-delay={0}
+                >
                   Unirme a la lista de espera
                 </button>
-                <button type="button" onClick={onChecklistClick} className={`${secondaryButton} w-full justify-center sm:w-auto`} data-reveal data-delay={40}>
-                  Recibir checklist gratis
+                <button
+                  type="button"
+                  onClick={onHowItWorksClick}
+                  className={`${secondaryButton} w-full sm:w-auto`}
+                  data-reveal
+                  data-delay={40}
+                >
+                  Ver cómo funciona el software
                 </button>
               </div>
-              <p className="mt-3 text-sm text-slate-400">Pilotos por cupos en Chile. Te avisamos primero.</p>
+              <p className="mt-3 text-center text-sm text-slate-400">
+                Déjanos tus datos y te contactaremos cuando abramos los primeros accesos.
+              </p>
             </div>
 
-            <aside className="glass-card floating-card" data-reveal data-delay={140}>
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Operación en vivo</p>
-              <h3 className="mt-2 text-xl font-semibold text-white">Control total del flujo diario</h3>
-              <img src={heroIllustration} alt="Panel hero de Comelu" className="mt-3 h-[24.5rem] w-full rounded-lg object-cover" />
-              <p className="mt-4 rounded-lg border border-white/15 bg-white/5 px-3 py-3 text-sm text-slate-300">
-                Detecta cuellos de botella y atrasos antes de que impacten tu entrega.
-              </p>
+            <aside className="glass-card floating-card space-y-4" data-reveal data-delay={140}>
+              <PlaceholderVisual
+                label="Placeholder hero principal: mockup del software para laboratorios dentales"
+                title="Hero principal"
+                detail="Espacio para mockup con órdenes de trabajo, casos activos, estado del caso, archivos y pago o saldo."
+                variant="hero"
+              />
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="metric-row">
+                  <span>Casos activos</span>
+                  <strong>24</strong>
+                </div>
+                <div className="metric-row">
+                  <span>Órdenes con adjuntos</span>
+                  <strong>18</strong>
+                </div>
+                <div className="metric-row">
+                  <span>En producción</span>
+                  <strong>9</strong>
+                </div>
+                <div className="metric-row">
+                  <span>Pagos pendientes</span>
+                  <strong>5</strong>
+                </div>
+              </div>
             </aside>
           </div>
         </section>
 
-        <section id="problemas" className="section-block" data-reveal>
-          <h2 className="section-title" data-reveal data-delay={80}>
-            Problemas operativos que hoy hacen perder tiempo (y plata)
-          </h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {PROBLEMAS.map((item, index) => {
+        <section id="que-resuelve" className="section-block scroll-mt-28" data-reveal>
+          <SectionIntro
+            title="Qué problemas resuelve un software para laboratorio dental como Comelu"
+            description="Muchos laboratorios dentales y clínicas con producción propia todavía gestionan órdenes, archivos, estados y cobros en varios canales al mismo tiempo. Eso genera atrasos, retrabajos y poca trazabilidad."
+          />
+          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {PROBLEM_CARDS.map((item, index) => {
               return (
                 <article
                   key={item.title}
-                  className="glass-card interactive-card min-h-[280px]"
+                  className="glass-card interactive-card problem-card flex h-full flex-col"
                   data-reveal
                   data-delay={index * 80}
                 >
-                  <h3 className="mt-3 text-lg font-semibold text-white">{item.title}</h3>
-                  <p className="mt-1 text-sm text-slate-300">{item.description}</p>
-                  <img
-                    src={retrabajosIllustration}
-                    alt="Retrabajos por información incompleta"
-                    className="mt-4 h-64 w-full rounded-lg object-contain"
-                  />
+                  <div className="problem-card-visual">
+                    <PlaceholderVisual
+                      label={item.placeholder}
+                      title="Imagen pendiente"
+                      detail="Reemplazar con visual final del problema descrito."
+                      variant="compact"
+                    />
+                  </div>
+                  <h3 className="problem-card-title mt-5 text-lg font-semibold text-white">{item.title}</h3>
+                  <p className="problem-card-description mt-3 text-sm text-slate-300">{item.description}</p>
                 </article>
               );
             })}
           </div>
-        </section>
-
-        <section id="como-funciona" className="section-block" data-reveal>
-          <h2 className="section-title" data-reveal data-delay={80}>
-            Cómo funciona el flujo del laboratorio dental en Comelu
-          </h2>
-          <div className="mt-6 grid gap-4 lg:grid-cols-3">
-            <article className="glass-card interactive-card" data-reveal data-delay={0}>
-              <div className="flex w-full items-start gap-3">
-                <div className="step-pill self-center">1</div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-white">Recibe el caso</h3>
-                  <p className="mt-1 text-sm text-slate-300">Cliente, fecha entrega, indicaciones y adjuntos.</p>
-                </div>
-              </div>
-            </article>
-            <article className="glass-card interactive-card" data-reveal data-delay={80}>
-              <div className="flex w-full items-start gap-3">
-                <div className="step-pill self-center translate-y-px">
-                  <span className="leading-none">2</span>
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-white">Trabaja por etapas</h3>
-                  <p className="mt-1 text-sm text-slate-300">Responsable, estado, alertas y checklist.</p>
-                </div>
-              </div>
-            </article>
-            <article className="glass-card interactive-card" data-reveal data-delay={160}>
-              <div className="flex w-full items-start gap-3">
-                <div className="step-pill self-center">3</div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-white">Entrega y cobra</h3>
-                  <p className="mt-1 text-sm text-slate-300">Saldo, comprobantes y seguimiento de pagos.</p>
-                </div>
-              </div>
-            </article>
+          <div className="section-cta-row mt-8" data-reveal data-delay={140}>
+            <button type="button" onClick={onWaitlistClick} className={primaryButton}>
+              Quiero ordenar la gestión del laboratorio
+            </button>
           </div>
         </section>
 
-        <section id="primera-version" className="section-block" data-reveal>
-          <h2 className="section-title" data-reveal data-delay={80}>
-            Primera versión del software: lo esencial para operar
-          </h2>
-          <div className="mt-6 grid gap-6 lg:grid-cols-2">
-            <article className="glass-card interactive-card" data-reveal data-delay={0}>
-              <ul className="space-y-3 text-sm text-slate-200">
-                <li>• Órdenes de trabajo (rápida y detallada)</li>
-                <li>• Archivos y adjuntos centralizados por orden</li>
-                <li>• Estados por etapa y responsables</li>
-                <li>• Registro de pagos / saldo / comprobante (transferencia)</li>
-                <li>• Historial y trazabilidad por caso</li>
-                <li>• Notificaciones básicas (email + link de seguimiento)</li>
-              </ul>
-            </article>
-            <article className="glass-card interactive-card" data-reveal data-delay={80}>
-              <h3 className="font-semibold text-white">Aún no (por ahora)</h3>
-              <ul className="mt-3 space-y-3 text-sm text-slate-300">
-                <li>• Integración automática con bancos / facturación</li>
-                <li>• Reportería avanzada</li>
-                <li>• Automatizaciones complejas</li>
-              </ul>
-            </article>
-          </div>
-        </section>
-
-        <section className="section-block" data-reveal>
-          <h2 className="section-title" data-reveal data-delay={80}>
-            Próximas mejoras del sistema, definidas contigo
-          </h2>
-          <p className="mt-3 max-w-3xl text-slate-300" data-reveal data-delay={140}>
-            Partimos resolviendo lo más crítico: órdenes, archivos, estados y pagos. Luego sumamos automatizaciones, reportes e integraciones. Al unirte a la lista de espera, marcas tus prioridades y eso define qué sale antes.
-          </p>
-        </section>
-
-        <section className="section-block" data-reveal>
-          <h2 className="section-title" data-reveal data-delay={80}>
-            Comelu nace desde la operación real del laboratorio dental
-          </h2>
-          <p className="mt-3 max-w-3xl text-slate-300" data-reveal data-delay={140}>
-            Comelu está desarrollada por un trabajador de laboratorio dental, para laboratoristas, supervisores y dueños de laboratorios. Nace de problemas reales: pedidos incompletos, archivos perdidos, estados confusos y pagos sin seguimiento.
-          </p>
-          <p className="mt-2 text-sm text-slate-400" data-reveal data-delay={180}>
-            Hecho para el día a día en Chile.
-          </p>
-        </section>
-
-        <section id="lista-espera" className="section-block">
-          <div className="panel-frame p-6 sm:p-8" data-reveal data-delay={0}>
-            <h2 className="section-title" data-reveal data-delay={20}>
-              Lista de espera: sé de los primeros en probar Comelu
-            </h2>
-            <p className="mt-3 max-w-3xl text-slate-300" data-reveal data-delay={40}>
-              Estamos armando un grupo piloto para laboratorios dentales en Chile. Déjanos tus datos y te contactamos cuando abramos nuevos cupos.
-            </p>
-
-            <form className="mt-6 grid gap-5" onSubmit={onSubmit} noValidate data-reveal data-delay={60}>
-              <div className="grid gap-2">
-                <label htmlFor="nombre" className="field-label">
-                  Nombre
-                </label>
-                <input
-                  ref={firstInputRef}
-                  id="nombre"
-                  name="nombre"
-                  type="text"
-                  required
-                  value={form.nombre}
-                  onChange={(e) => onFieldChange("nombre", e.target.value)}
-                  onBlur={() => onFieldBlur("nombre")}
-                  placeholder="Ej: Carlos González"
-                  aria-invalid={Boolean(fieldErrors.nombre)}
-                  aria-describedby="nombre-help nombre-error"
-                  className="field"
-                />
-                {fieldErrors.nombre ? (
-                  <p id="nombre-error" className="text-xs text-rose-300">
-                    {fieldErrors.nombre}
-                  </p>
-                ) : (
-                  <p id="nombre-help" className="text-xs text-slate-400">
-                    Escribe tu nombre y apellido.
-                  </p>
-                )}
-              </div>
-
-              <div className="form-grid grid gap-4 sm:grid-cols-2">
-                <div className="grid gap-2">
-                  <label htmlFor="email" className="field-label">
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={form.email}
-                    onChange={(e) => onFieldChange("email", e.target.value)}
-                    onBlur={() => onFieldBlur("email")}
-                    placeholder="nombre@empresa.cl"
-                    aria-invalid={Boolean(fieldErrors.email)}
-                    aria-describedby="email-help email-error"
-                    className="field"
+        <section className="section-block scroll-mt-28" data-reveal>
+          <SectionIntro
+            title="Software para laboratorios dentales, laboratoristas y clínicas dentales con laboratorio propio"
+            description="Comelu está pensado para equipos que producen, coordinan o supervisan trabajos protésicos dentales y necesitan una forma más ordenada de gestionar casos, archivos y pagos."
+          />
+          <div className="audience-grid mt-8 grid gap-4 md:grid-cols-2">
+            {AUDIENCE_BLOCKS.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <article
+                  key={item.title}
+                  className="glass-card interactive-card flex h-full flex-col"
+                  data-reveal
+                  data-delay={index * 80}
+                >
+                  <PlaceholderVisual
+                    label={item.placeholder}
+                    title="Imagen del cliente potencial"
+                    detail="Reemplazar con visual editorial del perfil descrito."
+                    variant="audience"
                   />
-                  {fieldErrors.email ? (
-                    <p id="email-error" className="text-xs text-rose-300">
-                      {fieldErrors.email}
-                    </p>
-                  ) : (
-                    <p id="email-help" className="text-xs text-slate-400">
-                      Formato esperado: nombre@empresa.cl
-                    </p>
-                  )}
+                  <div className="mt-5 flex items-start gap-4">
+                    <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-white/5 text-[#8efaf0]">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <div>
+                      <h3 className="text-lg font-semibold text-white">{item.title}</h3>
+                      <p className="mt-2 text-sm text-slate-300">{item.description}</p>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+          <div className="section-cta-row mt-8" data-reveal data-delay={140}>
+            <button type="button" onClick={onWaitlistClick} className={primaryButton}>
+              Quiero recibir novedades del lanzamiento
+            </button>
+          </div>
+        </section>
+
+        <section id="como-funciona" className="section-block scroll-mt-28" data-reveal>
+          <SectionIntro
+            title="Cómo funciona Comelu para gestionar órdenes de trabajo dentales"
+            description="El software concentra en un solo flujo lo que hoy suele repartirse entre mensajes, planillas, archivos y seguimiento manual."
+          />
+          <div className="how-carousel panel-frame mt-8 overflow-hidden p-4 sm:p-6" data-reveal data-delay={80}>
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="section-eyebrow mb-2">Flujo guiado</p>
+                <p className="text-sm text-slate-400">
+                  Paso {currentHowIndex + 1} de {HOW_IT_WORKS.length}
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={goToPreviousHowStep}
+                  aria-label="Ver paso anterior"
+                  className="carousel-arrow"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={goToNextHowStep}
+                  aria-label="Ver paso siguiente"
+                  className="carousel-arrow"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-6 overflow-hidden">
+              <div
+                className="flex"
+                style={{
+                  transform: `translateX(-${currentHowIndex * 100}%)`,
+                  transition: allowCarouselMotion ? "transform 520ms cubic-bezier(0.22, 1, 0.36, 1)" : "none",
+                }}
+              >
+                {HOW_IT_WORKS.map((item, index) => (
+                  <article key={item.title} className="min-w-full">
+                    <div className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-stretch">
+                      <div className="glass-card flex h-full flex-col justify-between">
+                        <div>
+                          <div className="step-pill mx-auto">{item.step}</div>
+                          <h3 className="mt-6 text-2xl font-semibold text-white">{item.title}</h3>
+                          <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">{item.description}</p>
+                        </div>
+                      </div>
+                      <div className="glass-card flex h-full items-center">
+                        <div className="w-full">
+                          <PlaceholderVisual
+                            label={item.placeholder}
+                            title={`Mini visual ${item.step}`}
+                            detail="Reemplazar con visual final del flujo correspondiente."
+                            variant="hero"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <div className="carousel-progress" aria-label={`Indicador del paso ${currentHowIndex + 1}`}>
+                {HOW_IT_WORKS.map((progressItem, progressIndex) => (
+                  <button
+                    key={progressItem.step}
+                    type="button"
+                    onClick={() => goToHowStep(progressIndex)}
+                    className={`carousel-progress-segment ${progressIndex === currentHowIndex ? "is-active" : ""}`}
+                    aria-label={`Ir al paso ${progressItem.step}`}
+                    aria-current={progressIndex === currentHowIndex ? "step" : undefined}
+                  >
+                    <span
+                      className={`carousel-progress-fill ${
+                        progressIndex === currentHowIndex && allowCarouselMotion ? "is-animated" : ""
+                      }`}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="section-cta-row mt-8" data-reveal data-delay={140}>
+            <button type="button" onClick={onWaitlistClick} className={primaryButton}>
+              Quiero ver una herramienta así en mi laboratorio
+            </button>
+          </div>
+        </section>
+
+        <section id="primera-version" className="section-block scroll-mt-28" data-reveal>
+          <SectionIntro
+            title="Primera versión del software para laboratorio dental: lo esencial para operar"
+            description="Comelu parte resolviendo lo más importante de la gestión diaria del laboratorio dental antes de sumar funciones más avanzadas."
+          />
+          <div className="mt-8 grid gap-6 lg:grid-cols-2">
+            <article className="glass-card interactive-card" data-reveal data-delay={0}>
+              <h3 className="text-lg font-semibold text-white">Qué incluirá primero</h3>
+              <ul className="mt-4 space-y-3 text-sm text-slate-200">
+                {INITIAL_FEATURES.map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#56f3e2]" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+            <article className="glass-card interactive-card" data-reveal data-delay={80}>
+              <h3 className="text-lg font-semibold text-white">Más adelante.</h3>
+              <ul className="mt-4 space-y-3 text-sm text-slate-300">
+                {FUTURE_FEATURES.map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
+          <div className="section-cta-row mt-8" data-reveal data-delay={140}>
+            <button type="button" onClick={onWaitlistClick} className={primaryButton}>
+              Quiero estar entre los primeros interesados
+            </button>
+          </div>
+        </section>
+
+        <section className="section-block scroll-mt-28" data-reveal>
+          <SectionIntro
+            title="Comelu nace desde la operación real del laboratorio dental"
+            description="Comelu no busca ser un software dental genérico. Nace con foco específico en la gestión del laboratorio dental: órdenes de trabajo, archivos, seguimiento, pagos y coordinación diaria."
+          />
+          <div className="mt-6 grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
+            <div data-reveal data-delay={80} className="h-full">
+              <PlaceholderVisual
+                label="Placeholder credibilidad o contexto de laboratorio"
+                title="Imagen de credibilidad"
+                detail="Espacio para entorno de laboratorio dental o composición entre interfaz y contexto real."
+              />
+            </div>
+            <div data-reveal data-delay={120} className="glass-card flex h-full flex-col justify-center">
+              <p className="section-copy">
+                La meta es construir una herramienta simple, clara y útil para laboratorios dentales en Chile, basada
+                en problemas reales del flujo protésico y no en funciones desconectadas de la operación.
+              </p>
+            </div>
+          </div>
+          <div className="section-cta-row mt-8" data-reveal data-delay={160}>
+            <button type="button" onClick={onWaitlistClick} className={primaryButton}>
+              Quiero sumarme al lanzamiento temprano
+            </button>
+          </div>
+        </section>
+
+        <section id="lista-espera" className="section-block scroll-mt-28">
+          <div className="panel-frame p-6 sm:p-8" data-reveal data-delay={0}>
+            <SectionIntro
+              title="Únete a la lista de espera y ayúdanos a priorizar el software para laboratorio dental que realmente necesita el rubro"
+              description="Déjanos tus datos para obtener descuentos especiales de lanzamiento que ofreceremos a nuestros primeros clientes"
+            />
+
+            <form className="mt-8 grid gap-8" onSubmit={onSubmit} noValidate data-reveal data-delay={60}>
+              <section className="grid gap-5">
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Datos principales</h3>
+                  <p className="mt-1 text-sm text-slate-400">Campos obligatorios para sumarte a la lista de espera.</p>
                 </div>
 
-                <div className="phone-field grid gap-2">
-                  <label htmlFor="telefono-pais" className="field-label">
-                    Teléfono
-                  </label>
-                  <div className="phone-grid grid gap-2 sm:grid-cols-[140px_1fr]">
+                <div className="grid gap-5 lg:grid-cols-3">
+                  <div className="grid gap-2 lg:col-span-1">
+                    <label htmlFor="nombre" className="field-label">
+                      Nombre
+                    </label>
+                    <input
+                      ref={firstInputRef}
+                      id="nombre"
+                      name="nombre"
+                      type="text"
+                      required
+                      value={form.nombre}
+                      onChange={(e) => onFieldChange("nombre", e.target.value)}
+                      onBlur={() => onFieldBlur("nombre")}
+                      placeholder="Ej: Carlos González"
+                      aria-invalid={Boolean(fieldErrors.nombre)}
+                      aria-describedby="nombre-help nombre-error"
+                      className="field"
+                    />
+                    {fieldErrors.nombre ? (
+                      <p id="nombre-error" className="text-xs text-rose-300">
+                        {fieldErrors.nombre}
+                      </p>
+                    ) : (
+                      <p id="nombre-help" className="text-xs text-slate-400">
+                        Escribe tu nombre y apellido.
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="grid gap-2 lg:col-span-1">
+                    <label htmlFor="email" className="field-label">
+                      Email
+                    </label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      value={form.email}
+                      onChange={(e) => onFieldChange("email", e.target.value)}
+                      onBlur={() => onFieldBlur("email")}
+                      placeholder="nombre@empresa.cl"
+                      aria-invalid={Boolean(fieldErrors.email)}
+                      aria-describedby="email-help email-error"
+                      className="field"
+                    />
+                    {fieldErrors.email ? (
+                      <p id="email-error" className="text-xs text-rose-300">
+                        {fieldErrors.email}
+                      </p>
+                    ) : (
+                      <p id="email-help" className="text-xs text-slate-400">
+                        Formato esperado: nombre@empresa.cl
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="grid gap-2 lg:col-span-1">
+                    <label htmlFor="rol" className="field-label">
+                      Rol
+                    </label>
                     <div className="relative">
                       <select
-                        id="telefono-pais"
-                        name="telefonoPais"
-                        value={form.telefonoPais}
-                        onChange={(e) => onFieldChange("telefonoPais", e.target.value)}
-                        onBlur={() => onFieldBlur("telefonoPais")}
-                        aria-invalid={Boolean(fieldErrors.telefonoPais)}
-                        aria-describedby="telefono-help telefono-pais-error telefono-numero-error"
-                        className="field w-full appearance-none pr-9"
+                        id="rol"
+                        name="rol"
+                        required
+                        value={form.rol}
+                        onChange={(e) => {
+                          setForm((prev) => ({ ...prev, rol: e.target.value as Role }));
+                          if (fieldErrors.rol) setFieldErrors((prev) => ({ ...prev, rol: "" }));
+                        }}
+                        aria-invalid={Boolean(fieldErrors.rol)}
+                        className="field w-full appearance-none border-white/25 bg-gradient-to-b from-white/10 to-white/[0.03] pr-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
                       >
                         <option className="bg-[#0b1222] text-slate-100" value="">
-                          País
+                          Selecciona
                         </option>
-                        <option className="bg-[#0b1222] text-slate-100" value="+56">
-                          Chile (+56)
+                        <option className="bg-[#0b1222] text-slate-100" value="Laboratorio dental">
+                          Laboratorio dental
                         </option>
-                        <option className="bg-[#0b1222] text-slate-100" value="+54">
-                          Argentina (+54)
+                        <option className="bg-[#0b1222] text-slate-100" value="Laboratorista">
+                          Laboratorista
                         </option>
-                        <option className="bg-[#0b1222] text-slate-100" value="+57">
-                          Colombia (+57)
+                        <option className="bg-[#0b1222] text-slate-100" value="Supervisor">
+                          Supervisor
                         </option>
-                        <option className="bg-[#0b1222] text-slate-100" value="+51">
-                          Perú (+51)
+                        <option className="bg-[#0b1222] text-slate-100" value="Clínica con laboratorio propio">
+                          Clínica con laboratorio propio
                         </option>
-                        <option className="bg-[#0b1222] text-slate-100" value="+52">
-                          México (+52)
+                        <option className="bg-[#0b1222] text-slate-100" value="Dentista">
+                          Dentista
                         </option>
-                        <option className="bg-[#0b1222] text-slate-100" value="+1">
-                          EE.UU./Canadá (+1)
-                        </option>
-                        <option className="bg-[#0b1222] text-slate-100" value="+34">
-                          España (+34)
+                        <option className="bg-[#0b1222] text-slate-100" value="Técnico dental">
+                          Técnico dental
                         </option>
                       </select>
                       <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                     </div>
-
-                    <input
-                      id="telefono-numero"
-                      name="telefonoNumero"
-                      type="tel"
-                      value={form.telefonoNumero}
-                      onChange={(e) => onFieldChange("telefonoNumero", e.target.value)}
-                      onBlur={() => onFieldBlur("telefonoNumero")}
-                      placeholder="9 1234 5678"
-                      aria-invalid={Boolean(fieldErrors.telefonoNumero)}
-                      aria-describedby="telefono-help telefono-pais-error telefono-numero-error"
-                      className="field"
-                    />
+                    {fieldErrors.rol ? (
+                      <p className="text-xs text-rose-300">{fieldErrors.rol}</p>
+                    ) : (
+                      <p className="text-xs text-slate-400">Selecciona el perfil que mejor te representa.</p>
+                    )}
                   </div>
-
-                  {fieldErrors.telefonoPais ? (
-                    <p id="telefono-pais-error" className="text-xs text-rose-300">
-                      {fieldErrors.telefonoPais}
-                    </p>
-                  ) : null}
-                  {fieldErrors.telefonoNumero ? (
-                    <p id="telefono-numero-error" className="text-xs text-rose-300">
-                      {fieldErrors.telefonoNumero}
-                    </p>
-                  ) : null}
-                  {!fieldErrors.telefonoPais && !fieldErrors.telefonoNumero ? (
-                    <p id="telefono-help" className="text-xs text-slate-400">
-                      Selecciona país y escribe el número sin código. Ej: +56 9 1234 5678
-                    </p>
-                  ) : null}
                 </div>
-              </div>
+              </section>
 
-              <div className="meta-grid grid gap-4 sm:grid-cols-3">
-                <div className="grid gap-2">
-                  <label htmlFor="rol" className="field-label">
-                    Rol
-                  </label>
-                  <div className="relative">
-                    <select
-                      id="rol"
-                      name="rol"
-                      value={form.rol}
-                      onChange={(e) => {
-                        setForm((prev) => ({ ...prev, rol: e.target.value as Role }));
-                        if (fieldErrors.rol) setFieldErrors((prev) => ({ ...prev, rol: "" }));
-                      }}
-                      aria-invalid={Boolean(fieldErrors.rol)}
-                      className="field w-full appearance-none border-white/25 bg-gradient-to-b from-white/10 to-white/[0.03] pr-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-                    >
-                      <option className="bg-[#0b1222] text-slate-100" value="">
-                        Selecciona
-                      </option>
-                      <option className="bg-[#0b1222] text-slate-100" value="Laboratorista">
-                        Laboratorista
-                      </option>
-                      <option className="bg-[#0b1222] text-slate-100" value="Supervisor">
-                        Supervisor
-                      </option>
-                      <option className="bg-[#0b1222] text-slate-100" value="Dueño">
-                        Dueño
-                      </option>
-                    </select>
-                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                  </div>
-                  {fieldErrors.rol && <p className="text-xs text-rose-300">{fieldErrors.rol}</p>}
+              <section className="grid gap-5">
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Cuéntanos más</h3>
+                  <p className="mt-1 text-sm text-slate-400">
+                    Campos opcionales para ayudarnos a priorizar mejor el producto.
+                  </p>
                 </div>
 
-                <div className="grid gap-2">
-                  <label htmlFor="tamano" className="field-label">
-                    Tamaño del laboratorio
-                  </label>
-                  <div className="relative">
-                    <select
-                      id="tamano"
-                      name="tamano"
-                      value={form.tamano}
-                      onChange={(e) => {
-                        setForm((prev) => ({ ...prev, tamano: e.target.value as LabSize }));
-                        if (fieldErrors.tamano) setFieldErrors((prev) => ({ ...prev, tamano: "" }));
-                      }}
-                      aria-invalid={Boolean(fieldErrors.tamano)}
-                      className="field w-full appearance-none border-white/25 bg-gradient-to-b from-white/10 to-white/[0.03] pr-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-                    >
-                      <option className="bg-[#0b1222] text-slate-100" value="">
-                        Selecciona
-                      </option>
-                      <option className="bg-[#0b1222] text-slate-100" value="1–3">
-                        1–3
-                      </option>
-                      <option className="bg-[#0b1222] text-slate-100" value="4–10">
-                        4–10
-                      </option>
-                      <option className="bg-[#0b1222] text-slate-100" value="10+">
-                        10+
-                      </option>
-                    </select>
-                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                  </div>
-                  {fieldErrors.tamano && <p className="text-xs text-rose-300">{fieldErrors.tamano}</p>}
-                </div>
-
-                <div className="grid gap-2">
-                  <label htmlFor="dolor" className="field-label">
-                    Dolor principal
-                  </label>
-                  <div className="relative">
-                    <select
-                      id="dolor"
-                      name="dolor"
-                      value={form.dolor}
-                      onChange={(e) => {
-                        setForm((prev) => ({ ...prev, dolor: e.target.value as MainPain }));
-                        if (fieldErrors.dolor) setFieldErrors((prev) => ({ ...prev, dolor: "" }));
-                      }}
-                      aria-invalid={Boolean(fieldErrors.dolor)}
-                      className="field w-full appearance-none border-white/25 bg-gradient-to-b from-white/10 to-white/[0.03] pr-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-                    >
-                      <option className="bg-[#0b1222] text-slate-100" value="">
-                        Selecciona
-                      </option>
-                      <option className="bg-[#0b1222] text-slate-100" value="Información incompleta">
-                        Información incompleta
-                      </option>
-                      <option className="bg-[#0b1222] text-slate-100" value="Archivos perdidos">
-                        Archivos perdidos
-                      </option>
-                      <option className="bg-[#0b1222] text-slate-100" value="Estados confusos">
-                        Estados confusos
-                      </option>
-                      <option className="bg-[#0b1222] text-slate-100" value="Pagos sin trazabilidad">
-                        Pagos sin trazabilidad
-                      </option>
-                    </select>
-                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                  </div>
-                  {fieldErrors.dolor && <p className="text-xs text-rose-300">{fieldErrors.dolor}</p>}
-                </div>
-              </div>
-
-              <fieldset className="grid">
-                <legend className={`mb-4 block text-center text-lg font-semibold sm:text-left ${fieldErrors.intereses ? "text-rose-300" : "text-white"}`}>
-                  ¿Qué te interesa más?
-                  <span className="block text-sm font-medium text-slate-300">(máximo 3 opciones)</span>
-                </legend>
-                <div className={`interest-grid grid gap-2 sm:grid-cols-2 ${fieldErrors.intereses ? "rounded-xl border border-rose-400/70 p-2" : ""}`}>
-                  {INTERESES.map((interest) => (
-                    <label
-                      key={interest}
-                      className={`group flex items-start gap-3 rounded-xl border p-3 text-sm transition duration-300 ${
-                        form.intereses.includes(interest)
-                          ? "border-[#2dd4bf]/70 bg-[#2dd4bf]/12 text-white shadow-[0_10px_30px_-18px_rgba(45,212,191,0.7)]"
-                          : "border-white/15 bg-white/[0.03] text-slate-200 hover:border-[#2dd4bf]/55 hover:bg-white/[0.07]"
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        name="intereses"
-                        checked={form.intereses.includes(interest)}
-                        disabled={!form.intereses.includes(interest) && form.intereses.length >= 3}
-                        onChange={(e) => {
-                          toggleInterest(interest, e.target.checked);
-                          if (fieldErrors.intereses) {
-                            setFieldErrors((prev) => ({ ...prev, intereses: "" }));
-                          }
-                        }}
-                        className="mt-0.5 h-5 w-9 shrink-0 cursor-pointer appearance-none rounded-full border border-white/35 bg-slate-950/70 transition before:block before:h-4 before:w-4 before:translate-x-[1px] before:translate-y-[1px] before:rounded-full before:bg-white/80 before:content-[''] checked:border-[#2dd4bf] checked:bg-[#2dd4bf]/30 checked:before:translate-x-[17px] checked:before:bg-[#2dd4bf] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]"
-                      />
-                      <span className="transition group-hover:text-white">{interest}</span>
+                <div className="grid items-start gap-4 lg:grid-cols-2">
+                  <div className="phone-field grid gap-2">
+                    <label htmlFor="telefono-pais" className="field-label">
+                      Teléfono
                     </label>
-                  ))}
+                    <div className="phone-grid grid gap-2 sm:grid-cols-[140px_1fr]">
+                      <div className="relative">
+                        <select
+                          id="telefono-pais"
+                          name="telefonoPais"
+                          value={form.telefonoPais}
+                          onChange={(e) => onFieldChange("telefonoPais", e.target.value)}
+                          onBlur={() => onFieldBlur("telefonoPais")}
+                          aria-invalid={Boolean(fieldErrors.telefonoPais)}
+                          aria-describedby="telefono-help telefono-pais-error telefono-numero-error"
+                          className="field w-full appearance-none pr-9"
+                        >
+                          <option className="bg-[#0b1222] text-slate-100" value="">
+                            País
+                          </option>
+                          <option className="bg-[#0b1222] text-slate-100" value="+56">
+                            Chile (+56)
+                          </option>
+                          <option className="bg-[#0b1222] text-slate-100" value="+54">
+                            Argentina (+54)
+                          </option>
+                          <option className="bg-[#0b1222] text-slate-100" value="+57">
+                            Colombia (+57)
+                          </option>
+                          <option className="bg-[#0b1222] text-slate-100" value="+51">
+                            Perú (+51)
+                          </option>
+                          <option className="bg-[#0b1222] text-slate-100" value="+52">
+                            México (+52)
+                          </option>
+                          <option className="bg-[#0b1222] text-slate-100" value="+1">
+                            EE.UU./Canadá (+1)
+                          </option>
+                          <option className="bg-[#0b1222] text-slate-100" value="+34">
+                            España (+34)
+                          </option>
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                      </div>
+
+                      <input
+                        id="telefono-numero"
+                        name="telefonoNumero"
+                        type="tel"
+                        value={form.telefonoNumero}
+                        onChange={(e) => onFieldChange("telefonoNumero", e.target.value)}
+                        onBlur={() => onFieldBlur("telefonoNumero")}
+                        placeholder="9 1234 5678"
+                        aria-invalid={Boolean(fieldErrors.telefonoNumero)}
+                        aria-describedby="telefono-help telefono-pais-error telefono-numero-error"
+                        className="field"
+                      />
+                    </div>
+
+                    {fieldErrors.telefonoPais ? (
+                      <p id="telefono-pais-error" className="text-xs text-rose-300">
+                        {fieldErrors.telefonoPais}
+                      </p>
+                    ) : null}
+                    {fieldErrors.telefonoNumero ? (
+                      <p id="telefono-numero-error" className="text-xs text-rose-300">
+                        {fieldErrors.telefonoNumero}
+                      </p>
+                    ) : null}
+                    {!fieldErrors.telefonoPais && !fieldErrors.telefonoNumero ? (
+                      <p id="telefono-help" className="text-xs text-slate-400">
+                        Opcional. Si lo dejas, usa el formato país + número.
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div className="grid gap-2 self-start">
+                    <label htmlFor="tamano" className="field-label">
+                      Tamaño del laboratorio / equipo
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="tamano"
+                        name="tamano"
+                        value={form.tamano}
+                        onChange={(e) => setForm((prev) => ({ ...prev, tamano: e.target.value as LabSize }))}
+                        className="field w-full appearance-none border-white/25 bg-gradient-to-b from-white/10 to-white/[0.03] pr-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                      >
+                        <option className="bg-[#0b1222] text-slate-100" value="">
+                          Selecciona
+                        </option>
+                        <option className="bg-[#0b1222] text-slate-100" value="1–3 personas">
+                          1–3 personas
+                        </option>
+                        <option className="bg-[#0b1222] text-slate-100" value="4–10 personas">
+                          4–10 personas
+                        </option>
+                        <option className="bg-[#0b1222] text-slate-100" value="11+ personas">
+                          11+ personas
+                        </option>
+                      </select>
+                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                    </div>
+                  </div>
+
+                  <fieldset className="lg:col-span-2">
+                    <legend className="mb-4 block text-lg font-semibold text-white">
+                      Intereses / funcionalidades
+                      <span className="mt-1 block text-sm font-medium text-slate-300">(opcional, máximo 3)</span>
+                    </legend>
+                    <div className="interest-grid grid gap-2 sm:grid-cols-2">
+                      {INTERESES.map((interest) => (
+                        <label
+                          key={interest}
+                          className={`group flex items-start gap-3 rounded-xl border p-3 text-sm transition duration-300 ${
+                            form.intereses.includes(interest)
+                              ? "border-[#2dd4bf]/70 bg-[#2dd4bf]/12 text-white shadow-[0_10px_30px_-18px_rgba(45,212,191,0.7)]"
+                              : "border-white/15 bg-white/[0.03] text-slate-200 hover:border-[#2dd4bf]/55 hover:bg-white/[0.07]"
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            name="intereses"
+                            checked={form.intereses.includes(interest)}
+                            disabled={!form.intereses.includes(interest) && form.intereses.length >= 3}
+                            onChange={(e) => toggleInterest(interest, e.target.checked)}
+                            className="mt-0.5 h-5 w-9 shrink-0 cursor-pointer appearance-none rounded-full border border-white/35 bg-slate-950/70 transition before:block before:h-4 before:w-4 before:translate-x-[1px] before:translate-y-[1px] before:rounded-full before:bg-white/80 before:content-[''] checked:border-[#2dd4bf] checked:bg-[#2dd4bf]/30 checked:before:translate-x-[17px] checked:before:bg-[#2dd4bf] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-offset-2 focus-visible:ring-offset-[#070c19]"
+                          />
+                          <span className="transition group-hover:text-white">{interest}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
                 </div>
-                {fieldErrors.intereses && <p className="mt-2 text-xs text-rose-300">{fieldErrors.intereses}</p>}
-              </fieldset>
+              </section>
 
               <input type="hidden" name="checklist" value={form.checklist ? "true" : "false"} />
 
-              {formError && <p className="text-sm text-rose-300">{formError}</p>}
-              {submitted && <p className="text-sm text-emerald-300">Gracias. Te agregamos a la lista de espera de Comelu.</p>}
+              {formError ? <p className="text-sm text-rose-300">{formError}</p> : null}
+              {submitted ? (
+                <p className="text-sm text-emerald-300">
+                  Te contactaremos cuando haya novedades relevantes, primeros accesos o instancias de validación del
+                  producto.
+                </p>
+              ) : null}
 
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center justify-center gap-3">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`inline-flex w-full items-center justify-center disabled:cursor-not-allowed disabled:opacity-75 sm:w-auto ${primaryButton}`}
+                  className={`w-full disabled:cursor-not-allowed disabled:opacity-75 sm:w-auto ${primaryButton}`}
                 >
                   <Send className="mr-2 h-4 w-4" />
-                  {isSubmitting ? "Enviando..." : "Unirme a la lista de espera"}
+                  {isSubmitting ? "Enviando..." : "Quiero unirme a la lista de espera"}
                 </button>
-                <p className="text-sm text-slate-400">Sin spam. Solo te contactamos para el piloto/lanzamiento.</p>
+                <p className="text-sm text-slate-400">
+                  Te contactaremos cuando haya novedades relevantes, primeros accesos o instancias de validación del
+                  producto.
+                </p>
               </div>
             </form>
           </div>
         </section>
 
-        <section id="faq" className="section-block" data-reveal>
-          <h2 className="section-title" data-reveal data-delay={80}>
-            FAQ
-          </h2>
+        <section id="faq" className="section-block scroll-mt-28" data-reveal>
+          <SectionIntro
+            title="Preguntas frecuentes sobre Comelu"
+            description="Respuestas breves para entender el foco del software para laboratorios dentales y cómo avanza esta primera versión."
+          />
           <div className="mt-6 space-y-3">
-            {FAQ.map((item, index) => {
+            {FAQ_ITEMS.map((item, index) => {
               const isOpen = faqOpenIndex === index;
               const buttonId = `faq-button-${index}`;
               const panelId = `faq-panel-${index}`;
@@ -957,7 +1280,7 @@ function App() {
                   key={item.q}
                   className="interactive-card overflow-hidden rounded-xl border border-white/15 bg-white/[0.04] backdrop-blur-sm transition hover:bg-white/[0.06]"
                   data-reveal
-                  data-delay={index * 80}
+                  data-delay={index * 70}
                 >
                   <h3>
                     <button
@@ -972,8 +1295,14 @@ function App() {
                       <ChevronDown className={`h-4 w-4 text-slate-400 transition ${isOpen ? "rotate-180" : ""}`} />
                     </button>
                   </h3>
-                  <div id={panelId} role="region" aria-labelledby={buttonId} hidden={!isOpen} className="border-t border-white/10 px-5 py-4 text-sm text-slate-300">
-                    {item.a}
+                  <div
+                    id={panelId}
+                    role="region"
+                    aria-labelledby={buttonId}
+                    aria-hidden={!isOpen}
+                    className={`faq-panel text-sm text-slate-300 ${isOpen ? "is-open" : ""}`}
+                  >
+                    <div className="faq-panel-inner border-t border-white/10 px-5 py-4">{item.a}</div>
                   </div>
                 </article>
               );
@@ -983,19 +1312,20 @@ function App() {
       </main>
 
       <footer className="mt-16 border-t border-white/10 bg-[#060b16]/70">
-        <div className="mx-auto flex w-full max-w-[1160px] flex-col gap-4 px-4 py-8 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+        <div className="mx-auto flex w-full max-w-[1160px] flex-col gap-6 px-4 py-8 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
           <div>
             <p className="text-sm font-semibold text-white">Comelu</p>
-            <p className="text-sm text-slate-400">© {year} Comelu. Todos los derechos reservados.</p>
+            <p className="mt-1 text-sm text-slate-400">Comelu — Software para gestión de laboratorios dentales</p>
+            <p className="mt-1 text-sm text-slate-500">© {year} Comelu. Todos los derechos reservados.</p>
           </div>
           <div className="flex flex-wrap items-center gap-4 text-sm text-slate-400">
-            <a href="#" className="transition hover:text-white">
-              Privacidad
-            </a>
-            <a href="mailto:contacto@comelu.cl" className="transition hover:text-white">
-              Contacto
-            </a>
-            <button type="button" onClick={onWaitlistClick} className="font-semibold text-slate-200 transition hover:text-[#64ffe9]">
+            <button type="button" onClick={onHowItWorksClick} className="transition hover:text-white">
+              Cómo funciona
+            </button>
+            <button type="button" onClick={() => scrollTo("faq")} className="transition hover:text-white">
+              FAQ
+            </button>
+            <button type="button" onClick={onWaitlistClick} className="transition hover:text-white">
               Lista de espera
             </button>
           </div>
