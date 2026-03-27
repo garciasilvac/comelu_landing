@@ -13,6 +13,12 @@ import {
   Workflow,
   X,
 } from "lucide-react";
+import heroIllustration from "./assets/illustrations/hero.png";
+import retrabajosIllustration from "./assets/illustrations/retrabajos.jpg";
+import clinicEquipmentPhoto from "./assets/photos/clinic-equipment.jpg";
+import clinicTeamPhoto from "./assets/photos/clinic-team.jpg";
+import dentalModelPhoto from "./assets/photos/dental-model.jpg";
+import labProsthesisPhoto from "./assets/photos/lab-prosthesis.jpg";
 
 type Role =
   | ""
@@ -55,6 +61,31 @@ type FieldErrors = {
 };
 
 type InlineValidatableField = "nombre" | "email" | "telefonoPais" | "telefonoNumero";
+type VisualCard = {
+  image: string;
+  alt: string;
+  eyebrow?: string;
+  detail?: string;
+  objectPosition?: string;
+};
+type ProblemCard = VisualCard & {
+  title: string;
+  description: string;
+  eyebrow: string;
+  detail: string;
+};
+type AudienceBlock = VisualCard & {
+  title: string;
+  description: string;
+  icon: typeof FlaskConical;
+  eyebrow: string;
+};
+type HowItWorksStep = VisualCard & {
+  step: string;
+  title: string;
+  description: string;
+  detail: string;
+};
 
 const NAV_LINKS = [
   { id: "como-funciona", label: "Cómo funciona" },
@@ -70,94 +101,131 @@ const HERO_BULLETS = [
   "Pagos, saldos y comprobantes vinculados al trabajo",
 ] as const;
 
-const PROBLEM_CARDS = [
+const PROBLEM_CARDS: readonly ProblemCard[] = [
   {
     title: "Información incompleta al iniciar una orden de trabajo dental",
     description:
       "Faltan fotos, indicaciones, escaneos o detalles clínicos, y el caso parte con vacíos que después generan correcciones y retrasos.",
-    placeholder: "Placeholder problema 1: caso iniciado con datos faltantes",
+    image: retrabajosIllustration,
+    alt: "Ilustración de un técnico dental revisando un caso con dudas y papeles sobre la mesa.",
+    eyebrow: "Ingreso incompleto",
+    detail: "Casos que parten con vacíos y después obligan a rehacer seguimiento.",
   },
   {
     title: "Archivos del caso repartidos entre WhatsApp, correo y teléfono",
     description:
       "Las imágenes, documentos y mensajes quedan dispersos y después cuesta saber qué corresponde realmente a cada trabajo.",
-    placeholder: "Placeholder problema 2: múltiples canales desordenados",
+    image: clinicEquipmentPhoto,
+    alt: "Equipo clínico dental en primer plano con fondo desenfocado.",
+    eyebrow: "Información dispersa",
+    detail: "Cuando el caso vive en varios canales, nadie ve el historial completo.",
+    objectPosition: "center 60%",
   },
   {
     title: "Poca claridad sobre el estado del trabajo protésico",
     description:
       "Hay casos urgentes, atrasados o en producción, pero no siempre está claro en qué etapa va cada uno ni quién lo tiene asignado.",
-    placeholder: "Placeholder problema 3: tablero o flujo de estados",
+    image: heroIllustration,
+    alt: "Mockup del software mostrando estados, casos y métricas dentales.",
+    eyebrow: "Seguimiento en curso",
+    detail: "Una vista clara de estados evita perseguir el avance por mensajes.",
   },
   {
     title: "Pagos y comprobantes sin seguimiento simple",
     description:
       "Después cuesta revisar qué se pagó, qué falta por cobrar y qué comprobante corresponde a cada orden.",
-    placeholder: "Placeholder problema 4: saldo, comprobante o cobro vinculado al caso",
+    image: dentalModelPhoto,
+    alt: "Modelo dental montado sobre equipo de laboratorio.",
+    eyebrow: "Cierre del caso",
+    detail: "Cobros, saldos y comprobantes atados al mismo trabajo.",
+    objectPosition: "center 42%",
   },
 ] as const;
 
-const AUDIENCE_BLOCKS = [
+const AUDIENCE_BLOCKS: readonly AudienceBlock[] = [
   {
     title: "Laboratorios dentales",
     description:
       "Para gestionar órdenes de trabajo, archivos, estados y pagos del laboratorio dental desde un solo lugar.",
     icon: FlaskConical,
-    placeholder: "Placeholder cliente 1: laboratorio dental",
+    image: labProsthesisPhoto,
+    alt: "Manos trabajando una prótesis dental en laboratorio.",
+    eyebrow: "Producción diaria",
   },
   {
     title: "Laboratoristas y supervisores",
     description:
       "Para saber qué trabajo entró, en qué etapa va cada caso y qué prioridad tiene.",
     icon: Workflow,
-    placeholder: "Placeholder cliente 2: laboratorista o supervisor",
+    image: heroIllustration,
+    alt: "Interfaz de Comelu con lista de casos y seguimiento.",
+    eyebrow: "Trazabilidad operativa",
   },
   {
     title: "Clínicas dentales con laboratorio propio",
     description:
       "Para organizar la producción interna de soluciones protésicas con más trazabilidad y menos seguimiento manual.",
     icon: Stethoscope,
-    placeholder: "Placeholder cliente 3: clínica con laboratorio propio",
+    image: clinicTeamPhoto,
+    alt: "Profesional de clínica dental en un espacio clínico luminoso.",
+    eyebrow: "Coordinación interna",
+    objectPosition: "center 28%",
   },
   {
     title: "Dentistas y técnicos dentales",
     description:
       "También puede ser relevante para dentistas y técnicos odontológicos que trabajan coordinadamente con laboratorios y quieren seguir de cerca una gestión más ordenada del caso.",
     icon: Files,
-    placeholder: "Placeholder cliente 4: dentista o técnico dental",
+    image: dentalModelPhoto,
+    alt: "Modelo protésico dental preparado para revisión técnica.",
+    eyebrow: "Visibilidad compartida",
+    objectPosition: "center 36%",
   },
 ] as const;
 
-const HOW_IT_WORKS = [
+const HOW_IT_WORKS: readonly HowItWorksStep[] = [
   {
     step: "1",
     title: "Recibes la orden de trabajo dental",
     description: "Registras el caso con la información principal para comenzar.",
-    placeholder: "Placeholder paso 1: formulario o alta de caso",
+    image: heroIllustration,
+    alt: "Vista del software con ingreso de casos y órdenes dentales.",
+    detail: "Se crea el caso con lo esencial y todos parten desde el mismo contexto.",
   },
   {
     step: "2",
     title: "Adjuntas archivos, fotos, escaneos e indicaciones",
     description: "Todo queda asociado al mismo trabajo.",
-    placeholder: "Placeholder paso 2: archivos adjuntos o documentos",
+    image: clinicEquipmentPhoto,
+    alt: "Equipo dental fotografiado en un entorno clínico ordenado.",
+    detail: "Fotos, escaneos e indicaciones se agrupan en una sola ficha.",
+    objectPosition: "center 58%",
   },
   {
     step: "3",
     title: "Organizas el caso por estado o etapa",
     description: "El equipo puede ver en qué va cada trabajo y qué sigue.",
-    placeholder: "Placeholder paso 3: workflow o estados",
+    image: labProsthesisPhoto,
+    alt: "Trabajo de precisión sobre una prótesis dental.",
+    detail: "Cada caso avanza con una etapa visible y sin ambigüedad operativa.",
   },
   {
     step: "4",
     title: "Haces seguimiento del trabajo en curso",
     description: "Menos mensajes sueltos y más visibilidad operativa.",
-    placeholder: "Placeholder paso 4: listado o tablero de seguimiento",
+    image: dentalModelPhoto,
+    alt: "Modelo dental en equipo de laboratorio para revisión.",
+    detail: "La operación diaria se sigue en un flujo común para todo el equipo.",
+    objectPosition: "center 42%",
   },
   {
     step: "5",
     title: "Registras pago, saldo o comprobante",
     description: "El cierre del caso también queda ordenado.",
-    placeholder: "Placeholder paso 5: resumen de pago o saldo",
+    image: clinicTeamPhoto,
+    alt: "Profesional dental en clínica moderna.",
+    detail: "El cierre financiero queda vinculado al mismo historial del trabajo.",
+    objectPosition: "center 26%",
   },
 ] as const;
 
@@ -255,34 +323,34 @@ function SectionIntro({
   );
 }
 
-function PlaceholderVisual({
-  label,
+function EditorialVisual({
+  image,
+  alt,
+  eyebrow,
   title,
   detail,
   variant = "default",
+  objectPosition,
+  priority = false,
 }: {
-  label: string;
+  image: string;
+  alt: string;
+  eyebrow: string;
   title: string;
   detail: string;
   variant?: "default" | "hero" | "compact" | "audience";
+  objectPosition?: string;
+  priority?: boolean;
 }) {
   return (
-    <div
-      className={`placeholder-card placeholder-${variant}`}
-      role="img"
-      aria-label={label}
-      data-reveal
-      data-delay={120}
-    >
-      <p className="placeholder-label">{label}</p>
-      <p className="placeholder-title">{title}</p>
-      <p className="placeholder-detail">{detail}</p>
-      <div className="placeholder-lines" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-      </div>
-    </div>
+    <figure className={`editorial-visual editorial-${variant}`} data-reveal data-delay={120}>
+      <img src={image} alt={alt} className="editorial-image" style={{ objectPosition }} loading={priority ? "eager" : "lazy"} />
+      <figcaption className="editorial-caption">
+        <p className="editorial-eyebrow">{eyebrow}</p>
+        <p className="editorial-title">{title}</p>
+        <p className="editorial-detail">{detail}</p>
+      </figcaption>
+    </figure>
   );
 }
 
@@ -580,24 +648,24 @@ function App() {
       <div className="ambient ambient-b" aria-hidden="true" />
       <div className="ambient ambient-c" aria-hidden="true" />
 
-      <header className="sticky top-0 z-50 border-b border-slate-900/10 bg-[#edf5ff]/88 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#08111f]/72 backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-[1160px] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-          <a href="#" className="flex items-center gap-3 text-slate-950">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#0a1629] text-sm font-semibold text-[#8efaf0]">
+          <a href="#" className="flex items-center gap-3 text-white">
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#12243e] text-sm font-semibold text-[#8efaf0]">
               C
             </span>
             <span>
               <span className="block text-lg font-semibold tracking-tight">Comelu</span>
-              <span className="block text-xs text-slate-600">Software para laboratorios dentales en Chile</span>
+              <span className="block text-xs text-slate-400">Software para laboratorios dentales en Chile</span>
             </span>
           </a>
 
-          <nav className="hidden items-center gap-7 text-sm text-slate-700 lg:flex" aria-label="Navegación principal">
+          <nav className="hidden items-center gap-7 text-sm text-slate-300 lg:flex" aria-label="Navegación principal">
             {NAV_LINKS.map((link) => (
               <button
                 key={link.id}
                 type="button"
-                className="transition duration-300 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#109d8f] focus-visible:ring-offset-2 focus-visible:ring-offset-[#edf5ff]"
+                className="transition duration-300 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#109d8f] focus-visible:ring-offset-2 focus-visible:ring-offset-[#08111f]"
                 onClick={() => scrollTo(link.id)}
               >
                 {link.label}
@@ -613,7 +681,7 @@ function App() {
               type="button"
               aria-label="Abrir menú"
               aria-expanded={mobileMenuOpen}
-              className="inline-flex h-[46px] w-[46px] items-center justify-center rounded-lg border border-slate-900/10 bg-white/70 p-0 text-slate-900 transition hover:bg-white lg:hidden"
+              className="inline-flex h-[46px] w-[46px] items-center justify-center rounded-lg border border-white/10 bg-white/5 p-0 text-white transition hover:bg-white/10 lg:hidden"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -622,13 +690,13 @@ function App() {
         </div>
 
         {mobileMenuOpen ? (
-          <div className="border-t border-slate-900/10 bg-[#edf5ff]/95 px-4 py-3 lg:hidden">
+          <div className="border-t border-white/10 bg-[#08111f]/95 px-4 py-3 lg:hidden">
             <div className="mx-auto flex max-w-[1160px] flex-col gap-2">
               {NAV_LINKS.map((link) => (
                 <button
                   key={link.id}
                   type="button"
-                  className="rounded-md px-2 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-950/5"
+                  className="rounded-md px-2 py-2 text-left text-sm text-slate-300 transition hover:bg-white/5"
                   onClick={() => {
                     scrollTo(link.id);
                     setMobileMenuOpen(false);
@@ -646,31 +714,30 @@ function App() {
       </header>
 
       <main className="mx-auto w-full max-w-[1160px] px-4 pb-20 pt-10 sm:px-6 lg:px-8 lg:pt-16">
-        <section className="hero-panel panel-frame scroll-mt-28" data-reveal>
+        <section className="hero-panel hero-stage panel-frame scroll-mt-28" data-reveal>
           <div className="hero-grid">
             <div data-reveal data-delay={80}>
               <p
-                className="mb-4 inline-flex rounded-full border border-[#2dd4bf]/40 bg-[#2dd4bf]/12 px-3 py-1 text-xs font-semibold tracking-wide text-[#81fff2]"
+                className="mb-4 inline-flex rounded-full border border-[#2dd4bf]/40 bg-[#2dd4bf]/12 px-3 py-1 text-xs font-semibold tracking-[0.18em] text-[#81fff2]"
                 data-reveal
                 data-delay={120}
               >
                 Software para laboratorios dentales en Chile
               </p>
               <h1
-                className="max-w-4xl text-3xl font-semibold leading-tight text-white sm:text-4xl lg:text-5xl"
+                className="max-w-4xl text-4xl font-semibold leading-[0.96] text-white sm:text-5xl lg:text-6xl"
                 data-reveal
                 data-delay={160}
               >
-                Software para gestión de laboratorios dentales: órdenes, archivos, estados y pagos en un solo lugar
+                Ordena cada trabajo protésico con una sola vista del caso
               </h1>
               <p className="mt-5 max-w-3xl text-base text-slate-300 sm:text-lg" data-reveal data-delay={220}>
-                Comelu es un software fácil e intuitivo para laboratorios dentales, laboratoristas y clínicas dentales
-                con laboratorio propio. Ordena órdenes, archivos, estados y pagos sin depender de Excel, WhatsApp o
-                mensajes sueltos.
+                Comelu reúne órdenes de trabajo, archivos clínicos, estados y pagos en un flujo claro para
+                laboratorios dentales, laboratoristas y clínicas con laboratorio propio.
               </p>
               <p className="mt-4 max-w-3xl text-sm text-slate-400 sm:text-base" data-reveal data-delay={260}>
-                Pensado para la operación real del laboratorio dental en Chile: centraliza cada caso y da visibilidad
-                clara del trabajo en curso sin sumar complejidad innecesaria.
+                Pensado para la operación real del laboratorio dental en Chile: menos seguimiento manual, menos
+                retrabajos y más trazabilidad desde que entra el caso hasta que se cierra.
               </p>
 
               <ul className="mt-6 grid gap-3 text-sm text-slate-200 sm:text-base" data-reveal data-delay={300}>
@@ -682,7 +749,7 @@ function App() {
                 ))}
               </ul>
 
-              <div className="hero-cta mt-8 flex flex-wrap items-center justify-center gap-3">
+              <div className="hero-cta mt-8 flex flex-wrap items-center gap-3">
                 <button
                   type="button"
                   onClick={onWaitlistClick}
@@ -702,18 +769,26 @@ function App() {
                   Ver cómo funciona el software
                 </button>
               </div>
-              <p className="mt-3 text-center text-sm text-slate-400">
+              <p className="mt-4 text-sm text-slate-400">
                 Déjanos tus datos y te contactaremos cuando abramos los primeros accesos.
               </p>
             </div>
 
-            <aside className="glass-card floating-card space-y-4" data-reveal data-delay={140}>
-              <PlaceholderVisual
-                label="Placeholder hero principal: mockup del software para laboratorios dentales"
-                title="Hero principal"
-                detail="Espacio para mockup con órdenes de trabajo, casos activos, estado del caso, archivos y pago o saldo."
-                variant="hero"
-              />
+            <aside className="hero-visual-shell floating-card" data-reveal data-delay={140}>
+              <div className="hero-visual-card">
+                <div className="hero-visual-copy">
+                  <p className="editorial-eyebrow">Vista centralizada</p>
+                  <h2 className="font-serif-display text-2xl text-white">Una operación más visible para el laboratorio</h2>
+                  <p className="mt-3 max-w-sm text-sm leading-7 text-slate-300">
+                    El caso conserva contexto, archivos y estado sin depender de mensajes sueltos.
+                  </p>
+                </div>
+                <img
+                  src={heroIllustration}
+                  alt="Ilustración del producto Comelu mostrando órdenes, estados y métricas."
+                  className="hero-illustration"
+                />
+              </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="metric-row">
                   <span>Casos activos</span>
@@ -741,25 +816,28 @@ function App() {
             title="Qué problemas resuelve un software para laboratorio dental como Comelu"
             description="Muchos laboratorios dentales y clínicas con producción propia todavía gestionan órdenes, archivos, estados y cobros en varios canales al mismo tiempo. Eso genera atrasos, retrabajos y poca trazabilidad."
           />
-          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
             {PROBLEM_CARDS.map((item, index) => {
               return (
                 <article
                   key={item.title}
-                  className="glass-card interactive-card problem-card flex h-full flex-col"
+                  className="story-card interactive-card"
                   data-reveal
                   data-delay={index * 80}
                 >
-                  <div className="problem-card-visual">
-                    <PlaceholderVisual
-                      label={item.placeholder}
-                      title="Imagen pendiente"
-                      detail="Reemplazar con visual final del problema descrito."
-                      variant="compact"
-                    />
+                  <EditorialVisual
+                    image={item.image}
+                    alt={item.alt}
+                    eyebrow={item.eyebrow}
+                    title={item.title}
+                    detail={item.detail}
+                    variant="compact"
+                    objectPosition={item.objectPosition}
+                  />
+                  <div className="story-copy">
+                    <h3 className="problem-card-title text-lg font-semibold text-white">{item.title}</h3>
+                    <p className="problem-card-description mt-3 text-sm text-slate-300">{item.description}</p>
                   </div>
-                  <h3 className="problem-card-title mt-5 text-lg font-semibold text-white">{item.title}</h3>
-                  <p className="problem-card-description mt-3 text-sm text-slate-300">{item.description}</p>
                 </article>
               );
             })}
@@ -782,17 +860,20 @@ function App() {
               return (
                 <article
                   key={item.title}
-                  className="glass-card interactive-card flex h-full flex-col"
+                  className="audience-card interactive-card"
                   data-reveal
                   data-delay={index * 80}
                 >
-                  <PlaceholderVisual
-                    label={item.placeholder}
-                    title="Imagen del cliente potencial"
-                    detail="Reemplazar con visual editorial del perfil descrito."
+                  <EditorialVisual
+                    image={item.image}
+                    alt={item.alt}
+                    eyebrow={item.eyebrow}
+                    title={item.title}
+                    detail={item.description}
                     variant="audience"
+                    objectPosition={item.objectPosition}
                   />
-                  <div className="mt-5 flex items-start gap-4">
+                  <div className="mt-5 flex items-start gap-4 px-5 pb-5">
                     <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-white/5 text-[#8efaf0]">
                       <Icon className="h-5 w-5" />
                     </span>
@@ -865,11 +946,14 @@ function App() {
                       </div>
                       <div className="glass-card flex h-full items-center">
                         <div className="w-full">
-                          <PlaceholderVisual
-                            label={item.placeholder}
-                            title={`Mini visual ${item.step}`}
-                            detail="Reemplazar con visual final del flujo correspondiente."
+                          <EditorialVisual
+                            image={item.image}
+                            alt={item.alt}
+                            eyebrow={`Paso ${item.step}`}
+                            title={item.title}
+                            detail={item.detail}
                             variant="hero"
+                            objectPosition={item.objectPosition}
                           />
                         </div>
                       </div>
@@ -950,10 +1034,12 @@ function App() {
           />
           <div className="mt-6 grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
             <div data-reveal data-delay={80} className="h-full">
-              <PlaceholderVisual
-                label="Placeholder credibilidad o contexto de laboratorio"
-                title="Imagen de credibilidad"
-                detail="Espacio para entorno de laboratorio dental o composición entre interfaz y contexto real."
+              <EditorialVisual
+                image={labProsthesisPhoto}
+                alt="Trabajo técnico en una prótesis dental dentro de un laboratorio."
+                eyebrow="Base operativa real"
+                title="Diseñado para flujos concretos del laboratorio"
+                detail="La propuesta parte desde el caso, no desde funciones sueltas."
               />
             </div>
             <div data-reveal data-delay={120} className="glass-card flex h-full flex-col justify-center">
