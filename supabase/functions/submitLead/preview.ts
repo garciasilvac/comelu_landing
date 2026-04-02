@@ -7,10 +7,11 @@ const preview = buildLeadEmailTemplate({
     email: "carla.morales@biolabc.cl",
     telefonoPais: "+56",
     telefonoNumero: "987654321",
-    rol: "Jefa de laboratorio",
-    tamano: "11-25 personas",
-    dolor: "Nos cuesta mantener trazabilidad de muestras y estado de reactivos en tiempo real.",
-    intereses: ["Trazabilidad completa", "Alertas de stock", "Reportes operativos"],
+    rol: "Laboratorio dental",
+    tamano: "11+ personas",
+    intereses: ["Gestión de órdenes de trabajo", "Estados y seguimiento operativo", "Automatizaciones futuras"],
+    otraNecesidad:
+      "Nos gustaría centralizar mejor los requerimientos especiales de cada caso y detectar antes los cuellos de botella.",
     checklist: true,
   },
   metadata: {
