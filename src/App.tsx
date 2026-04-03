@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import problema1Illustration from "./assets/illustrations/Problema_1.jpeg";
 import problema2Illustration from "./assets/illustrations/Problema_2.png";
+import problema3Illustration from "./assets/illustrations/Problema_3b.jpeg";
+import problema4Illustration from "./assets/illustrations/Problema_4.jpeg";
 
 type Role =
   | ""
@@ -776,6 +778,10 @@ function App() {
                           ? problema1Illustration
                           : index === 1
                             ? problema2Illustration
+                            : index === 2
+                              ? problema3Illustration
+                              : index === 3
+                                ? problema4Illustration
                             : undefined
                       }
                     />
