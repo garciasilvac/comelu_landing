@@ -774,7 +774,7 @@ function App() {
           </div>
         </section>
 
-        <section className="section-block pb-10 scroll-mt-28 lg:pb-14" data-reveal>
+        <section className="section-block pb-14 scroll-mt-28 lg:pb-20" data-reveal>
           <SectionIntro
             title="Software para laboratorios dentales, laboratoristas y clínicas dentales con laboratorio propio"
             description="Comelu está pensado para equipos que producen, coordinan o supervisan trabajos protésicos dentales y necesitan una forma más ordenada de gestionar casos, archivos y pagos."

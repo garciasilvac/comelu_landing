@@ -113,7 +113,8 @@ footer {
 }
 
 .section-block {
-  padding-top: 4rem;
+  padding-top: 5.5rem;
+  padding-bottom: 1rem;
 }
 
 .section-title {
@@ -139,6 +140,11 @@ footer {
 }
 
 @media (max-width: 639px) {
+  .section-block {
+    padding-top: 4.5rem;
+    padding-bottom: 0.75rem;
+  }
+
   .section-title {
     text-align: center;
   }
