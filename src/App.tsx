@@ -41,6 +41,7 @@ type FormState = {
   rol: Role;
   tamano: LabSize;
   intereses: Interest[];
+  otraNecesidad: string;
   checklist: boolean;
 };
 
@@ -220,6 +221,7 @@ const initialForm: FormState = {
   rol: "",
   tamano: "",
   intereses: [],
+  otraNecesidad: "",
   checklist: false,
 };
 
@@ -515,6 +517,7 @@ function App() {
       rol: form.rol,
       tamano: form.tamano,
       intereses: form.intereses,
+      otraNecesidad: form.otraNecesidad.trim(),
       checklist: form.checklist,
     };
 
@@ -1233,6 +1236,23 @@ function App() {
                       ))}
                     </div>
                   </fieldset>
+
+                  <div className="grid gap-2 lg:col-span-2">
+                    <label htmlFor="otra-necesidad" className="field-label">
+                      ¿Hay alguna otra necesidad que te gustaría que Comelu resolviera?
+                    </label>
+                    <textarea
+                      id="otra-necesidad"
+                      name="otraNecesidad"
+                      rows={5}
+                      maxLength={2000}
+                      value={form.otraNecesidad}
+                      onChange={(e) => setForm((prev) => ({ ...prev, otraNecesidad: e.target.value }))}
+                      placeholder="Cuéntanos cualquier necesidad, problema o idea que te gustaría resolver con la app"
+                      className="field min-h-[140px] resize-y"
+                    />
+                    <p className="text-xs text-slate-400">Opcional. Puedes contarnos cualquier idea o problema adicional.</p>
+                  </div>
                 </div>
               </section>
 

@@ -6,6 +6,7 @@ export type LeadEmailPayload = {
   rol: string;
   tamano: string;
   intereses: string[];
+  otraNecesidad: string;
   checklist: boolean;
 };
 
@@ -117,6 +118,7 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
   const role = toTextValue(payload.rol, 80);
   const size = toTextValue(payload.tamano, 80);
   const interestLabels = payload.intereses.map((item) => mapInterestLabel(item)).filter(Boolean);
+  const otherNeed = toTextValue(payload.otraNecesidad, 2000);
   const sentAt = formatSentAt(metadata.timestamp);
 
   const subject = `Comelu: registro confirmado — ${name}`;
@@ -127,6 +129,7 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
     ["Rol", toHtmlValue(role, 80)],
     ["Tamaño del laboratorio", toHtmlValue(size, 80)],
     ["¿Qué te interesa más?", renderInterestsHtml(interestLabels)],
+    ["Otra necesidad que te gustaría resolver", toHtmlValue(otherNeed, 2000)],
   ]
     .map(([label, value]) => renderSummaryRow(label, value))
     .join("");
@@ -195,6 +198,7 @@ export const buildLeadEmailTemplate = ({ payload, metadata }: LeadEmailInput) =>
     `- Tamaño del laboratorio: ${size}`,
     "- ¿Qué te interesa más?:",
     renderInterestsText(interestLabels),
+    `- Otra necesidad que te gustaría resolver: ${otherNeed}`,
     "",
     `Fecha y hora de envío: ${sentAt}`,
     "https://www.comelu.cl",

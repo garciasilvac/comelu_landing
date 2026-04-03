@@ -9,6 +9,7 @@ type LeadPayload = {
   rol: string;
   tamano: string;
   intereses: string[];
+  otraNecesidad: string;
   checklist: boolean;
   website?: string;
   hp?: string;
@@ -168,6 +169,7 @@ const validatePayload = (input: unknown): { valid: true; payload: LeadPayload } 
     intereses: Array.isArray(candidate.intereses)
       ? candidate.intereses.map((item) => asTrimmedString(item)).filter(Boolean)
       : [],
+    otraNecesidad: asTrimmedString(candidate.otraNecesidad),
     checklist: typeof candidate.checklist === "boolean" ? candidate.checklist : false,
     website: asTrimmedString(candidate.website),
     hp: asTrimmedString(candidate.hp),
@@ -190,6 +192,10 @@ const validatePayload = (input: unknown): { valid: true; payload: LeadPayload } 
   if (payload.rol.length > 40) return { valid: false, message: "rol excede el máximo permitido." };
 
   if (payload.tamano.length > 20) return { valid: false, message: "tamano excede el máximo permitido." };
+
+  if (payload.otraNecesidad.length > 2000) {
+    return { valid: false, message: "otraNecesidad excede el máximo permitido." };
+  }
 
   if (payload.telefonoPais && !payload.telefonoNumero) {
     return { valid: false, message: "telefonoNumero es obligatorio cuando se informa telefonoPais." };
@@ -265,6 +271,7 @@ Deno.serve(async (request) => {
       rol: payload.rol,
       tamano: payload.tamano,
       intereses: payload.intereses,
+      otra_necesidad: payload.otraNecesidad,
       checklist: payload.checklist,
       market,
       source,
