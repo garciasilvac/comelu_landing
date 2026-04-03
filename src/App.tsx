@@ -17,6 +17,7 @@ import problema1Illustration from "./assets/illustrations/Problema_1.jpeg";
 import problema2Illustration from "./assets/illustrations/Problema_2.png";
 import problema3Illustration from "./assets/illustrations/Problema_3b.jpeg";
 import problema4Illustration from "./assets/illustrations/Problema_4.jpeg";
+import cliente1Illustration from "./assets/illustrations/Cliente_1.jpeg";
 
 type Role =
   | ""
@@ -875,7 +876,7 @@ function App() {
             title="Software para laboratorios dentales, laboratoristas y clínicas dentales con laboratorio propio"
             description="Comelu está pensado para equipos que producen, coordinan o supervisan trabajos protésicos dentales y necesitan una forma más ordenada de gestionar casos, archivos y pagos."
           />
-          <div className="audience-grid mt-8 grid gap-4 md:grid-cols-2">
+          <div className="mt-8 grid gap-5 lg:grid-cols-3">
             {AUDIENCE_BLOCKS.map((item, index) => {
               const Icon = item.icon;
               return (
@@ -890,15 +891,16 @@ function App() {
                     title="Imagen del cliente potencial"
                     detail="Reemplazar con visual editorial del perfil descrito."
                     variant="audience"
+                    imageSrc={index === 0 ? cliente1Illustration : undefined}
                   />
-                  <div className="mt-5 flex items-start gap-4">
-                    <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white text-[#109d8f]">
+                  <div className="mt-4 flex items-start gap-3">
+                    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white text-[#109d8f]">
                       <Icon className="h-5 w-5" />
                     </span>
                     <div>
-                      <h3 className="text-lg font-semibold text-slate-950">{item.title}</h3>
-                      <p className="mt-2 text-sm font-medium text-slate-700">{item.description}</p>
-                      <p className="mt-2 text-sm text-slate-600">{item.detail}</p>
+                      <h3 className="text-base font-semibold text-slate-950 lg:text-lg">{item.title}</h3>
+                      <p className="mt-1.5 text-sm font-medium leading-6 text-slate-700">{item.description}</p>
+                      <p className="mt-2 text-sm leading-6 text-slate-600">{item.detail}</p>
                     </div>
                   </div>
                 </article>
