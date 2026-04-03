@@ -14,6 +14,7 @@ import {
   X,
 } from "lucide-react";
 import problema1Illustration from "./assets/illustrations/Problema_1.jpeg";
+import problema2Illustration from "./assets/illustrations/Problema_2.png";
 
 type Role =
   | ""
@@ -770,7 +771,13 @@ function App() {
                       title="Imagen pendiente"
                       detail="Reemplazar con visual final del problema descrito."
                       variant="compact"
-                      imageSrc={index === 0 ? problema1Illustration : undefined}
+                      imageSrc={
+                        index === 0
+                          ? problema1Illustration
+                          : index === 1
+                            ? problema2Illustration
+                            : undefined
+                      }
                     />
                   </div>
                   <h3 className="problem-card-title mt-5 text-lg font-semibold text-slate-950">{item.title}</h3>
