@@ -388,6 +388,26 @@ footer {
   line-height: 1.65;
 }
 
+.placeholder-specs {
+  margin-top: 0.95rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.placeholder-specs span {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(16, 157, 143, 0.18);
+  background: rgba(16, 157, 143, 0.08);
+  padding: 0.3rem 0.55rem;
+  color: #0f172a;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
 .placeholder-lines {
   margin-top: 1rem;
   display: grid;
@@ -418,6 +438,12 @@ footer {
 
 .dark-card .placeholder-detail {
   color: #b7c6d9;
+}
+
+.dark-card .placeholder-specs span {
+  border-color: rgba(129, 255, 242, 0.22);
+  background: rgba(129, 255, 242, 0.08);
+  color: #e2fdfa;
 }
 
 .dark-card .placeholder-lines span {

@@ -60,6 +60,7 @@ type FieldErrors = {
 };
 
 type InlineValidatableField = "nombre" | "email" | "telefonoPais" | "telefonoNumero";
+type PlaceholderVariant = "default" | "hero" | "compact" | "audience";
 
 const NAV_LINKS = [
   { id: "como-funciona", label: "Cómo funciona" },
@@ -271,9 +272,75 @@ function PlaceholderVisual({
   label: string;
   title: string;
   detail: string;
-  variant?: "default" | "hero" | "compact" | "audience";
+  variant?: PlaceholderVariant;
   imageSrc?: string;
 }) {
+  const getPlaceholderSpecs = (currentLabel: string, currentVariant: PlaceholderVariant) => {
+    if (currentLabel.includes("hero principal")) {
+      return {
+        ratio: "4:5",
+        desktop: "1200 x 1500 px",
+        mobile: "960 x 1200 px",
+      };
+    }
+
+    if (currentLabel.includes("Placeholder paso")) {
+      return {
+        ratio: "5:4",
+        desktop: "1600 x 1280 px",
+        mobile: "1200 x 960 px",
+      };
+    }
+
+    if (currentLabel.includes("Placeholder cliente")) {
+      return {
+        ratio: "16:9",
+        desktop: "1600 x 900 px",
+        mobile: "1200 x 900 px",
+      };
+    }
+
+    if (currentLabel.includes("credibilidad")) {
+      return {
+        ratio: "4:3",
+        desktop: "1600 x 1200 px",
+        mobile: "1200 x 900 px",
+      };
+    }
+
+    if (currentVariant === "compact") {
+      return {
+        ratio: "4:3",
+        desktop: "1200 x 900 px",
+        mobile: "960 x 720 px",
+      };
+    }
+
+    if (currentVariant === "audience") {
+      return {
+        ratio: "16:9",
+        desktop: "1600 x 900 px",
+        mobile: "1200 x 900 px",
+      };
+    }
+
+    if (currentVariant === "hero") {
+      return {
+        ratio: "5:4",
+        desktop: "1600 x 1280 px",
+        mobile: "1200 x 960 px",
+      };
+    }
+
+    return {
+      ratio: "4:3",
+      desktop: "1600 x 1200 px",
+      mobile: "1200 x 900 px",
+    };
+  };
+
+  const specs = getPlaceholderSpecs(label, variant);
+
   return (
     <div
       className={`placeholder-card placeholder-${variant} ${imageSrc ? "image-placeholder" : ""}`}
@@ -287,6 +354,11 @@ function PlaceholderVisual({
           <p className="placeholder-label">{label}</p>
           <p className="placeholder-title">{title}</p>
           <p className="placeholder-detail">{detail}</p>
+          <div className="placeholder-specs" aria-label="Especificaciones recomendadas de imagen">
+            <span>Ratio {specs.ratio}</span>
+            <span>Desktop {specs.desktop}</span>
+            <span>Mobile {specs.mobile}</span>
+          </div>
           <div className="placeholder-lines" aria-hidden="true">
             <span />
             <span />
