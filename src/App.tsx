@@ -13,6 +13,11 @@ import {
   Workflow,
   X,
 } from "lucide-react";
+import problema1Illustration from "./assets/illustrations/Problema_1.jpeg";
+import problema2Illustration from "./assets/illustrations/Problema_2.png";
+import problema3Illustration from "./assets/illustrations/Problema_3b.jpeg";
+import problema4Illustration from "./assets/illustrations/Problema_4.jpeg";
+import cliente1Illustration from "./assets/illustrations/Cliente_1.jpeg";
 
 type Role =
   | ""
@@ -56,6 +61,7 @@ type FieldErrors = {
 };
 
 type InlineValidatableField = "nombre" | "email" | "telefonoPais" | "telefonoNumero";
+type PlaceholderVariant = "default" | "hero" | "compact" | "audience";
 
 const NAV_LINKS = [
   { id: "como-funciona", label: "Cómo funciona" },
@@ -102,30 +108,29 @@ const AUDIENCE_BLOCKS = [
   {
     title: "Laboratorios dentales",
     description:
-      "Para gestionar órdenes de trabajo, archivos, estados y pagos del laboratorio dental desde un solo lugar.",
+      "Para laboratorios con equipo y flujo de trabajo distribuido",
+    detail:
+      "Si el trabajo pasa por distintas manos, necesitas claridad sobre tareas, responsables, estados y comunicación. Comelu ayuda a coordinar mejor la operación diaria sin perder trazabilidad.",
     icon: FlaskConical,
     placeholder: "Placeholder cliente 1: laboratorio dental",
   },
   {
-    title: "Laboratoristas y supervisores",
+    title: "Laboratorista independiente",
     description:
-      "Para saber qué trabajo entró, en qué etapa va cada caso y qué prioridad tiene.",
+      "Para quienes hacen todo al mismo tiempo",
     icon: Workflow,
-    placeholder: "Placeholder cliente 2: laboratorista o supervisor",
+    detail:
+      "Cuando una sola persona vende, produce, coordina y cobra, cada minuto importa. Comelu ayuda a centralizar la operación para trabajar con más orden, menos fricción y mejor seguimiento.",
+    placeholder: "Placeholder cliente 2: laboratorista independiente",
   },
   {
-    title: "Clínicas dentales con laboratorio propio",
+    title: "Clínica con laboratorio",
     description:
-      "Para organizar la producción interna de soluciones protésicas con más trazabilidad y menos seguimiento manual.",
+      "Para clínicas que quieren controlar todo el proceso",
     icon: Stethoscope,
-    placeholder: "Placeholder cliente 3: clínica con laboratorio propio",
-  },
-  {
-    title: "Dentistas y técnicos dentales",
-    description:
-      "También puede ser relevante para dentistas y técnicos odontológicos que trabajan coordinadamente con laboratorios y quieren seguir de cerca una gestión más ordenada del caso.",
-    icon: Files,
-    placeholder: "Placeholder cliente 4: dentista o técnico dental",
+    detail:
+      "Desde la solicitud hasta la confección de la prótesis, tener el proceso conectado permite responder más rápido y trabajar con mayor control. Comelu ayuda a integrar esa relación de forma simple y visible.",
+    placeholder: "Placeholder cliente 3: clínica con laboratorio",
   },
 ] as const;
 
@@ -262,28 +267,105 @@ function PlaceholderVisual({
   title,
   detail,
   variant = "default",
+  imageSrc,
 }: {
   label: string;
   title: string;
   detail: string;
-  variant?: "default" | "hero" | "compact" | "audience";
+  variant?: PlaceholderVariant;
+  imageSrc?: string;
 }) {
+  const getPlaceholderSpecs = (currentLabel: string, currentVariant: PlaceholderVariant) => {
+    if (currentLabel.includes("hero principal")) {
+      return {
+        ratio: "4:5",
+        desktop: "1200 x 1500 px",
+        mobile: "960 x 1200 px",
+      };
+    }
+
+    if (currentLabel.includes("Placeholder paso")) {
+      return {
+        ratio: "5:4",
+        desktop: "1600 x 1280 px",
+        mobile: "1200 x 960 px",
+      };
+    }
+
+    if (currentLabel.includes("Placeholder cliente")) {
+      return {
+        ratio: "16:9",
+        desktop: "1600 x 900 px",
+        mobile: "1200 x 900 px",
+      };
+    }
+
+    if (currentLabel.includes("credibilidad")) {
+      return {
+        ratio: "4:3",
+        desktop: "1600 x 1200 px",
+        mobile: "1200 x 900 px",
+      };
+    }
+
+    if (currentVariant === "compact") {
+      return {
+        ratio: "4:3",
+        desktop: "1200 x 900 px",
+        mobile: "960 x 720 px",
+      };
+    }
+
+    if (currentVariant === "audience") {
+      return {
+        ratio: "16:9",
+        desktop: "1600 x 900 px",
+        mobile: "1200 x 900 px",
+      };
+    }
+
+    if (currentVariant === "hero") {
+      return {
+        ratio: "5:4",
+        desktop: "1600 x 1280 px",
+        mobile: "1200 x 960 px",
+      };
+    }
+
+    return {
+      ratio: "4:3",
+      desktop: "1600 x 1200 px",
+      mobile: "1200 x 900 px",
+    };
+  };
+
+  const specs = getPlaceholderSpecs(label, variant);
+
   return (
     <div
-      className={`placeholder-card placeholder-${variant}`}
-      role="img"
-      aria-label={label}
+      className={`placeholder-card placeholder-${variant} ${imageSrc ? "image-placeholder" : ""}`}
       data-reveal
       data-delay={120}
     >
-      <p className="placeholder-label">{label}</p>
-      <p className="placeholder-title">{title}</p>
-      <p className="placeholder-detail">{detail}</p>
-      <div className="placeholder-lines" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-      </div>
+      {imageSrc ? (
+        <img src={imageSrc} alt={label} className="placeholder-image" />
+      ) : (
+        <>
+          <p className="placeholder-label">{label}</p>
+          <p className="placeholder-title">{title}</p>
+          <p className="placeholder-detail">{detail}</p>
+          <div className="placeholder-specs" aria-label="Especificaciones recomendadas de imagen">
+            <span>Ratio {specs.ratio}</span>
+            <span>Desktop {specs.desktop}</span>
+            <span>Mobile {specs.mobile}</span>
+          </div>
+          <div className="placeholder-lines" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -578,29 +660,29 @@ function App() {
   };
 
   return (
-    <div className="page-shell min-h-screen text-white">
+    <div className="page-shell min-h-screen text-slate-950">
       <div className="ambient ambient-a" aria-hidden="true" />
       <div className="ambient ambient-b" aria-hidden="true" />
       <div className="ambient ambient-c" aria-hidden="true" />
 
-      <header className="sticky top-0 z-50 border-b border-slate-900/10 bg-[#edf5ff]/88 backdrop-blur-xl">
-        <div className="mx-auto flex w-full max-w-[1160px] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-          <a href="#" className="flex items-center gap-3 text-slate-950">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#0a1629] text-sm font-semibold text-[#8efaf0]">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0a1623]/84 backdrop-blur-xl">
+        <div className="mx-auto flex w-full max-w-[1160px] items-center justify-between gap-3 px-4 py-2.5 sm:px-6 sm:py-3 lg:px-8">
+          <a href="#" className="flex items-center gap-2.5 text-white sm:gap-3">
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#0a1629] text-sm font-semibold text-[#8efaf0] sm:h-10 sm:w-10">
               C
             </span>
             <span>
-              <span className="block text-lg font-semibold tracking-tight">Comelu</span>
-              <span className="block text-xs text-slate-600">Software para laboratorios dentales en Chile</span>
+              <span className="block text-base font-semibold tracking-tight sm:text-lg">Comelu</span>
+              <span className="hidden text-xs text-slate-300 sm:block">Software para laboratorios dentales en Chile</span>
             </span>
           </a>
 
-          <nav className="hidden items-center gap-7 text-sm text-slate-700 lg:flex" aria-label="Navegación principal">
+          <nav className="hidden items-center gap-7 text-sm text-slate-300 lg:flex" aria-label="Navegación principal">
             {NAV_LINKS.map((link) => (
               <button
                 key={link.id}
                 type="button"
-                className="transition duration-300 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#109d8f] focus-visible:ring-offset-2 focus-visible:ring-offset-[#edf5ff]"
+                className="transition duration-300 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#109d8f] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a1623]"
                 onClick={() => scrollTo(link.id)}
               >
                 {link.label}
@@ -610,28 +692,28 @@ function App() {
 
           <div className="flex items-center gap-2">
             <button type="button" onClick={onWaitlistClick} className={`${primaryButton} hidden sm:inline-flex`}>
-              Unirme a la lista de espera
+              Lista de espera
             </button>
             <button
               type="button"
               aria-label="Abrir menú"
               aria-expanded={mobileMenuOpen}
-              className="inline-flex h-[46px] w-[46px] items-center justify-center rounded-lg border border-slate-900/10 bg-white/70 p-0 text-slate-900 transition hover:bg-white lg:hidden"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] p-0 text-slate-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition hover:bg-white/[0.08] hover:text-white lg:hidden"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
             >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {mobileMenuOpen ? <X className="h-[18px] w-[18px]" /> : <Menu className="h-[18px] w-[18px]" />}
             </button>
           </div>
         </div>
 
         {mobileMenuOpen ? (
-          <div className="border-t border-slate-900/10 bg-[#edf5ff]/95 px-4 py-3 lg:hidden">
+          <div className="border-t border-white/10 bg-[#0a1623]/95 px-4 py-2.5 lg:hidden">
             <div className="mx-auto flex max-w-[1160px] flex-col gap-2">
               {NAV_LINKS.map((link) => (
                 <button
                   key={link.id}
                   type="button"
-                  className="rounded-md px-2 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-950/5"
+                  className="rounded-lg px-3 py-2 text-left text-sm text-slate-300 transition hover:bg-white/6 hover:text-white"
                   onClick={() => {
                     scrollTo(link.id);
                     setMobileMenuOpen(false);
@@ -640,16 +722,20 @@ function App() {
                   {link.label}
                 </button>
               ))}
-              <button type="button" className={`${primaryButton} mt-1`} onClick={onWaitlistClick}>
-                Unirme a la lista de espera
+              <button
+                type="button"
+                className="interactive-cta mt-1 inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-[#11a79b] to-[#7be0d4] px-4 py-2.5 text-sm font-semibold text-[#04131a] shadow-[0_12px_28px_-18px_rgba(17,167,155,0.6)]"
+                onClick={onWaitlistClick}
+              >
+                Lista de espera
               </button>
             </div>
           </div>
         ) : null}
       </header>
 
-      <main className="mx-auto w-full max-w-[1160px] px-4 pb-20 pt-10 sm:px-6 lg:px-8 lg:pt-16">
-        <section className="hero-panel panel-frame scroll-mt-28" data-reveal>
+      <main className="mx-auto w-full max-w-[1160px] px-4 pb-20 sm:px-6 lg:px-8">
+        <section className="full-bleed-dark-section hero-panel panel-frame dark-panel scroll-mt-28" data-reveal>
           <div className="hero-grid">
             <div data-reveal data-delay={80}>
               <p
@@ -710,7 +796,7 @@ function App() {
               </p>
             </div>
 
-            <aside className="glass-card floating-card space-y-4" data-reveal data-delay={140}>
+            <aside className="glass-card dark-card floating-card space-y-4" data-reveal data-delay={140}>
               <PlaceholderVisual
                 label="Placeholder hero principal: mockup del software para laboratorios dentales"
                 title="Hero principal"
@@ -759,10 +845,21 @@ function App() {
                       title="Imagen pendiente"
                       detail="Reemplazar con visual final del problema descrito."
                       variant="compact"
+                      imageSrc={
+                        index === 0
+                          ? problema1Illustration
+                          : index === 1
+                            ? problema2Illustration
+                            : index === 2
+                              ? problema3Illustration
+                              : index === 3
+                                ? problema4Illustration
+                            : undefined
+                      }
                     />
                   </div>
-                  <h3 className="problem-card-title mt-5 text-lg font-semibold text-white">{item.title}</h3>
-                  <p className="problem-card-description mt-3 text-sm text-slate-300">{item.description}</p>
+                  <h3 className="problem-card-title mt-5 text-lg font-semibold text-slate-950">{item.title}</h3>
+                  <p className="problem-card-description mt-3 text-sm text-slate-600">{item.description}</p>
                 </article>
               );
             })}
@@ -774,12 +871,12 @@ function App() {
           </div>
         </section>
 
-        <section className="section-block scroll-mt-28" data-reveal>
+        <section className="section-block pb-14 scroll-mt-28 lg:pb-20" data-reveal>
           <SectionIntro
             title="Software para laboratorios dentales, laboratoristas y clínicas dentales con laboratorio propio"
             description="Comelu está pensado para equipos que producen, coordinan o supervisan trabajos protésicos dentales y necesitan una forma más ordenada de gestionar casos, archivos y pagos."
           />
-          <div className="audience-grid mt-8 grid gap-4 md:grid-cols-2">
+          <div className="mt-8 grid gap-5 lg:grid-cols-3">
             {AUDIENCE_BLOCKS.map((item, index) => {
               const Icon = item.icon;
               return (
@@ -794,14 +891,16 @@ function App() {
                     title="Imagen del cliente potencial"
                     detail="Reemplazar con visual editorial del perfil descrito."
                     variant="audience"
+                    imageSrc={index === 0 ? cliente1Illustration : undefined}
                   />
-                  <div className="mt-5 flex items-start gap-4">
-                    <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-white/5 text-[#8efaf0]">
+                  <div className="mt-4 flex items-start gap-3">
+                    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white text-[#109d8f]">
                       <Icon className="h-5 w-5" />
                     </span>
                     <div>
-                      <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-                      <p className="mt-2 text-sm text-slate-300">{item.description}</p>
+                      <h3 className="text-base font-semibold text-slate-950 lg:text-lg">{item.title}</h3>
+                      <p className="mt-1.5 text-sm font-medium leading-6 text-slate-700">{item.description}</p>
+                      <p className="mt-2 text-sm leading-6 text-slate-600">{item.detail}</p>
                     </div>
                   </div>
                 </article>
@@ -824,7 +923,7 @@ function App() {
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="section-eyebrow mb-2">Flujo guiado</p>
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-slate-500">
                   Paso {currentHowIndex + 1} de {HOW_IT_WORKS.length}
                 </p>
               </div>
@@ -862,8 +961,8 @@ function App() {
                       <div className="glass-card flex h-full flex-col justify-between">
                         <div>
                           <div className="step-pill mx-auto">{item.step}</div>
-                          <h3 className="mt-6 text-2xl font-semibold text-white">{item.title}</h3>
-                          <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">{item.description}</p>
+                          <h3 className="mt-6 text-2xl font-semibold text-slate-950">{item.title}</h3>
+                          <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600">{item.description}</p>
                         </div>
                       </div>
                       <div className="glass-card flex h-full items-center">
@@ -917,8 +1016,8 @@ function App() {
           />
           <div className="mt-8 grid gap-6 lg:grid-cols-2">
             <article className="glass-card interactive-card" data-reveal data-delay={0}>
-              <h3 className="text-lg font-semibold text-white">Qué incluirá primero</h3>
-              <ul className="mt-4 space-y-3 text-sm text-slate-200">
+              <h3 className="text-lg font-semibold text-slate-950">Qué incluirá primero</h3>
+              <ul className="mt-4 space-y-3 text-sm text-slate-700">
                 {INITIAL_FEATURES.map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#56f3e2]" />
@@ -928,8 +1027,8 @@ function App() {
               </ul>
             </article>
             <article className="glass-card interactive-card" data-reveal data-delay={80}>
-              <h3 className="text-lg font-semibold text-white">Más adelante.</h3>
-              <ul className="mt-4 space-y-3 text-sm text-slate-300">
+              <h3 className="text-lg font-semibold text-slate-950">Más adelante.</h3>
+              <ul className="mt-4 space-y-3 text-sm text-slate-600">
                 {FUTURE_FEATURES.map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
@@ -966,15 +1065,10 @@ function App() {
               </p>
             </div>
           </div>
-          <div className="section-cta-row mt-8" data-reveal data-delay={160}>
-            <button type="button" onClick={onWaitlistClick} className={primaryButton}>
-              Quiero sumarme al lanzamiento temprano
-            </button>
-          </div>
         </section>
 
-        <section id="lista-espera" className="section-block scroll-mt-28">
-          <div className="panel-frame p-6 sm:p-8" data-reveal data-delay={0}>
+        <section id="lista-espera" className="full-bleed-dark-section waitlist-section section-block scroll-mt-28">
+          <div className="panel-frame dark-panel p-6 sm:p-8" data-reveal data-delay={0}>
             <SectionIntro
               title="Únete a la lista de espera y ayúdanos a priorizar el software para laboratorio dental que realmente necesita el rubro"
               description="Déjanos tus datos para obtener descuentos especiales de lanzamiento que ofreceremos a nuestros primeros clientes"
@@ -1298,7 +1392,7 @@ function App() {
               return (
                 <article
                   key={item.q}
-                  className="interactive-card overflow-hidden rounded-xl border border-white/15 bg-white/[0.04] backdrop-blur-sm transition hover:bg-white/[0.06]"
+                  className="interactive-card overflow-hidden rounded-xl border border-slate-200 bg-white/90 backdrop-blur-sm transition hover:bg-white"
                   data-reveal
                   data-delay={index * 70}
                 >
@@ -1308,7 +1402,7 @@ function App() {
                       type="button"
                       aria-expanded={isOpen}
                       aria-controls={panelId}
-                      className="flex w-full items-center justify-between px-5 py-4 text-left text-sm font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-inset"
+                      className="flex w-full items-center justify-between px-5 py-4 text-left text-sm font-semibold text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-inset"
                       onClick={() => setFaqOpenIndex(isOpen ? null : index)}
                     >
                       {item.q}
@@ -1320,9 +1414,9 @@ function App() {
                     role="region"
                     aria-labelledby={buttonId}
                     aria-hidden={!isOpen}
-                    className={`faq-panel text-sm text-slate-300 ${isOpen ? "is-open" : ""}`}
+                    className={`faq-panel text-sm text-slate-600 ${isOpen ? "is-open" : ""}`}
                   >
-                    <div className="faq-panel-inner border-t border-white/10 px-5 py-4">{item.a}</div>
+                    <div className="faq-panel-inner border-t border-slate-200 px-5 py-4">{item.a}</div>
                   </div>
                 </article>
               );
@@ -1331,7 +1425,7 @@ function App() {
         </section>
       </main>
 
-      <footer className="mt-16 border-t border-white/10 bg-[#060b16]/70">
+      <footer className="mt-16 border-t border-white/10 bg-[#0a1623]">
         <div className="mx-auto flex w-full max-w-[1160px] flex-col gap-6 px-4 py-8 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
           <div>
             <p className="text-sm font-semibold text-white">Comelu</p>
