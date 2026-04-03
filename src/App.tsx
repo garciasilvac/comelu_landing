@@ -649,7 +649,7 @@ function App() {
       </header>
 
       <main className="mx-auto w-full max-w-[1160px] px-4 pb-20 pt-10 sm:px-6 lg:px-8 lg:pt-16">
-        <section className="hero-panel panel-frame dark-panel scroll-mt-28" data-reveal>
+        <section className="full-bleed-dark-section hero-panel panel-frame dark-panel scroll-mt-28" data-reveal>
           <div className="hero-grid">
             <div data-reveal data-delay={80}>
               <p
@@ -973,7 +973,7 @@ function App() {
           </div>
         </section>
 
-        <section id="lista-espera" className="section-block scroll-mt-28">
+        <section id="lista-espera" className="full-bleed-dark-section section-block scroll-mt-28">
           <div className="panel-frame dark-panel p-6 sm:p-8" data-reveal data-delay={0}>
             <SectionIntro
               title="Únete a la lista de espera y ayúdanos a priorizar el software para laboratorio dental que realmente necesita el rubro"

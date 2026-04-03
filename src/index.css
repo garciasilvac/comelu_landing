@@ -139,6 +139,11 @@ footer {
   .section-title {
     text-align: center;
   }
+
+  .full-bleed-dark-section::before {
+    top: -1.2rem;
+    bottom: -1.2rem;
+  }
 }
 
 .panel-frame {
@@ -185,6 +190,25 @@ footer {
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: linear-gradient(145deg, rgba(14, 23, 43, 0.84), rgba(9, 15, 30, 0.74));
   box-shadow: 0 16px 42px -30px rgba(0, 0, 0, 0.7);
+}
+
+.full-bleed-dark-section {
+  position: relative;
+  z-index: 0;
+}
+
+.full-bleed-dark-section::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -1.75rem;
+  bottom: -1.75rem;
+  left: calc((100vw - 100%) / -2);
+  right: calc((100vw - 100%) / -2);
+  background:
+    radial-gradient(circle at 15% 12%, rgba(27, 129, 120, 0.18), transparent 28%),
+    radial-gradient(circle at 85% 18%, rgba(60, 128, 220, 0.16), transparent 26%),
+    linear-gradient(180deg, #07111d 0%, #0a1623 100%);
 }
 
 .interactive-card {
