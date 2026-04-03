@@ -13,6 +13,7 @@ import {
   Workflow,
   X,
 } from "lucide-react";
+import problema1Illustration from "./assets/illustrations/Problema_1.jpeg";
 
 type Role =
   | ""
@@ -262,28 +263,34 @@ function PlaceholderVisual({
   title,
   detail,
   variant = "default",
+  imageSrc,
 }: {
   label: string;
   title: string;
   detail: string;
   variant?: "default" | "hero" | "compact" | "audience";
+  imageSrc?: string;
 }) {
   return (
     <div
-      className={`placeholder-card placeholder-${variant}`}
-      role="img"
-      aria-label={label}
+      className={`placeholder-card placeholder-${variant} ${imageSrc ? "image-placeholder" : ""}`}
       data-reveal
       data-delay={120}
     >
-      <p className="placeholder-label">{label}</p>
-      <p className="placeholder-title">{title}</p>
-      <p className="placeholder-detail">{detail}</p>
-      <div className="placeholder-lines" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-      </div>
+      {imageSrc ? (
+        <img src={imageSrc} alt={label} className="placeholder-image" />
+      ) : (
+        <>
+          <p className="placeholder-label">{label}</p>
+          <p className="placeholder-title">{title}</p>
+          <p className="placeholder-detail">{detail}</p>
+          <div className="placeholder-lines" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -763,6 +770,7 @@ function App() {
                       title="Imagen pendiente"
                       detail="Reemplazar con visual final del problema descrito."
                       variant="compact"
+                      imageSrc={index === 0 ? problema1Illustration : undefined}
                     />
                   </div>
                   <h3 className="problem-card-title mt-5 text-lg font-semibold text-slate-950">{item.title}</h3>
