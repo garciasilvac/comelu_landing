@@ -107,30 +107,29 @@ const AUDIENCE_BLOCKS = [
   {
     title: "Laboratorios dentales",
     description:
-      "Para gestionar órdenes de trabajo, archivos, estados y pagos del laboratorio dental desde un solo lugar.",
+      "Para laboratorios con equipo y flujo de trabajo distribuido",
+    detail:
+      "Si el trabajo pasa por distintas manos, necesitas claridad sobre tareas, responsables, estados y comunicación. Comelu ayuda a coordinar mejor la operación diaria sin perder trazabilidad.",
     icon: FlaskConical,
     placeholder: "Placeholder cliente 1: laboratorio dental",
   },
   {
-    title: "Laboratoristas y supervisores",
+    title: "Laboratorista independiente",
     description:
-      "Para saber qué trabajo entró, en qué etapa va cada caso y qué prioridad tiene.",
+      "Para quienes hacen todo al mismo tiempo",
     icon: Workflow,
-    placeholder: "Placeholder cliente 2: laboratorista o supervisor",
+    detail:
+      "Cuando una sola persona vende, produce, coordina y cobra, cada minuto importa. Comelu ayuda a centralizar la operación para trabajar con más orden, menos fricción y mejor seguimiento.",
+    placeholder: "Placeholder cliente 2: laboratorista independiente",
   },
   {
-    title: "Clínicas dentales con laboratorio propio",
+    title: "Clínica con laboratorio",
     description:
-      "Para organizar la producción interna de soluciones protésicas con más trazabilidad y menos seguimiento manual.",
+      "Para clínicas que quieren controlar todo el proceso",
     icon: Stethoscope,
-    placeholder: "Placeholder cliente 3: clínica con laboratorio propio",
-  },
-  {
-    title: "Dentistas y técnicos dentales",
-    description:
-      "También puede ser relevante para dentistas y técnicos odontológicos que trabajan coordinadamente con laboratorios y quieren seguir de cerca una gestión más ordenada del caso.",
-    icon: Files,
-    placeholder: "Placeholder cliente 4: dentista o técnico dental",
+    detail:
+      "Desde la solicitud hasta la confección de la prótesis, tener el proceso conectado permite responder más rápido y trabajar con mayor control. Comelu ayuda a integrar esa relación de forma simple y visible.",
+    placeholder: "Placeholder cliente 3: clínica con laboratorio",
   },
 ] as const;
 
@@ -898,7 +897,8 @@ function App() {
                     </span>
                     <div>
                       <h3 className="text-lg font-semibold text-slate-950">{item.title}</h3>
-                      <p className="mt-2 text-sm text-slate-600">{item.description}</p>
+                      <p className="mt-2 text-sm font-medium text-slate-700">{item.description}</p>
+                      <p className="mt-2 text-sm text-slate-600">{item.detail}</p>
                     </div>
                   </div>
                 </article>
