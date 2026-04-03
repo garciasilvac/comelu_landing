@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  color: #e2e8f0;
-  background-color: #050816;
+  color: #0f172a;
+  background-color: #f4f8fb;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -22,7 +22,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: #050816;
+  background-color: #f4f8fb;
   overflow-x: hidden;
   overflow-x: clip;
 }
@@ -32,9 +32,9 @@ body {
   overflow-x: hidden;
   overflow-x: clip;
   background:
-    radial-gradient(circle at 15% -15%, rgba(27, 129, 120, 0.35), transparent 34%),
-    radial-gradient(circle at 88% 12%, rgba(60, 128, 220, 0.26), transparent 30%),
-    linear-gradient(180deg, #03060f 0%, #060b16 48%, #070f1e 100%);
+    radial-gradient(circle at 15% -15%, rgba(27, 129, 120, 0.08), transparent 34%),
+    radial-gradient(circle at 88% 12%, rgba(60, 128, 220, 0.08), transparent 30%),
+    linear-gradient(180deg, #f6fafc 0%, #eff5f8 48%, #edf4f8 100%);
 }
 
 .ambient {
@@ -117,7 +117,7 @@ footer {
   font-size: clamp(1.55rem, 1.1rem + 1.5vw, 2rem);
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: #f8fafc;
+  color: #0f172a;
 }
 
 .section-eyebrow {
@@ -130,7 +130,7 @@ footer {
 }
 
 .section-copy {
-  color: #cbd5e1;
+  color: #526173;
   font-size: 1rem;
   line-height: 1.7;
 }
@@ -143,19 +143,47 @@ footer {
 
 .panel-frame {
   border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: linear-gradient(150deg, rgba(14, 22, 42, 0.87), rgba(8, 14, 28, 0.78));
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(245, 249, 251, 0.92));
   box-shadow:
-    0 22px 64px -42px rgba(45, 212, 191, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    0 20px 54px -40px rgba(15, 23, 42, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
 }
 
 .glass-card {
   border-radius: 0.95rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: linear-gradient(145deg, rgba(14, 23, 43, 0.84), rgba(9, 15, 30, 0.74));
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 248, 251, 0.94));
   backdrop-filter: blur(8px);
   padding: 1.3rem;
+  box-shadow: 0 16px 42px -30px rgba(15, 23, 42, 0.18);
+}
+
+.dark-panel {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background:
+    linear-gradient(155deg, rgba(17, 25, 48, 0.88), rgba(10, 16, 33, 0.8)),
+    radial-gradient(circle at 85% 24%, rgba(45, 212, 191, 0.15), transparent 30%);
+  box-shadow:
+    0 24px 80px -44px rgba(45, 212, 191, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.dark-panel .section-title {
+  color: #f8fafc;
+}
+
+.dark-panel .section-copy {
+  color: #cbd5e1;
+}
+
+.dark-panel .section-eyebrow {
+  color: #81fff2;
+}
+
+.dark-card {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(145deg, rgba(14, 23, 43, 0.84), rgba(9, 15, 30, 0.74));
   box-shadow: 0 16px 42px -30px rgba(0, 0, 0, 0.7);
 }
 
@@ -229,22 +257,30 @@ footer {
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.03);
   padding: 0.68rem 0.85rem;
-  color: #cbd5e1;
+  color: #526173;
   font-size: 0.9rem;
 }
 
 .metric-row strong {
-  color: #f8fafc;
+  color: #0f172a;
   font-size: 1.02rem;
   letter-spacing: -0.02em;
 }
 
+.dark-card .metric-row {
+  color: #cbd5e1;
+}
+
+.dark-card .metric-row strong {
+  color: #f8fafc;
+}
+
 .placeholder-card {
   border-radius: 1rem;
-  border: 1px dashed rgba(129, 255, 242, 0.28);
+  border: 1px dashed rgba(16, 157, 143, 0.24);
   background:
-    linear-gradient(155deg, rgba(9, 18, 34, 0.88), rgba(12, 24, 44, 0.82)),
-    radial-gradient(circle at top right, rgba(45, 212, 191, 0.12), transparent 36%);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 247, 250, 0.95)),
+    radial-gradient(circle at top right, rgba(16, 157, 143, 0.08), transparent 36%);
   padding: 1rem;
 }
 
@@ -273,7 +309,7 @@ footer {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #81fff2;
+  color: #109d8f;
 }
 
 .placeholder-title {
@@ -281,12 +317,12 @@ footer {
   font-size: 1.12rem;
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: #f8fafc;
+  color: #0f172a;
 }
 
 .placeholder-detail {
   margin: 0.65rem 0 0;
-  color: #b7c6d9;
+  color: #64748b;
   font-size: 0.92rem;
   line-height: 1.65;
 }
@@ -301,6 +337,29 @@ footer {
   display: block;
   height: 0.6rem;
   border-radius: 999px;
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.18), rgba(16, 157, 143, 0.18));
+}
+
+.dark-card .placeholder-card {
+  border: 1px dashed rgba(129, 255, 242, 0.28);
+  background:
+    linear-gradient(155deg, rgba(9, 18, 34, 0.88), rgba(12, 24, 44, 0.82)),
+    radial-gradient(circle at top right, rgba(45, 212, 191, 0.12), transparent 36%);
+}
+
+.dark-card .placeholder-label {
+  color: #81fff2;
+}
+
+.dark-card .placeholder-title {
+  color: #f8fafc;
+}
+
+.dark-card .placeholder-detail {
+  color: #b7c6d9;
+}
+
+.dark-card .placeholder-lines span {
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(129, 255, 242, 0.2));
 }
 
@@ -334,8 +393,8 @@ footer {
 
 .how-carousel {
   background:
-    linear-gradient(145deg, rgba(12, 20, 39, 0.94), rgba(7, 14, 28, 0.82)),
-    radial-gradient(circle at 82% 20%, rgba(45, 212, 191, 0.14), transparent 28%);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(245, 249, 251, 0.92)),
+    radial-gradient(circle at 82% 20%, rgba(16, 157, 143, 0.08), transparent 28%);
 }
 
 .carousel-arrow {
@@ -345,9 +404,9 @@ footer {
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.05);
-  color: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(255, 255, 255, 0.92);
+  color: #0f172a;
   transition:
     transform 220ms ease,
     border-color 220ms ease,
@@ -376,7 +435,7 @@ footer {
   height: 0.42rem;
   width: 100%;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(148, 163, 184, 0.2);
 }
 
 .carousel-progress-fill {
@@ -482,6 +541,10 @@ footer {
 .field option {
   color: #e2e8f0;
   background: #111827;
+}
+
+.dark-panel .field-label {
+  color: #dbe5f1;
 }
 
 .faq-panel {

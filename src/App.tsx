@@ -578,29 +578,29 @@ function App() {
   };
 
   return (
-    <div className="page-shell min-h-screen text-white">
+    <div className="page-shell min-h-screen text-slate-950">
       <div className="ambient ambient-a" aria-hidden="true" />
       <div className="ambient ambient-b" aria-hidden="true" />
       <div className="ambient ambient-c" aria-hidden="true" />
 
-      <header className="sticky top-0 z-50 border-b border-slate-900/10 bg-[#edf5ff]/88 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#08111d]/78 backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-[1160px] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-          <a href="#" className="flex items-center gap-3 text-slate-950">
+          <a href="#" className="flex items-center gap-3 text-white">
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#0a1629] text-sm font-semibold text-[#8efaf0]">
               C
             </span>
             <span>
               <span className="block text-lg font-semibold tracking-tight">Comelu</span>
-              <span className="block text-xs text-slate-600">Software para laboratorios dentales en Chile</span>
+              <span className="block text-xs text-slate-300">Software para laboratorios dentales en Chile</span>
             </span>
           </a>
 
-          <nav className="hidden items-center gap-7 text-sm text-slate-700 lg:flex" aria-label="Navegación principal">
+          <nav className="hidden items-center gap-7 text-sm text-slate-300 lg:flex" aria-label="Navegación principal">
             {NAV_LINKS.map((link) => (
               <button
                 key={link.id}
                 type="button"
-                className="transition duration-300 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#109d8f] focus-visible:ring-offset-2 focus-visible:ring-offset-[#edf5ff]"
+                className="transition duration-300 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#109d8f] focus-visible:ring-offset-2 focus-visible:ring-offset-[#08111d]"
                 onClick={() => scrollTo(link.id)}
               >
                 {link.label}
@@ -616,7 +616,7 @@ function App() {
               type="button"
               aria-label="Abrir menú"
               aria-expanded={mobileMenuOpen}
-              className="inline-flex h-[46px] w-[46px] items-center justify-center rounded-lg border border-slate-900/10 bg-white/70 p-0 text-slate-900 transition hover:bg-white lg:hidden"
+              className="inline-flex h-[46px] w-[46px] items-center justify-center rounded-lg border border-white/12 bg-white/6 p-0 text-white transition hover:bg-white/10 lg:hidden"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -625,13 +625,13 @@ function App() {
         </div>
 
         {mobileMenuOpen ? (
-          <div className="border-t border-slate-900/10 bg-[#edf5ff]/95 px-4 py-3 lg:hidden">
+          <div className="border-t border-white/10 bg-[#08111d]/95 px-4 py-3 lg:hidden">
             <div className="mx-auto flex max-w-[1160px] flex-col gap-2">
               {NAV_LINKS.map((link) => (
                 <button
                   key={link.id}
                   type="button"
-                  className="rounded-md px-2 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-950/5"
+                  className="rounded-md px-2 py-2 text-left text-sm text-slate-300 transition hover:bg-white/6 hover:text-white"
                   onClick={() => {
                     scrollTo(link.id);
                     setMobileMenuOpen(false);
@@ -649,7 +649,7 @@ function App() {
       </header>
 
       <main className="mx-auto w-full max-w-[1160px] px-4 pb-20 pt-10 sm:px-6 lg:px-8 lg:pt-16">
-        <section className="hero-panel panel-frame scroll-mt-28" data-reveal>
+        <section className="hero-panel panel-frame dark-panel scroll-mt-28" data-reveal>
           <div className="hero-grid">
             <div data-reveal data-delay={80}>
               <p
@@ -710,7 +710,7 @@ function App() {
               </p>
             </div>
 
-            <aside className="glass-card floating-card space-y-4" data-reveal data-delay={140}>
+            <aside className="glass-card dark-card floating-card space-y-4" data-reveal data-delay={140}>
               <PlaceholderVisual
                 label="Placeholder hero principal: mockup del software para laboratorios dentales"
                 title="Hero principal"
@@ -761,8 +761,8 @@ function App() {
                       variant="compact"
                     />
                   </div>
-                  <h3 className="problem-card-title mt-5 text-lg font-semibold text-white">{item.title}</h3>
-                  <p className="problem-card-description mt-3 text-sm text-slate-300">{item.description}</p>
+                  <h3 className="problem-card-title mt-5 text-lg font-semibold text-slate-950">{item.title}</h3>
+                  <p className="problem-card-description mt-3 text-sm text-slate-600">{item.description}</p>
                 </article>
               );
             })}
@@ -796,12 +796,12 @@ function App() {
                     variant="audience"
                   />
                   <div className="mt-5 flex items-start gap-4">
-                    <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-white/5 text-[#8efaf0]">
+                    <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white text-[#109d8f]">
                       <Icon className="h-5 w-5" />
                     </span>
                     <div>
-                      <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-                      <p className="mt-2 text-sm text-slate-300">{item.description}</p>
+                      <h3 className="text-lg font-semibold text-slate-950">{item.title}</h3>
+                      <p className="mt-2 text-sm text-slate-600">{item.description}</p>
                     </div>
                   </div>
                 </article>
@@ -824,7 +824,7 @@ function App() {
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="section-eyebrow mb-2">Flujo guiado</p>
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-slate-500">
                   Paso {currentHowIndex + 1} de {HOW_IT_WORKS.length}
                 </p>
               </div>
@@ -862,8 +862,8 @@ function App() {
                       <div className="glass-card flex h-full flex-col justify-between">
                         <div>
                           <div className="step-pill mx-auto">{item.step}</div>
-                          <h3 className="mt-6 text-2xl font-semibold text-white">{item.title}</h3>
-                          <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">{item.description}</p>
+                          <h3 className="mt-6 text-2xl font-semibold text-slate-950">{item.title}</h3>
+                          <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600">{item.description}</p>
                         </div>
                       </div>
                       <div className="glass-card flex h-full items-center">
@@ -917,8 +917,8 @@ function App() {
           />
           <div className="mt-8 grid gap-6 lg:grid-cols-2">
             <article className="glass-card interactive-card" data-reveal data-delay={0}>
-              <h3 className="text-lg font-semibold text-white">Qué incluirá primero</h3>
-              <ul className="mt-4 space-y-3 text-sm text-slate-200">
+              <h3 className="text-lg font-semibold text-slate-950">Qué incluirá primero</h3>
+              <ul className="mt-4 space-y-3 text-sm text-slate-700">
                 {INITIAL_FEATURES.map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#56f3e2]" />
@@ -928,8 +928,8 @@ function App() {
               </ul>
             </article>
             <article className="glass-card interactive-card" data-reveal data-delay={80}>
-              <h3 className="text-lg font-semibold text-white">Más adelante.</h3>
-              <ul className="mt-4 space-y-3 text-sm text-slate-300">
+              <h3 className="text-lg font-semibold text-slate-950">Más adelante.</h3>
+              <ul className="mt-4 space-y-3 text-sm text-slate-600">
                 {FUTURE_FEATURES.map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
@@ -974,7 +974,7 @@ function App() {
         </section>
 
         <section id="lista-espera" className="section-block scroll-mt-28">
-          <div className="panel-frame p-6 sm:p-8" data-reveal data-delay={0}>
+          <div className="panel-frame dark-panel p-6 sm:p-8" data-reveal data-delay={0}>
             <SectionIntro
               title="Únete a la lista de espera y ayúdanos a priorizar el software para laboratorio dental que realmente necesita el rubro"
               description="Déjanos tus datos para obtener descuentos especiales de lanzamiento que ofreceremos a nuestros primeros clientes"
@@ -1298,7 +1298,7 @@ function App() {
               return (
                 <article
                   key={item.q}
-                  className="interactive-card overflow-hidden rounded-xl border border-white/15 bg-white/[0.04] backdrop-blur-sm transition hover:bg-white/[0.06]"
+                  className="interactive-card overflow-hidden rounded-xl border border-slate-200 bg-white/90 backdrop-blur-sm transition hover:bg-white"
                   data-reveal
                   data-delay={index * 70}
                 >
@@ -1308,7 +1308,7 @@ function App() {
                       type="button"
                       aria-expanded={isOpen}
                       aria-controls={panelId}
-                      className="flex w-full items-center justify-between px-5 py-4 text-left text-sm font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-inset"
+                      className="flex w-full items-center justify-between px-5 py-4 text-left text-sm font-semibold text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-inset"
                       onClick={() => setFaqOpenIndex(isOpen ? null : index)}
                     >
                       {item.q}
@@ -1320,9 +1320,9 @@ function App() {
                     role="region"
                     aria-labelledby={buttonId}
                     aria-hidden={!isOpen}
-                    className={`faq-panel text-sm text-slate-300 ${isOpen ? "is-open" : ""}`}
+                    className={`faq-panel text-sm text-slate-600 ${isOpen ? "is-open" : ""}`}
                   >
-                    <div className="faq-panel-inner border-t border-white/10 px-5 py-4">{item.a}</div>
+                    <div className="faq-panel-inner border-t border-slate-200 px-5 py-4">{item.a}</div>
                   </div>
                 </article>
               );
