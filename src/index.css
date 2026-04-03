@@ -22,7 +22,8 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: #f4f8fb;
+  background:
+    linear-gradient(180deg, #07111d 0 23rem, #f4f8fb 23rem 100%);
   overflow-x: hidden;
   overflow-x: clip;
 }
@@ -32,8 +33,9 @@ body {
   overflow-x: hidden;
   overflow-x: clip;
   background:
-    radial-gradient(circle at 15% -15%, rgba(27, 129, 120, 0.08), transparent 34%),
-    radial-gradient(circle at 88% 12%, rgba(60, 128, 220, 0.08), transparent 30%),
+    radial-gradient(circle at 15% -15%, rgba(27, 129, 120, 0.18), transparent 34%),
+    radial-gradient(circle at 88% 12%, rgba(60, 128, 220, 0.16), transparent 30%),
+    linear-gradient(180deg, rgba(7, 17, 29, 0.98) 0 23rem, rgba(7, 17, 29, 0) 23rem),
     linear-gradient(180deg, #f6fafc 0%, #eff5f8 48%, #edf4f8 100%);
 }
 
