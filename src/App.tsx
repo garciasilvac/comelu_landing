@@ -584,14 +584,14 @@ function App() {
       <div className="ambient ambient-c" aria-hidden="true" />
 
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0a1623]/84 backdrop-blur-xl">
-        <div className="mx-auto flex w-full max-w-[1160px] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-          <a href="#" className="flex items-center gap-3 text-white">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#0a1629] text-sm font-semibold text-[#8efaf0]">
+        <div className="mx-auto flex w-full max-w-[1160px] items-center justify-between gap-3 px-4 py-2.5 sm:px-6 sm:py-3 lg:px-8">
+          <a href="#" className="flex items-center gap-2.5 text-white sm:gap-3">
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#0a1629] text-sm font-semibold text-[#8efaf0] sm:h-10 sm:w-10">
               C
             </span>
             <span>
-              <span className="block text-lg font-semibold tracking-tight">Comelu</span>
-              <span className="block text-xs text-slate-300">Software para laboratorios dentales en Chile</span>
+              <span className="block text-base font-semibold tracking-tight sm:text-lg">Comelu</span>
+              <span className="hidden text-xs text-slate-300 sm:block">Software para laboratorios dentales en Chile</span>
             </span>
           </a>
 
@@ -610,28 +610,28 @@ function App() {
 
           <div className="flex items-center gap-2">
             <button type="button" onClick={onWaitlistClick} className={`${primaryButton} hidden sm:inline-flex`}>
-              Unirme a la lista de espera
+              Lista de espera
             </button>
             <button
               type="button"
               aria-label="Abrir menú"
               aria-expanded={mobileMenuOpen}
-              className="inline-flex h-[46px] w-[46px] items-center justify-center rounded-lg border border-white/12 bg-white/6 p-0 text-white transition hover:bg-white/10 lg:hidden"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] p-0 text-slate-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition hover:bg-white/[0.08] hover:text-white lg:hidden"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
             >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {mobileMenuOpen ? <X className="h-[18px] w-[18px]" /> : <Menu className="h-[18px] w-[18px]" />}
             </button>
           </div>
         </div>
 
         {mobileMenuOpen ? (
-          <div className="border-t border-white/10 bg-[#0a1623]/95 px-4 py-3 lg:hidden">
+          <div className="border-t border-white/10 bg-[#0a1623]/95 px-4 py-2.5 lg:hidden">
             <div className="mx-auto flex max-w-[1160px] flex-col gap-2">
               {NAV_LINKS.map((link) => (
                 <button
                   key={link.id}
                   type="button"
-                  className="rounded-md px-2 py-2 text-left text-sm text-slate-300 transition hover:bg-white/6 hover:text-white"
+                  className="rounded-lg px-3 py-2 text-left text-sm text-slate-300 transition hover:bg-white/6 hover:text-white"
                   onClick={() => {
                     scrollTo(link.id);
                     setMobileMenuOpen(false);
@@ -640,8 +640,12 @@ function App() {
                   {link.label}
                 </button>
               ))}
-              <button type="button" className={`${primaryButton} mt-1`} onClick={onWaitlistClick}>
-                Unirme a la lista de espera
+              <button
+                type="button"
+                className="interactive-cta mt-1 inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-[#11a79b] to-[#7be0d4] px-4 py-2.5 text-sm font-semibold text-[#04131a] shadow-[0_12px_28px_-18px_rgba(17,167,155,0.6)]"
+                onClick={onWaitlistClick}
+              >
+                Lista de espera
               </button>
             </div>
           </div>
