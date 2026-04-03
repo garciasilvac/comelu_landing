@@ -583,7 +583,7 @@ function App() {
       <div className="ambient ambient-b" aria-hidden="true" />
       <div className="ambient ambient-c" aria-hidden="true" />
 
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#08111d]/78 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0a1623]/84 backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-[1160px] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
           <a href="#" className="flex items-center gap-3 text-white">
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#0a1629] text-sm font-semibold text-[#8efaf0]">
@@ -600,7 +600,7 @@ function App() {
               <button
                 key={link.id}
                 type="button"
-                className="transition duration-300 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#109d8f] focus-visible:ring-offset-2 focus-visible:ring-offset-[#08111d]"
+                className="transition duration-300 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#109d8f] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a1623]"
                 onClick={() => scrollTo(link.id)}
               >
                 {link.label}
@@ -625,7 +625,7 @@ function App() {
         </div>
 
         {mobileMenuOpen ? (
-          <div className="border-t border-white/10 bg-[#08111d]/95 px-4 py-3 lg:hidden">
+          <div className="border-t border-white/10 bg-[#0a1623]/95 px-4 py-3 lg:hidden">
             <div className="mx-auto flex max-w-[1160px] flex-col gap-2">
               {NAV_LINKS.map((link) => (
                 <button
@@ -1331,7 +1331,7 @@ function App() {
         </section>
       </main>
 
-      <footer className="mt-16 border-t border-white/10 bg-[#060b16]/70">
+      <footer className="mt-16 border-t border-white/10 bg-[#0a1623]">
         <div className="mx-auto flex w-full max-w-[1160px] flex-col gap-6 px-4 py-8 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
           <div>
             <p className="text-sm font-semibold text-white">Comelu</p>
