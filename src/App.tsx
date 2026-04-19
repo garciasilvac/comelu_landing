@@ -1,11 +1,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import {
-  ArrowRight,
   CheckCircle2,
   ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Files,
   FlaskConical,
   Menu,
   Send,
@@ -64,43 +60,46 @@ type InlineValidatableField = "nombre" | "email" | "telefonoPais" | "telefonoNum
 type PlaceholderVariant = "default" | "hero" | "compact" | "audience";
 
 const NAV_LINKS = [
-  { id: "como-funciona", label: "Cómo funciona" },
-  { id: "que-resuelve", label: "Qué resuelve" },
-  { id: "primera-version", label: "Primera versión" },
+  { id: "que-resuelve", label: "Qué queremos resolver" },
+  { id: "para-quien", label: "Para quién" },
   { id: "faq", label: "FAQ" },
 ] as const;
 
 const HERO_BULLETS = [
-  "Órdenes de trabajo dentales en un solo lugar",
-  "Archivos, fotos y documentos asociados a cada caso",
-  "Seguimiento claro por estado o etapa",
-  "Pagos, saldos y comprobantes vinculados al trabajo",
+  "Una experiencia simple para ordenar órdenes y archivos por caso",
+  "Un seguimiento moderno y amigable del estado de cada trabajo",
+  "Más trazabilidad sin depender de WhatsApp, Excel o mensajes sueltos",
+  "Cobros y comprobantes vinculados a cada orden de forma intuitiva",
 ] as const;
 
 const PROBLEM_CARDS = [
   {
     title: "Información incompleta al iniciar una orden de trabajo dental",
     description:
-      "Faltan fotos, indicaciones, escaneos o detalles clínicos, y el caso parte con vacíos que después generan correcciones y retrasos.",
-    placeholder: "Placeholder problema 1: caso iniciado con datos faltantes",
+      "Hoy faltan fotos, indicaciones, escaneos o detalles clínicos, y el caso parte con vacíos que después generan correcciones y retrasos. Comelu buscará ayudar a iniciar cada trabajo con más claridad desde el principio.",
+    imageAlt: "Orden de trabajo dental con información faltante",
+    imageSrc: problema1Illustration,
   },
   {
     title: "Archivos del caso repartidos entre WhatsApp, correo y teléfono",
     description:
-      "Las imágenes, documentos y mensajes quedan dispersos y después cuesta saber qué corresponde realmente a cada trabajo.",
-    placeholder: "Placeholder problema 2: múltiples canales desordenados",
+      "Las imágenes, documentos y mensajes quedan dispersos y después cuesta saber qué corresponde realmente a cada trabajo. Queremos construir una forma más simple y amigable de reunir todo en un mismo contexto.",
+    imageAlt: "Archivos de un caso dental dispersos en distintos canales",
+    imageSrc: problema2Illustration,
   },
   {
     title: "Poca claridad sobre el estado del trabajo protésico",
     description:
-      "Hay casos urgentes, atrasados o en producción, pero no siempre está claro en qué etapa va cada uno ni quién lo tiene asignado.",
-    placeholder: "Placeholder problema 3: tablero o flujo de estados",
+      "Hay casos urgentes, atrasados o en producción, pero no siempre está claro en qué etapa va cada uno ni quién lo tiene asignado. La idea es que Comelu entregue una vista más intuitiva para seguir prioridades y responsables.",
+    imageAlt: "Flujo de estados de trabajos protésicos en producción",
+    imageSrc: problema3Illustration,
   },
   {
     title: "Pagos y comprobantes sin seguimiento simple",
     description:
-      "Después cuesta revisar qué se pagó, qué falta por cobrar y qué comprobante corresponde a cada orden.",
-    placeholder: "Placeholder problema 4: saldo, comprobante o cobro vinculado al caso",
+      "Después cuesta revisar qué se pagó, qué falta por cobrar y qué comprobante corresponde a cada orden. Apuntamos a que esto también se pueda seguir de forma clara, moderna y sin fricción.",
+    imageAlt: "Pagos y comprobantes vinculados a órdenes dentales",
+    imageSrc: problema4Illustration,
   },
 ] as const;
 
@@ -110,7 +109,7 @@ const AUDIENCE_BLOCKS = [
     description:
       "Para laboratorios con equipo y flujo de trabajo distribuido",
     detail:
-      "Si el trabajo pasa por distintas manos, necesitas claridad sobre tareas, responsables, estados y comunicación. Comelu ayuda a coordinar mejor la operación diaria sin perder trazabilidad.",
+      "Si el trabajo pasa por distintas manos, queremos construir una herramienta que dé claridad sobre tareas, responsables, estados y comunicación sin perder trazabilidad.",
     icon: FlaskConical,
     placeholder: "Placeholder cliente 1: laboratorio dental",
   },
@@ -120,7 +119,7 @@ const AUDIENCE_BLOCKS = [
       "Para quienes hacen todo al mismo tiempo",
     icon: Workflow,
     detail:
-      "Cuando una sola persona vende, produce, coordina y cobra, cada minuto importa. Comelu ayuda a centralizar la operación para trabajar con más orden, menos fricción y mejor seguimiento.",
+      "Cuando una sola persona vende, produce, coordina y cobra, cada minuto importa. Comelu apunta a simplificar esa operación con una experiencia más ordenada, amable y fácil de seguir.",
     placeholder: "Placeholder cliente 2: laboratorista independiente",
   },
   {
@@ -129,63 +128,15 @@ const AUDIENCE_BLOCKS = [
       "Para clínicas que quieren controlar todo el proceso",
     icon: Stethoscope,
     detail:
-      "Desde la solicitud hasta la confección de la prótesis, tener el proceso conectado permite responder más rápido y trabajar con mayor control. Comelu ayuda a integrar esa relación de forma simple y visible.",
+      "Desde la solicitud hasta la confección de la prótesis, queremos que el proceso se pueda seguir con más control, orden y visibilidad desde un solo flujo.",
     placeholder: "Placeholder cliente 3: clínica con laboratorio",
   },
-] as const;
-
-const HOW_IT_WORKS = [
-  {
-    step: "1",
-    title: "Recibes la orden de trabajo dental",
-    description: "Registras el caso con la información principal para comenzar.",
-    placeholder: "Placeholder paso 1: formulario o alta de caso",
-  },
-  {
-    step: "2",
-    title: "Adjuntas archivos, fotos, escaneos e indicaciones",
-    description: "Todo queda asociado al mismo trabajo.",
-    placeholder: "Placeholder paso 2: archivos adjuntos o documentos",
-  },
-  {
-    step: "3",
-    title: "Organizas el caso por estado o etapa",
-    description: "El equipo puede ver en qué va cada trabajo y qué sigue.",
-    placeholder: "Placeholder paso 3: workflow o estados",
-  },
-  {
-    step: "4",
-    title: "Haces seguimiento del trabajo en curso",
-    description: "Menos mensajes sueltos y más visibilidad operativa.",
-    placeholder: "Placeholder paso 4: listado o tablero de seguimiento",
-  },
-  {
-    step: "5",
-    title: "Registras pago, saldo o comprobante",
-    description: "El cierre del caso también queda ordenado.",
-    placeholder: "Placeholder paso 5: resumen de pago o saldo",
-  },
-] as const;
-
-const INITIAL_FEATURES = [
-  "Gestión de órdenes de trabajo",
-  "Archivos asociados a cada caso",
-  "Estados del trabajo",
-  "Pagos, saldos y comprobantes",
-  "Vista clara del trabajo en curso",
-] as const;
-
-const FUTURE_FEATURES = [
-  "Automatizaciones",
-  "Reportes más avanzados",
-  "Métricas operativas",
-  "Nuevas funciones priorizadas con feedback real del rubro",
 ] as const;
 
 const FAQ_ITEMS = [
   {
     q: "¿Qué es Comelu?",
-    a: "Comelu es un software para gestión de laboratorios dentales que busca ordenar órdenes de trabajo, archivos, estados y pagos en un solo lugar.",
+    a: "Comelu es un software en construcción para laboratorios dentales que estamos diseñando para ordenar órdenes de trabajo, archivos, estados y pagos en un solo lugar.",
   },
   {
     q: "¿Para quién está pensado?",
@@ -197,11 +148,11 @@ const FAQ_ITEMS = [
   },
   {
     q: "¿Sirve si hoy trabajamos con Excel y WhatsApp?",
-    a: "Sí. Uno de los objetivos principales de Comelu es reemplazar el desorden de planillas, mensajes y archivos dispersos por un flujo más centralizado y claro.",
+    a: "Sí. Uno de los objetivos principales de Comelu es ayudar a reemplazar el desorden de planillas, mensajes y archivos dispersos por un flujo más claro, simple e intuitivo.",
   },
   {
     q: "¿Sirve para laboratorios pequeños?",
-    a: "Sí. La idea es que sea útil tanto para laboratorios pequeños como para equipos más estructurados, siempre con foco en ordenar la operación diaria.",
+    a: "Sí. La idea es que sea útil tanto para laboratorios pequeños como para equipos más estructurados, siempre con foco en ordenar la operación diaria sin sumar complejidad.",
   },
   {
     q: "¿Sirve para clínicas dentales con laboratorio interno?",
@@ -373,7 +324,7 @@ function PlaceholderVisual({
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [faqOpenIndex, setFaqOpenIndex] = useState<number | null>(0);
-  const [currentHowIndex, setCurrentHowIndex] = useState(0);
+  const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [allowCarouselMotion, setAllowCarouselMotion] = useState(true);
   const [form, setForm] = useState<FormState>(initialForm);
   const [formError, setFormError] = useState("");
@@ -408,7 +359,7 @@ function App() {
     if (!allowCarouselMotion) return undefined;
 
     const intervalId = window.setInterval(() => {
-      setCurrentHowIndex((prev) => (prev + 1) % HOW_IT_WORKS.length);
+      setCurrentProblemIndex((prev) => (prev + 1) % PROBLEM_CARDS.length);
     }, 8000);
 
     return () => window.clearInterval(intervalId);
@@ -433,21 +384,8 @@ function App() {
     setMobileMenuOpen(false);
   };
 
-  const onHowItWorksClick = () => {
-    scrollTo("como-funciona");
-    setMobileMenuOpen(false);
-  };
-
-  const goToHowStep = (index: number) => {
-    setCurrentHowIndex(index);
-  };
-
-  const goToPreviousHowStep = () => {
-    setCurrentHowIndex((prev) => (prev === 0 ? HOW_IT_WORKS.length - 1 : prev - 1));
-  };
-
-  const goToNextHowStep = () => {
-    setCurrentHowIndex((prev) => (prev + 1) % HOW_IT_WORKS.length);
+  const goToProblemSlide = (index: number) => {
+    setCurrentProblemIndex(index);
   };
 
   const toggleInterest = (interest: Interest, checked: boolean) => {
@@ -750,16 +688,16 @@ function App() {
                 data-reveal
                 data-delay={160}
               >
-                Software para gestión de laboratorios dentales: órdenes, archivos, estados y pagos en un solo lugar
+                Estamos creando Comelu para que la gestión del laboratorio dental sea simple, moderna e intuitiva
               </h1>
               <p className="mt-5 max-w-3xl text-base text-slate-300 sm:text-lg" data-reveal data-delay={220}>
-                Comelu es un software fácil e intuitivo para laboratorios dentales, laboratoristas y clínicas dentales
-                con laboratorio propio. Ordena órdenes, archivos, estados y pagos sin depender de Excel, WhatsApp o
+                Estamos construyendo un software para laboratorios dentales, laboratoristas y clínicas con laboratorio
+                propio que buscará ordenar órdenes, archivos, estados y pagos sin depender de Excel, WhatsApp o
                 mensajes sueltos.
               </p>
               <p className="mt-4 max-w-3xl text-sm text-slate-400 sm:text-base" data-reveal data-delay={260}>
-                Pensado para la operación real del laboratorio dental en Chile: centraliza cada caso y da visibilidad
-                clara del trabajo en curso sin sumar complejidad innecesaria.
+                Queremos construir una herramienta cercana al problema real del rubro en Chile: simple, amigable y
+                con trazabilidad clara para seguir cada caso sin sumar complejidad innecesaria.
               </p>
 
               <ul className="mt-6 grid gap-3 text-sm text-slate-200 sm:text-base" data-reveal data-delay={300}>
@@ -783,16 +721,16 @@ function App() {
                 </button>
                 <button
                   type="button"
-                  onClick={onHowItWorksClick}
+                  onClick={() => scrollTo("que-resuelve")}
                   className={`${secondaryButton} w-full sm:w-auto`}
                   data-reveal
                   data-delay={40}
                 >
-                  Ver cómo funciona el software
+                  Ver lo que buscamos resolver
                 </button>
               </div>
               <p className="mt-3 text-center text-sm text-slate-400">
-                Déjanos tus datos y te contactaremos cuando abramos los primeros accesos.
+                Déjanos tus datos y te contactaremos cuando abramos los primeros accesos y espacios de validación.
               </p>
             </div>
 
@@ -827,54 +765,85 @@ function App() {
 
         <section id="que-resuelve" className="section-block scroll-mt-28" data-reveal>
           <SectionIntro
-            title="Qué problemas resuelve un software para laboratorio dental como Comelu"
-            description="Muchos laboratorios dentales y clínicas con producción propia todavía gestionan órdenes, archivos, estados y cobros en varios canales al mismo tiempo. Eso genera atrasos, retrabajos y poca trazabilidad."
+            title="Lo que buscamos resolver con Comelu"
+            description="Muchos laboratorios dentales y clínicas con producción propia todavía gestionan órdenes, archivos, estados y cobros en varios canales al mismo tiempo. Estamos creando Comelu para simplificar esos puntos de fricción con una experiencia más clara, moderna y trazable."
           />
-          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {PROBLEM_CARDS.map((item, index) => {
-              return (
-                <article
-                  key={item.title}
-                  className="glass-card interactive-card problem-card flex h-full flex-col"
-                  data-reveal
-                  data-delay={index * 80}
-                >
-                  <div className="problem-card-visual">
-                    <PlaceholderVisual
-                      label={item.placeholder}
-                      title="Imagen pendiente"
-                      detail="Reemplazar con visual final del problema descrito."
-                      variant="compact"
-                      imageSrc={
-                        index === 0
-                          ? problema1Illustration
-                          : index === 1
-                            ? problema2Illustration
-                            : index === 2
-                              ? problema3Illustration
-                              : index === 3
-                                ? problema4Illustration
-                            : undefined
-                      }
+          <div className="content-carousel panel-frame mt-8 overflow-hidden p-4 sm:p-6" data-reveal data-delay={80}>
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="section-eyebrow mb-2">Problemas reales del rubro</p>
+                <p className="text-sm text-slate-500">
+                  Problema {currentProblemIndex + 1} de {PROBLEM_CARDS.length}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 overflow-hidden">
+              <div
+                className="flex"
+                style={{
+                  transform: `translateX(-${currentProblemIndex * 100}%)`,
+                  transition: allowCarouselMotion ? "transform 520ms cubic-bezier(0.22, 1, 0.36, 1)" : "none",
+                }}
+              >
+                {PROBLEM_CARDS.map((item) => (
+                  <article key={item.title} className="min-w-full">
+                    <div className="grid gap-6 lg:grid-cols-[1.02fr_0.98fr] lg:items-stretch">
+                      <div className="glass-card problem-slide-copy flex h-full flex-col justify-center">
+                        <h3 className="problem-card-title text-2xl font-semibold text-slate-950">{item.title}</h3>
+                        <p className="problem-card-description mt-4 text-base leading-8 text-slate-600">
+                          {item.description}
+                        </p>
+                      </div>
+                      <div className="glass-card problem-slide-visual flex h-full items-center">
+                        <div className="w-full">
+                          <PlaceholderVisual
+                            label={item.imageAlt}
+                            title={item.title}
+                            detail={item.description}
+                            variant="hero"
+                            imageSrc={item.imageSrc}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <div className="carousel-progress" aria-label={`Indicador del problema ${currentProblemIndex + 1}`}>
+                {PROBLEM_CARDS.map((item, progressIndex) => (
+                  <button
+                    key={item.title}
+                    type="button"
+                    onClick={() => goToProblemSlide(progressIndex)}
+                    className={`carousel-progress-segment ${progressIndex === currentProblemIndex ? "is-active" : ""}`}
+                    aria-label={`Ir al problema ${progressIndex + 1}: ${item.title}`}
+                    aria-current={progressIndex === currentProblemIndex ? "step" : undefined}
+                  >
+                    <span
+                      className={`carousel-progress-fill ${
+                        progressIndex === currentProblemIndex && allowCarouselMotion ? "is-animated" : ""
+                      }`}
                     />
-                  </div>
-                  <h3 className="problem-card-title mt-5 text-lg font-semibold text-slate-950">{item.title}</h3>
-                  <p className="problem-card-description mt-3 text-sm text-slate-600">{item.description}</p>
-                </article>
-              );
-            })}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
           <div className="section-cta-row mt-8" data-reveal data-delay={140}>
             <button type="button" onClick={onWaitlistClick} className={primaryButton}>
-              Quiero ordenar la gestión del laboratorio
+              Quiero sumarme temprano
             </button>
           </div>
         </section>
 
-        <section className="section-block pb-14 scroll-mt-28 lg:pb-20" data-reveal>
+        <section id="para-quien" className="section-block pb-14 scroll-mt-28 lg:pb-20" data-reveal>
           <SectionIntro
-            title="Software para laboratorios dentales, laboratoristas y clínicas dentales con laboratorio propio"
-            description="Comelu está pensado para equipos que producen, coordinan o supervisan trabajos protésicos dentales y necesitan una forma más ordenada de gestionar casos, archivos y pagos."
+            title="Lo estamos creando para equipos que viven este desorden de cerca"
+            description="Comelu se está diseñando para quienes producen, coordinan o supervisan trabajos protésicos dentales y necesitan una herramienta simple, moderna y amigable para ordenar casos, archivos y pagos."
           />
           <div className="mt-8 grid gap-5 lg:grid-cols-3">
             {AUDIENCE_BLOCKS.map((item, index) => {
@@ -914,141 +883,10 @@ function App() {
           </div>
         </section>
 
-        <section id="como-funciona" className="section-block scroll-mt-28" data-reveal>
-          <SectionIntro
-            title="Cómo funciona Comelu para gestionar órdenes de trabajo dentales"
-            description="El software concentra en un solo flujo lo que hoy suele repartirse entre mensajes, planillas, archivos y seguimiento manual."
-          />
-          <div className="how-carousel panel-frame mt-8 overflow-hidden p-4 sm:p-6" data-reveal data-delay={80}>
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="section-eyebrow mb-2">Flujo guiado</p>
-                <p className="text-sm text-slate-500">
-                  Paso {currentHowIndex + 1} de {HOW_IT_WORKS.length}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={goToPreviousHowStep}
-                  aria-label="Ver paso anterior"
-                  className="carousel-arrow"
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={goToNextHowStep}
-                  aria-label="Ver paso siguiente"
-                  className="carousel-arrow"
-                >
-                  <ChevronRight className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-
-            <div className="mt-6 overflow-hidden">
-              <div
-                className="flex"
-                style={{
-                  transform: `translateX(-${currentHowIndex * 100}%)`,
-                  transition: allowCarouselMotion ? "transform 520ms cubic-bezier(0.22, 1, 0.36, 1)" : "none",
-                }}
-              >
-                {HOW_IT_WORKS.map((item, index) => (
-                  <article key={item.title} className="min-w-full">
-                    <div className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-stretch">
-                      <div className="glass-card flex h-full flex-col justify-between">
-                        <div>
-                          <div className="step-pill mx-auto">{item.step}</div>
-                          <h3 className="mt-6 text-2xl font-semibold text-slate-950">{item.title}</h3>
-                          <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600">{item.description}</p>
-                        </div>
-                      </div>
-                      <div className="glass-card flex h-full items-center">
-                        <div className="w-full">
-                          <PlaceholderVisual
-                            label={item.placeholder}
-                            title={`Mini visual ${item.step}`}
-                            detail="Reemplazar con visual final del flujo correspondiente."
-                            variant="hero"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <div className="carousel-progress" aria-label={`Indicador del paso ${currentHowIndex + 1}`}>
-                {HOW_IT_WORKS.map((progressItem, progressIndex) => (
-                  <button
-                    key={progressItem.step}
-                    type="button"
-                    onClick={() => goToHowStep(progressIndex)}
-                    className={`carousel-progress-segment ${progressIndex === currentHowIndex ? "is-active" : ""}`}
-                    aria-label={`Ir al paso ${progressItem.step}`}
-                    aria-current={progressIndex === currentHowIndex ? "step" : undefined}
-                  >
-                    <span
-                      className={`carousel-progress-fill ${
-                        progressIndex === currentHowIndex && allowCarouselMotion ? "is-animated" : ""
-                      }`}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="section-cta-row mt-8" data-reveal data-delay={140}>
-            <button type="button" onClick={onWaitlistClick} className={primaryButton}>
-              Quiero ver una herramienta así en mi laboratorio
-            </button>
-          </div>
-        </section>
-
-        <section id="primera-version" className="section-block scroll-mt-28" data-reveal>
-          <SectionIntro
-            title="Primera versión del software para laboratorio dental: lo esencial para operar"
-            description="Comelu parte resolviendo lo más importante de la gestión diaria del laboratorio dental antes de sumar funciones más avanzadas."
-          />
-          <div className="mt-8 grid gap-6 lg:grid-cols-2">
-            <article className="glass-card interactive-card" data-reveal data-delay={0}>
-              <h3 className="text-lg font-semibold text-slate-950">Qué incluirá primero</h3>
-              <ul className="mt-4 space-y-3 text-sm text-slate-700">
-                {INITIAL_FEATURES.map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#56f3e2]" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </article>
-            <article className="glass-card interactive-card" data-reveal data-delay={80}>
-              <h3 className="text-lg font-semibold text-slate-950">Más adelante.</h3>
-              <ul className="mt-4 space-y-3 text-sm text-slate-600">
-                {FUTURE_FEATURES.map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </article>
-          </div>
-          <div className="section-cta-row mt-8" data-reveal data-delay={140}>
-            <button type="button" onClick={onWaitlistClick} className={primaryButton}>
-              Quiero estar entre los primeros interesados
-            </button>
-          </div>
-        </section>
-
         <section className="section-block scroll-mt-28" data-reveal>
           <SectionIntro
-            title="Comelu nace desde la operación real del laboratorio dental"
-            description="Comelu no busca ser un software dental genérico. Nace con foco específico en la gestión del laboratorio dental: órdenes de trabajo, archivos, seguimiento, pagos y coordinación diaria."
+            title="Estamos construyendo Comelu desde la operación real del laboratorio dental"
+            description="No queremos hacer un software dental genérico. Buscamos construir una herramienta enfocada en la gestión del laboratorio dental: órdenes de trabajo, archivos, seguimiento, pagos y coordinación diaria."
           />
           <div className="mt-6 grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
             <div data-reveal data-delay={80} className="h-full">
@@ -1060,8 +898,8 @@ function App() {
             </div>
             <div data-reveal data-delay={120} className="glass-card flex h-full flex-col justify-center">
               <p className="section-copy">
-                La meta es construir una herramienta simple, clara y útil para laboratorios dentales en Chile, basada
-                en problemas reales del flujo protésico y no en funciones desconectadas de la operación.
+                La meta es construir un software simple, moderno, amigable e intuitivo para laboratorios dentales en
+                Chile, basado en problemas reales del flujo protésico y no en funciones desconectadas de la operación.
               </p>
             </div>
           </div>
@@ -1070,8 +908,8 @@ function App() {
         <section id="lista-espera" className="full-bleed-dark-section waitlist-section section-block scroll-mt-28">
           <div className="panel-frame dark-panel p-6 sm:p-8" data-reveal data-delay={0}>
             <SectionIntro
-              title="Únete a la lista de espera y ayúdanos a priorizar el software para laboratorio dental que realmente necesita el rubro"
-              description="Déjanos tus datos para obtener descuentos especiales de lanzamiento que ofreceremos a nuestros primeros clientes"
+              title="Únete temprano y ayúdanos a construir el software para laboratorio dental que el rubro realmente necesita"
+              description="Déjanos tus datos para contactarte cuando abramos primeros accesos, entrevistas o instancias de validación del producto."
             />
 
             <form className="mt-8 grid gap-8" onSubmit={onSubmit} noValidate data-reveal data-delay={60}>
@@ -1381,7 +1219,7 @@ function App() {
         <section id="faq" className="section-block scroll-mt-28" data-reveal>
           <SectionIntro
             title="Preguntas frecuentes sobre Comelu"
-            description="Respuestas breves para entender el foco del software para laboratorios dentales y cómo avanza esta primera versión."
+            description="Respuestas breves para entender qué estamos construyendo, para quién lo estamos creando y cómo puedes sumarte temprano."
           />
           <div className="mt-6 space-y-3">
             {FAQ_ITEMS.map((item, index) => {
@@ -1429,12 +1267,15 @@ function App() {
         <div className="mx-auto flex w-full max-w-[1160px] flex-col gap-6 px-4 py-8 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
           <div>
             <p className="text-sm font-semibold text-white">Comelu</p>
-            <p className="mt-1 text-sm text-slate-400">Comelu — Software para gestión de laboratorios dentales</p>
+            <p className="mt-1 text-sm text-slate-400">Comelu — Software en construcción para laboratorios dentales</p>
             <p className="mt-1 text-sm text-slate-500">© {year} Comelu. Todos los derechos reservados.</p>
           </div>
           <div className="flex flex-wrap items-center gap-4 text-sm text-slate-400">
-            <button type="button" onClick={onHowItWorksClick} className="transition hover:text-white">
-              Cómo funciona
+            <button type="button" onClick={() => scrollTo("que-resuelve")} className="transition hover:text-white">
+              Problemas
+            </button>
+            <button type="button" onClick={() => scrollTo("para-quien")} className="transition hover:text-white">
+              Para quién
             </button>
             <button type="button" onClick={() => scrollTo("faq")} className="transition hover:text-white">
               FAQ
