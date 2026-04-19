@@ -82,33 +82,50 @@ footer {
 }
 
 .hero-panel {
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  position: relative;
+  isolation: isolate;
+  border: 0;
   background:
-    linear-gradient(155deg, rgba(17, 25, 48, 0.88), rgba(10, 16, 33, 0.8)),
-    radial-gradient(circle at 85% 24%, rgba(45, 212, 191, 0.15), transparent 30%);
-  border-radius: 1.15rem;
-  padding: 1.8rem;
+    linear-gradient(155deg, rgba(8, 16, 32, 0.66), rgba(7, 12, 24, 0.82)),
+    linear-gradient(180deg, rgba(5, 10, 20, 0.12) 0%, rgba(5, 10, 20, 0.56) 100%),
+    radial-gradient(circle at 85% 24%, rgba(45, 212, 191, 0.14), transparent 30%),
+    var(--hero-image);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 0;
+  width: calc(100vw + 4px);
+  margin-left: calc(50% - 50vw - 2px);
+  margin-right: calc(50% - 50vw - 2px);
+  padding: 1.8rem 1rem 2.1rem;
   margin-top: 0;
   box-shadow:
-    0 24px 80px -44px rgba(45, 212, 191, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    0 24px 80px -44px rgba(45, 212, 191, 0.35);
 }
 
 @media (min-width: 640px) {
   .hero-panel {
-    padding: 2.5rem;
+    padding: 2.5rem 1.5rem 2.75rem;
   }
+}
+
+.hero-panel-inner {
+  width: 100%;
+  max-width: 1160px;
+  margin: 0 auto;
 }
 
 .hero-grid {
   display: grid;
   gap: 1.5rem;
+  min-height: 32rem;
+  align-items: end;
 }
 
 @media (min-width: 1024px) {
   .hero-grid {
-    grid-template-columns: 1.2fr 0.8fr;
-    align-items: center;
+    grid-template-columns: 1fr;
+    min-height: 38rem;
   }
 }
 
@@ -213,6 +230,7 @@ footer {
     radial-gradient(circle at 15% 12%, rgba(27, 129, 120, 0.18), transparent 28%),
     radial-gradient(circle at 85% 18%, rgba(60, 128, 220, 0.16), transparent 26%),
     linear-gradient(180deg, #07111d 0%, #0a1623 100%);
+  opacity: 0.5;
 }
 
 .full-bleed-dark-section > * {
@@ -473,46 +491,67 @@ footer {
   justify-content: center;
 }
 
-.problem-card-visual .placeholder-compact,
-.how-card .placeholder-compact {
-  min-height: 11.5rem;
-}
-
-.how-carousel {
+.content-carousel {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(245, 249, 251, 0.92)),
     radial-gradient(circle at 82% 20%, rgba(16, 157, 143, 0.08), transparent 28%);
 }
 
-.carousel-arrow {
-  display: inline-flex;
-  height: 2.9rem;
-  width: 2.9rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  background: rgba(255, 255, 255, 0.92);
-  color: #0f172a;
-  transition:
-    transform 220ms ease,
-    border-color 220ms ease,
-    background-color 220ms ease,
-    box-shadow 220ms ease;
+.problem-carousel-slide {
+  position: relative;
+  min-height: 24rem;
+  isolation: isolate;
+  overflow: hidden;
+  background: #0b1222;
 }
 
-.carousel-arrow:hover,
-.carousel-arrow:focus-visible {
-  transform: translateY(-1px);
-  border-color: rgba(129, 255, 242, 0.32);
-  background: rgba(45, 212, 191, 0.1);
-  box-shadow: 0 0 20px rgba(34, 184, 168, 0.14);
-  outline: none;
+.problem-carousel-slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(7, 17, 29, 0.06) 0%, rgba(7, 17, 29, 0.16) 36%, rgba(7, 17, 29, 0.54) 100%);
+  z-index: 0;
+}
+
+.problem-carousel-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.problem-carousel-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+}
+
+.problem-carousel-copy {
+  position: relative;
+  width: 100%;
+  padding: 7rem 1.5rem 1.5rem;
+}
+
+.problem-carousel-copy::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(7, 17, 29, 0) 0%, rgba(7, 17, 29, 0.18) 18%, rgba(7, 17, 29, 0.56) 48%, rgba(7, 17, 29, 0.88) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.68) 28%, rgba(0, 0, 0, 1) 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.68) 28%, rgba(0, 0, 0, 1) 100%);
+  z-index: -1;
 }
 
 .carousel-progress {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
   gap: 0.65rem;
 }
 
@@ -534,6 +573,11 @@ footer {
   box-shadow: 0 0 12px rgba(34, 184, 168, 0.22);
 }
 
+.carousel-progress-segment:focus-visible {
+  outline: 2px solid rgba(16, 157, 143, 0.48);
+  outline-offset: 3px;
+}
+
 .carousel-progress-segment.is-active .carousel-progress-fill {
   width: 100%;
 }
@@ -542,51 +586,22 @@ footer {
   animation: carouselProgress 8s linear;
 }
 
-.problem-card-title,
-.how-card-title {
+.problem-card-title {
   line-height: 1.4;
 }
 
-.problem-card-description,
-.how-card-description {
+.problem-card-description {
   line-height: 1.7;
 }
 
 @media (min-width: 1280px) {
-  .problem-card-title {
-    min-height: 7.2rem;
+  .problem-carousel-slide {
+    min-height: 32rem;
   }
 
-  .problem-card-description {
-    min-height: 8.5rem;
+  .problem-carousel-copy {
+    padding: 9rem 2rem 2rem;
   }
-
-  .how-card-title {
-    min-height: 4.6rem;
-  }
-
-  .how-card-description {
-    min-height: 5.8rem;
-  }
-}
-
-.step-pill {
-  display: inline-flex;
-  height: 3rem;
-  width: 3rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  border: 1px solid rgba(129, 255, 242, 0.45);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(129, 255, 242, 0.28), rgba(16, 157, 143, 0.16)),
-    rgba(45, 212, 191, 0.14);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 0 18px rgba(34, 184, 168, 0.16);
-  color: #d8fffb;
-  font-weight: 700;
-  font-size: 1rem;
 }
 
 .field-label {
@@ -632,6 +647,23 @@ footer {
 
 .dark-panel .field-label {
   color: #dbe5f1;
+}
+
+.faq-list {
+  display: grid;
+  gap: 0;
+}
+
+.faq-item + .faq-item {
+  margin-top: 0.15rem;
+}
+
+.faq-trigger {
+  transition: color 180ms ease;
+}
+
+.faq-trigger:hover {
+  color: #0f172a;
 }
 
 .faq-panel {
@@ -705,7 +737,6 @@ footer {
     transition: none;
   }
 
-  .carousel-arrow,
   .faq-panel {
     transition: none;
   }
