@@ -473,46 +473,24 @@ footer {
   justify-content: center;
 }
 
-.problem-card-visual .placeholder-compact,
-.how-card .placeholder-compact {
-  min-height: 11.5rem;
-}
-
-.how-carousel {
+.content-carousel {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(245, 249, 251, 0.92)),
     radial-gradient(circle at 82% 20%, rgba(16, 157, 143, 0.08), transparent 28%);
 }
 
-.carousel-arrow {
-  display: inline-flex;
-  height: 2.9rem;
-  width: 2.9rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  background: rgba(255, 255, 255, 0.92);
-  color: #0f172a;
-  transition:
-    transform 220ms ease,
-    border-color 220ms ease,
-    background-color 220ms ease,
-    box-shadow 220ms ease;
+.problem-slide-copy {
+  min-height: 19rem;
 }
 
-.carousel-arrow:hover,
-.carousel-arrow:focus-visible {
-  transform: translateY(-1px);
-  border-color: rgba(129, 255, 242, 0.32);
-  background: rgba(45, 212, 191, 0.1);
-  box-shadow: 0 0 20px rgba(34, 184, 168, 0.14);
-  outline: none;
+.problem-slide-visual .placeholder-hero {
+  min-height: 19rem;
 }
 
 .carousel-progress {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
   gap: 0.65rem;
 }
 
@@ -534,6 +512,11 @@ footer {
   box-shadow: 0 0 12px rgba(34, 184, 168, 0.22);
 }
 
+.carousel-progress-segment:focus-visible {
+  outline: 2px solid rgba(16, 157, 143, 0.48);
+  outline-offset: 3px;
+}
+
 .carousel-progress-segment.is-active .carousel-progress-fill {
   width: 100%;
 }
@@ -542,51 +525,18 @@ footer {
   animation: carouselProgress 8s linear;
 }
 
-.problem-card-title,
-.how-card-title {
+.problem-card-title {
   line-height: 1.4;
 }
 
-.problem-card-description,
-.how-card-description {
+.problem-card-description {
   line-height: 1.7;
 }
 
 @media (min-width: 1280px) {
-  .problem-card-title {
-    min-height: 7.2rem;
+  .problem-slide-copy {
+    min-height: 23rem;
   }
-
-  .problem-card-description {
-    min-height: 8.5rem;
-  }
-
-  .how-card-title {
-    min-height: 4.6rem;
-  }
-
-  .how-card-description {
-    min-height: 5.8rem;
-  }
-}
-
-.step-pill {
-  display: inline-flex;
-  height: 3rem;
-  width: 3rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  border: 1px solid rgba(129, 255, 242, 0.45);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(129, 255, 242, 0.28), rgba(16, 157, 143, 0.16)),
-    rgba(45, 212, 191, 0.14);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 0 18px rgba(34, 184, 168, 0.16);
-  color: #d8fffb;
-  font-weight: 700;
-  font-size: 1rem;
 }
 
 .field-label {
@@ -705,7 +655,6 @@ footer {
     transition: none;
   }
 
-  .carousel-arrow,
   .faq-panel {
     transition: none;
   }
