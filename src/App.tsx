@@ -5,7 +5,6 @@ import {
   FlaskConical,
   Menu,
   Send,
-  Stethoscope,
   Workflow,
   X,
 } from "lucide-react";
@@ -14,6 +13,8 @@ import problema2Illustration from "./assets/illustrations/Problema_2.png";
 import problema3Illustration from "./assets/illustrations/Problema_3b.jpeg";
 import problema4Illustration from "./assets/illustrations/Problema_4.jpeg";
 import cliente1Illustration from "./assets/illustrations/Cliente_1.jpeg";
+import cliente2Illustration from "./assets/illustrations/Cliente_2.jpeg";
+import hero2Illustration from "./assets/illustrations/hero_2.png";
 
 type Role =
   | ""
@@ -121,15 +122,6 @@ const AUDIENCE_BLOCKS = [
     detail:
       "Cuando una sola persona vende, produce, coordina y cobra, cada minuto importa. Comelu apunta a simplificar esa operación con una experiencia más ordenada, amable y fácil de seguir.",
     placeholder: "Placeholder cliente 2: laboratorista independiente",
-  },
-  {
-    title: "Clínica con laboratorio",
-    description:
-      "Para clínicas que quieren controlar todo el proceso",
-    icon: Stethoscope,
-    detail:
-      "Desde la solicitud hasta la confección de la prótesis, queremos que el proceso se pueda seguir con más control, orden y visibilidad desde un solo flujo.",
-    placeholder: "Placeholder cliente 3: clínica con laboratorio",
   },
 ] as const;
 
@@ -611,7 +603,6 @@ function App() {
             </span>
             <span>
               <span className="block text-base font-semibold tracking-tight sm:text-lg">Comelu</span>
-              <span className="hidden text-xs text-slate-300 sm:block">Software para laboratorios dentales en Chile</span>
             </span>
           </a>
 
@@ -673,9 +664,14 @@ function App() {
       </header>
 
       <main className="mx-auto w-full max-w-[1160px] px-4 pb-20 sm:px-6 lg:px-8">
-        <section className="full-bleed-dark-section hero-panel panel-frame dark-panel scroll-mt-28" data-reveal>
-          <div className="hero-grid">
-            <div data-reveal data-delay={80}>
+        <section
+          className="full-bleed-dark-section hero-panel scroll-mt-28"
+          data-reveal
+          style={{ ["--hero-image" as string]: `url(${hero2Illustration})` }}
+        >
+          <div className="hero-panel-inner">
+            <div className="hero-grid">
+              <div data-reveal data-delay={80}>
               <p
                 className="mb-4 inline-flex rounded-full border border-[#2dd4bf]/40 bg-[#2dd4bf]/12 px-3 py-1 text-xs font-semibold tracking-wide text-[#81fff2]"
                 data-reveal
@@ -688,16 +684,15 @@ function App() {
                 data-reveal
                 data-delay={160}
               >
-                Estamos creando Comelu para que la gestión del laboratorio dental sea simple, moderna e intuitiva
+                El Software que cambiará la gestión del laboratorio dental 
               </h1>
               <p className="mt-5 max-w-3xl text-base text-slate-300 sm:text-lg" data-reveal data-delay={220}>
-                Estamos construyendo un software para laboratorios dentales, laboratoristas y clínicas con laboratorio
-                propio que buscará ordenar órdenes, archivos, estados y pagos sin depender de Excel, WhatsApp o
-                mensajes sueltos.
+                Organiza órdenes, archivos, estados y pagos. Sin depender de Excel, WhatsApp o
+                mensajes sueltos
               </p>
               <p className="mt-4 max-w-3xl text-sm text-slate-400 sm:text-base" data-reveal data-delay={260}>
-                Queremos construir una herramienta cercana al problema real del rubro en Chile: simple, amigable y
-                con trazabilidad clara para seguir cada caso sin sumar complejidad innecesaria.
+                Construiremos la solución para el problema real del rubro en Chile. Será simple, amigable y
+                con trazabilidad clara para seguir cada caso fácilmente.
               </p>
 
               <ul className="mt-6 grid gap-3 text-sm text-slate-200 sm:text-base" data-reveal data-delay={300}>
@@ -732,34 +727,8 @@ function App() {
               <p className="mt-3 text-center text-sm text-slate-400">
                 Déjanos tus datos y te contactaremos cuando abramos los primeros accesos y espacios de validación.
               </p>
-            </div>
-
-            <aside className="glass-card dark-card floating-card space-y-4" data-reveal data-delay={140}>
-              <PlaceholderVisual
-                label="Placeholder hero principal: mockup del software para laboratorios dentales"
-                title="Hero principal"
-                detail="Espacio para mockup con órdenes de trabajo, casos activos, estado del caso, archivos y pago o saldo."
-                variant="hero"
-              />
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="metric-row">
-                  <span>Casos activos</span>
-                  <strong>24</strong>
-                </div>
-                <div className="metric-row">
-                  <span>Órdenes con adjuntos</span>
-                  <strong>18</strong>
-                </div>
-                <div className="metric-row">
-                  <span>En producción</span>
-                  <strong>9</strong>
-                </div>
-                <div className="metric-row">
-                  <span>Pagos pendientes</span>
-                  <strong>5</strong>
-                </div>
               </div>
-            </aside>
+            </div>
           </div>
         </section>
 
@@ -768,17 +737,8 @@ function App() {
             title="Lo que buscamos resolver con Comelu"
             description="Muchos laboratorios dentales y clínicas con producción propia todavía gestionan órdenes, archivos, estados y cobros en varios canales al mismo tiempo. Estamos creando Comelu para simplificar esos puntos de fricción con una experiencia más clara, moderna y trazable."
           />
-          <div className="content-carousel panel-frame mt-8 overflow-hidden p-4 sm:p-6" data-reveal data-delay={80}>
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="section-eyebrow mb-2">Problemas reales del rubro</p>
-                <p className="text-sm text-slate-500">
-                  Problema {currentProblemIndex + 1} de {PROBLEM_CARDS.length}
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6 overflow-hidden">
+          <div className="content-carousel panel-frame mt-8 overflow-hidden" data-reveal data-delay={80}>
+            <div className="overflow-hidden">
               <div
                 className="flex"
                 style={{
@@ -787,24 +747,16 @@ function App() {
                 }}
               >
                 {PROBLEM_CARDS.map((item) => (
-                  <article key={item.title} className="min-w-full">
-                    <div className="grid gap-6 lg:grid-cols-[1.02fr_0.98fr] lg:items-stretch">
-                      <div className="glass-card problem-slide-copy flex h-full flex-col justify-center">
-                        <h3 className="problem-card-title text-2xl font-semibold text-slate-950">{item.title}</h3>
-                        <p className="problem-card-description mt-4 text-base leading-8 text-slate-600">
+                  <article key={item.title} className="problem-carousel-slide min-w-full">
+                    <img src={item.imageSrc} alt={item.imageAlt} className="problem-carousel-image" />
+                    <div className="problem-carousel-overlay">
+                      <div className="problem-carousel-copy">
+                        <h3 className="problem-card-title text-2xl font-semibold text-white sm:text-3xl">
+                          {item.title}
+                        </h3>
+                        <p className="problem-card-description mt-3 text-sm leading-7 text-slate-100 sm:text-base sm:leading-8">
                           {item.description}
                         </p>
-                      </div>
-                      <div className="glass-card problem-slide-visual flex h-full items-center">
-                        <div className="w-full">
-                          <PlaceholderVisual
-                            label={item.imageAlt}
-                            title={item.title}
-                            detail={item.description}
-                            variant="hero"
-                            imageSrc={item.imageSrc}
-                          />
-                        </div>
                       </div>
                     </div>
                   </article>
@@ -812,7 +764,7 @@ function App() {
               </div>
             </div>
 
-            <div className="mt-6">
+            <div className="px-4 pb-4 pt-4 sm:px-6 sm:pb-6">
               <div className="carousel-progress" aria-label={`Indicador del problema ${currentProblemIndex + 1}`}>
                 {PROBLEM_CARDS.map((item, progressIndex) => (
                   <button
@@ -845,7 +797,7 @@ function App() {
             title="Lo estamos creando para equipos que viven este desorden de cerca"
             description="Comelu se está diseñando para quienes producen, coordinan o supervisan trabajos protésicos dentales y necesitan una herramienta simple, moderna y amigable para ordenar casos, archivos y pagos."
           />
-          <div className="mt-8 grid gap-5 lg:grid-cols-3">
+          <div className="mt-8 grid gap-5 lg:grid-cols-2">
             {AUDIENCE_BLOCKS.map((item, index) => {
               const Icon = item.icon;
               return (
@@ -860,7 +812,7 @@ function App() {
                     title="Imagen del cliente potencial"
                     detail="Reemplazar con visual editorial del perfil descrito."
                     variant="audience"
-                    imageSrc={index === 0 ? cliente1Illustration : undefined}
+                    imageSrc={index === 0 ? cliente1Illustration : index === 1 ? cliente2Illustration : undefined}
                   />
                   <div className="mt-4 flex items-start gap-3">
                     <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white text-[#109d8f]">
@@ -1221,7 +1173,7 @@ function App() {
             title="Preguntas frecuentes sobre Comelu"
             description="Respuestas breves para entender qué estamos construyendo, para quién lo estamos creando y cómo puedes sumarte temprano."
           />
-          <div className="mt-6 space-y-3">
+          <div className="faq-list mt-6">
             {FAQ_ITEMS.map((item, index) => {
               const isOpen = faqOpenIndex === index;
               const buttonId = `faq-button-${index}`;
@@ -1230,7 +1182,7 @@ function App() {
               return (
                 <article
                   key={item.q}
-                  className="interactive-card overflow-hidden rounded-xl border border-slate-200 bg-white/90 backdrop-blur-sm transition hover:bg-white"
+                  className="faq-item"
                   data-reveal
                   data-delay={index * 70}
                 >
@@ -1240,7 +1192,7 @@ function App() {
                       type="button"
                       aria-expanded={isOpen}
                       aria-controls={panelId}
-                      className="flex w-full items-center justify-between px-5 py-4 text-left text-sm font-semibold text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-inset"
+                      className="faq-trigger flex w-full items-center justify-between py-4 text-left text-sm font-semibold text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] focus-visible:ring-inset"
                       onClick={() => setFaqOpenIndex(isOpen ? null : index)}
                     >
                       {item.q}
@@ -1254,7 +1206,7 @@ function App() {
                     aria-hidden={!isOpen}
                     className={`faq-panel text-sm text-slate-600 ${isOpen ? "is-open" : ""}`}
                   >
-                    <div className="faq-panel-inner border-t border-slate-200 px-5 py-4">{item.a}</div>
+                    <div className="faq-panel-inner pb-4 pr-8">{item.a}</div>
                   </div>
                 </article>
               );
