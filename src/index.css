@@ -114,8 +114,8 @@ footer {
 @media (min-width: 768px) {
   .hero-panel {
     background:
-      linear-gradient(90deg, rgba(5, 10, 20, 0.96) 0%, rgba(5, 10, 20, 0.86) 42%, rgba(5, 10, 20, 0.3) 70%, rgba(5, 10, 20, 0.56) 100%),
-      linear-gradient(180deg, rgba(5, 10, 20, 0.18) 0%, rgba(5, 10, 20, 0.74) 100%),
+      linear-gradient(90deg, rgba(5, 10, 20, 0.96) 0%, rgba(5, 10, 20, 0.84) 42%, rgba(5, 10, 20, 0.16) 72%, rgba(5, 10, 20, 0.2) 100%),
+      linear-gradient(180deg, rgba(5, 10, 20, 0.08) 0%, rgba(5, 10, 20, 0.5) 100%),
       var(--hero-image-desktop);
     background-position:
       center,
