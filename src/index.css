@@ -86,11 +86,13 @@ footer {
   isolation: isolate;
   border: 0;
   background:
-    linear-gradient(155deg, rgba(8, 16, 32, 0.66), rgba(7, 12, 24, 0.82)),
-    linear-gradient(180deg, rgba(5, 10, 20, 0.12) 0%, rgba(5, 10, 20, 0.56) 100%),
-    radial-gradient(circle at 85% 24%, rgba(45, 212, 191, 0.14), transparent 30%),
-    var(--hero-image);
-  background-position: center;
+    linear-gradient(180deg, rgba(5, 10, 20, 0.9) 0%, rgba(5, 10, 20, 0.7) 48%, rgba(5, 10, 20, 0.94) 100%),
+    linear-gradient(90deg, rgba(5, 10, 20, 0.94) 0%, rgba(5, 10, 20, 0.78) 46%, rgba(5, 10, 20, 0.42) 100%),
+    var(--hero-image-mobile);
+  background-position:
+    center,
+    center,
+    center top;
   background-repeat: no-repeat;
   background-size: cover;
   border-radius: 0;
@@ -109,6 +111,21 @@ footer {
   }
 }
 
+@media (min-width: 768px) {
+  .hero-panel {
+    background:
+      linear-gradient(90deg, rgba(5, 10, 20, 0.96) 0%, rgba(5, 10, 20, 0.86) 42%, rgba(5, 10, 20, 0.3) 70%, rgba(5, 10, 20, 0.56) 100%),
+      linear-gradient(180deg, rgba(5, 10, 20, 0.18) 0%, rgba(5, 10, 20, 0.74) 100%),
+      var(--hero-image-desktop);
+    background-position:
+      center,
+      center,
+      center right;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+
 .hero-panel-inner {
   width: 100%;
   max-width: 1160px;
@@ -122,10 +139,15 @@ footer {
   align-items: end;
 }
 
+.hero-copy {
+  max-width: 44rem;
+}
+
 @media (min-width: 1024px) {
   .hero-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 0.58fr) minmax(0, 0.42fr);
     min-height: 38rem;
+    align-items: center;
   }
 }
 

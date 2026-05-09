@@ -14,7 +14,7 @@ import problema3Illustration from "./assets/illustrations/Problema_3b.jpeg";
 import problema4Illustration from "./assets/illustrations/Problema_4.jpeg";
 import cliente1Illustration from "./assets/illustrations/Cliente_1.jpeg";
 import cliente2Illustration from "./assets/illustrations/Cliente_2.jpeg";
-import hero2Illustration from "./assets/illustrations/hero_2.png";
+import { landingHeroImages } from "./lib/landingAssets";
 
 type Role =
   | ""
@@ -667,11 +667,14 @@ function App() {
         <section
           className="full-bleed-dark-section hero-panel scroll-mt-28"
           data-reveal
-          style={{ ["--hero-image" as string]: `url(${hero2Illustration})` }}
+          style={{
+            ["--hero-image-desktop" as string]: `url(${landingHeroImages.desktop})`,
+            ["--hero-image-mobile" as string]: `url(${landingHeroImages.mobile})`,
+          }}
         >
           <div className="hero-panel-inner">
             <div className="hero-grid">
-              <div data-reveal data-delay={80}>
+              <div className="hero-copy" data-reveal data-delay={80}>
               <p
                 className="mb-4 inline-flex rounded-full border border-[#2dd4bf]/40 bg-[#2dd4bf]/12 px-3 py-1 text-xs font-semibold tracking-wide text-[#81fff2]"
                 data-reveal
@@ -704,7 +707,7 @@ function App() {
                 ))}
               </ul>
 
-              <div className="hero-cta mt-8 flex flex-wrap items-center justify-center gap-3">
+              <div className="hero-cta mt-8 flex flex-wrap items-center justify-start gap-3">
                 <button
                   type="button"
                   onClick={onWaitlistClick}
@@ -724,7 +727,7 @@ function App() {
                   Ver lo que buscamos resolver
                 </button>
               </div>
-              <p className="mt-3 text-center text-sm text-slate-400">
+              <p className="mt-3 max-w-2xl text-left text-sm text-slate-400">
                 Déjanos tus datos y te contactaremos cuando abramos los primeros accesos y espacios de validación.
               </p>
               </div>
