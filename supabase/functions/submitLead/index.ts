@@ -1,5 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { buildLeadEmailTemplate, type LeadEmailPayload } from "./emailTemplate.ts";
+import { parseTurnstileHostnames, TURNSTILE_WAITLIST_ACTION, validateTurnstile } from "./turnstile.ts";
 
 type LeadPayload = {
   nombre: string;
@@ -235,6 +236,23 @@ Deno.serve(async (request) => {
     body = await request.json();
   } catch {
     return json(400, { ok: false, error: "JSON inválido." });
+  }
+
+  const turnstileToken =
+    body && typeof body === "object" && !Array.isArray(body)
+      ? asTrimmedString((body as Record<string, unknown>).turnstileToken)
+      : "";
+  const turnstile = await validateTurnstile({
+    token: turnstileToken,
+    secret: Deno.env.get("TURNSTILE_SECRET"),
+    expectedAction: TURNSTILE_WAITLIST_ACTION,
+    expectedHostnames: parseTurnstileHostnames(Deno.env.get("TURNSTILE_HOSTNAMES")),
+    remoteIp: ip === "unknown" ? undefined : ip,
+  });
+
+  if (!turnstile.valid) {
+    const status = turnstile.reason === "configuration_error" ? 500 : 403;
+    return json(status, { ok: false, error: "No se pudo validar la comprobación de seguridad." });
   }
 
   const validation = validatePayload(body);
