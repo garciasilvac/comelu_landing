@@ -1,47 +1,37 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-03T00:00:00Z",
+  "generatedAt": "2026-08-03T04:58:13Z",
   "title": "Design System: Comelu",
   "extensions": {
     "colorMeta": {
-      "navy-deep": {
-        "role": "neutral",
-        "displayName": "Instrument Navy",
-        "canonical": "#07111d",
-        "tonalRamp": ["#07111d", "#0a1623", "#0b1222", "#1e293b", "#526173", "#94a3b8", "#cbd5e1", "#f4f8fb"]
-      },
-      "teal-primary": {
-        "role": "primary",
-        "displayName": "Calibrated Teal",
-        "canonical": "#109d8f",
-        "tonalRamp": ["#052f2c", "#07554e", "#08776d", "#109d8f", "#22b8a8", "#56f3e2", "#81fff2", "#e2fdfa"]
-      },
-      "blue-cool": {
-        "role": "secondary",
-        "displayName": "Clinical Blue",
-        "canonical": "#7dd3fc",
-        "tonalRamp": ["#0c2c42", "#155575", "#247da5", "#38bdf8", "#7dd3fc", "#bae6fd", "#e0f2fe", "#f0f9ff"]
-      },
-      "paper": {
-        "role": "neutral",
-        "displayName": "Cool Paper",
-        "canonical": "#f4f8fb",
-        "tonalRamp": ["#0f172a", "#334155", "#64748b", "#94a3b8", "#cbd5e1", "#edf4f8", "#f4f8fb", "#f8fafc"]
-      }
+      "navy-deep": { "role": "neutral", "displayName": "Instrument Navy", "canonical": "#07111d", "tonalRamp": ["#07111d", "#0a1623", "#132235", "#1e3349", "#526173", "#94a3b8", "#cbd5e1", "#f4f8fb"] },
+      "navy-panel": { "role": "neutral", "displayName": "Panel Navy", "canonical": "#0a1623", "tonalRamp": ["#06101a", "#0a1623", "#11263a", "#1d3b55", "#526173", "#94a3b8", "#dbe5f1", "#f8fafc"] },
+      "ink": { "role": "neutral", "displayName": "Graphite Ink", "canonical": "#0f172a", "tonalRamp": ["#0f172a", "#1e293b", "#334155", "#526173", "#94a3b8", "#cbd5e1", "#e2e8f0", "#f8fafc"] },
+      "teal-primary": { "role": "primary", "displayName": "Calibrated Teal", "canonical": "#109d8f", "tonalRamp": ["#052f2c", "#07554e", "#08776d", "#109d8f", "#22b8a8", "#56f3e2", "#81fff2", "#e2fdfa"] },
+      "teal-bright": { "role": "primary", "displayName": "Bright Teal", "canonical": "#2dd4bf", "tonalRamp": ["#063f39", "#08695f", "#109d8f", "#22b8a8", "#2dd4bf", "#56f3e2", "#81fff2", "#e2fdfa"] },
+      "teal-soft": { "role": "primary", "displayName": "Soft Teal Signal", "canonical": "#81fff2", "tonalRamp": ["#063f39", "#08695f", "#109d8f", "#22b8a8", "#2dd4bf", "#56f3e2", "#81fff2", "#e2fdfa"] },
+      "blue-cool": { "role": "secondary", "displayName": "Clinical Blue", "canonical": "#7dd3fc", "tonalRamp": ["#0c2c42", "#155575", "#247da5", "#38bdf8", "#7dd3fc", "#bae6fd", "#e0f2fe", "#f0f9ff"] },
+      "paper": { "role": "neutral", "displayName": "Cool Paper", "canonical": "#f4f8fb", "tonalRamp": ["#0f172a", "#334155", "#64748b", "#94a3b8", "#cbd5e1", "#edf4f8", "#f4f8fb", "#f8fafc"] },
+      "paper-light": { "role": "neutral", "displayName": "Light Paper", "canonical": "#f8fafc", "tonalRamp": ["#0f172a", "#334155", "#64748b", "#94a3b8", "#cbd5e1", "#e2e8f0", "#f4f8fb", "#f8fafc"] },
+      "copy-muted": { "role": "neutral", "displayName": "Quiet Copy", "canonical": "#526173", "tonalRamp": ["#0f172a", "#26384b", "#526173", "#64748b", "#94a3b8", "#cbd5e1", "#e2e8f0", "#f8fafc"] },
+      "error": { "role": "tertiary", "displayName": "Clear Error Rose", "canonical": "#fb7185", "tonalRamp": ["#4c0a1b", "#881337", "#be123c", "#e11d48", "#fb7185", "#fda4af", "#fecdd3", "#fff1f2"] }
     },
     "typographyMeta": {
       "display": { "displayName": "Hero Display", "purpose": "State the primary public promise with calm authority." },
-      "headline": { "displayName": "Section Headline", "purpose": "Orient visitors as they move through the story." },
+      "headline": { "displayName": "Section Headline", "purpose": "Orient visitors as they move through the page story." },
       "body": { "displayName": "Explanatory Body", "purpose": "Explain operational value in plain Spanish (Chile)." },
-      "label": { "displayName": "Control Label", "purpose": "Make actions and form inputs clear at a compact scale." }
+      "label": { "displayName": "Control Label", "purpose": "Make actions and form inputs legible at a compact scale." }
     },
     "shadows": [
       { "name": "panel-low", "value": "0 20px 54px -40px rgba(15, 23, 42, 0.18)", "purpose": "Give light panels restrained containment." },
-      { "name": "accent-interaction", "value": "0 12px 32px -24px rgba(34, 184, 168, 0.3)", "purpose": "Support a primary action without making it glossy." }
+      { "name": "dark-panel-ambient", "value": "0 24px 80px -44px rgba(45, 212, 191, 0.3)", "purpose": "Support dark surfaces with a muted atmospheric lift." },
+      { "name": "accent-interaction", "value": "0 12px 32px -24px rgba(34, 184, 168, 0.3)", "purpose": "Support an important action without making it glossy." }
     ],
     "motion": [
-      { "name": "state-standard", "value": "240ms ease", "purpose": "Default button and interactive-card state transition." },
-      { "name": "reveal", "value": "680ms cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Optional content reveal; disabled for reduced motion." }
+      { "name": "state-standard", "value": "240ms ease", "purpose": "Default call-to-action state transition." },
+      { "name": "card-state", "value": "260ms ease", "purpose": "Card lift, border, and shadow transition." },
+      { "name": "reveal", "value": "680ms cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Optional content reveal; disabled when reduced motion is requested." },
+      { "name": "carousel-progress", "value": "8s linear", "purpose": "Problem-carousel progress fill; disabled when reduced motion is requested." }
     ],
     "breakpoints": [
       { "name": "sm", "value": "640px" },
@@ -57,34 +47,57 @@
       "refersTo": "button-primary",
       "description": "The decisive waitlist action on dark surfaces.",
       "html": "<button class=\"ds-btn-primary\">Unirme a la lista de espera</button>",
-      "css": ".ds-btn-primary { appearance: none; border: 0; border-radius: .75rem; background: linear-gradient(90deg, #109d8f, #22b8a8); box-shadow: 0 8px 24px rgba(34,184,168,.24); color: #031016; cursor: pointer; font: 600 .875rem/1.25 Inter, system-ui, sans-serif; padding: .75rem 1.25rem; transition: transform 240ms ease, box-shadow 240ms ease; } .ds-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 34px -24px rgba(45,212,191,.45); } .ds-btn-primary:focus-visible { outline: 2px solid #2dd4bf; outline-offset: 3px; }"
+      "css": ".ds-btn-primary { appearance: none; border: 0; border-radius: .75rem; background: linear-gradient(90deg, #109d8f, #22b8a8); box-shadow: 0 8px 24px rgba(34,184,168,.24); color: #031016; cursor: pointer; font: 600 .875rem/1.25 Inter, system-ui, sans-serif; padding: .75rem 1.25rem; transition: transform 240ms ease, box-shadow 240ms ease; } .ds-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 34px -24px rgba(45,212,191,.45); } .ds-btn-primary:focus-visible { outline: 2px solid #2dd4bf; outline-offset: 3px; } .ds-btn-primary:active { transform: translateY(0); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "A quiet secondary action that stays legible on the navy hero.",
+      "html": "<button class=\"ds-btn-secondary\">Conocer el enfoque</button>",
+      "css": ".ds-btn-secondary { appearance: none; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.2); border-radius: .75rem; color: #fff; cursor: pointer; font: 600 .875rem/1.25 Inter, system-ui, sans-serif; padding: .75rem 1.25rem; transition: transform 240ms ease, background-color 240ms ease; } .ds-btn-secondary:hover { background: rgba(255,255,255,.1); transform: translateY(-2px); } .ds-btn-secondary:focus-visible { outline: 2px solid #2dd4bf; outline-offset: 3px; } .ds-btn-secondary:active { transform: translateY(0); }"
     },
     {
       "name": "Dark Field",
       "kind": "input",
       "refersTo": "field",
-      "description": "A high-contrast waitlist field with a clear focus state.",
+      "description": "A high-contrast waitlist field with a clear teal focus halo.",
       "html": "<label class=\"ds-field-label\">Email<input class=\"ds-field\" placeholder=\"nombre@empresa.cl\"></label>",
-      "css": ".ds-field-label { color: #dbe5f1; display: grid; font: 500 .875rem/1.4 Inter, system-ui, sans-serif; gap: .5rem; } .ds-field { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.18); border-radius: .75rem; color: #f8fafc; font: 400 1rem/1.5 Inter, system-ui, sans-serif; padding: .65rem .8rem; } .ds-field::placeholder { color: #94a3b8; } .ds-field:focus-visible { background: rgba(255,255,255,.07); border-color: rgba(45,212,191,.7); box-shadow: 0 0 0 3px rgba(45,212,191,.22); outline: none; }"
+      "css": ".ds-field-label { color: #dbe5f1; display: grid; font: 500 .875rem/1.4 Inter, system-ui, sans-serif; gap: .5rem; } .ds-field { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.18); border-radius: .75rem; color: #f8fafc; font: 400 1rem/1.5 Inter, system-ui, sans-serif; padding: .65rem .8rem; } .ds-field::placeholder { color: #94a3b8; } .ds-field:focus-visible { background: rgba(255,255,255,.07); border-color: rgba(45,212,191,.7); box-shadow: 0 0 0 3px rgba(45,212,191,.22); outline: none; } .ds-field[aria-invalid=\"true\"] { border-color: rgba(251,113,133,.85); }"
+    },
+    {
+      "name": "Sticky Navigation",
+      "kind": "nav",
+      "description": "A translucent navy navigation bar that anchors conversion without competing with the hero.",
+      "html": "<nav class=\"ds-nav\"><span class=\"ds-nav-brand\">C&nbsp; Comelu</span><a href=\"#\">Qué queremos resolver</a><button>Lista de espera</button></nav>",
+      "css": ".ds-nav { align-items: center; backdrop-filter: blur(20px); background: rgba(10,22,35,.84); border-bottom: 1px solid rgba(255,255,255,.1); color: #cbd5e1; display: flex; font: 500 .875rem/1.4 Inter, system-ui, sans-serif; gap: 1rem; justify-content: space-between; padding: .75rem 1rem; } .ds-nav-brand { color: #fff; font-size: 1rem; font-weight: 600; letter-spacing: -.02em; } .ds-nav a { color: inherit; text-decoration: none; } .ds-nav a:hover { color: #fff; } .ds-nav button { background: #109d8f; border: 0; border-radius: .75rem; color: #031016; font: inherit; font-weight: 600; padding: .6rem .8rem; } .ds-nav a:focus-visible, .ds-nav button:focus-visible { outline: 2px solid #2dd4bf; outline-offset: 3px; }"
     },
     {
       "name": "Light Panel",
       "kind": "card",
-      "description": "A quiet explanatory container for light sections.",
+      "description": "A quiet explanatory container for light editorial sections.",
       "html": "<section class=\"ds-panel\"><strong>Ordena cada caso</strong><p>Archivos, estados y pagos en el mismo contexto.</p></section>",
       "css": ".ds-panel { background: linear-gradient(180deg, rgba(255,255,255,.94), rgba(245,249,251,.92)); border: 1px solid rgba(148,163,184,.16); border-radius: 1rem; box-shadow: 0 20px 54px -40px rgba(15,23,42,.18); color: #0f172a; font: 400 1rem/1.7 Inter, system-ui, sans-serif; padding: 1.3rem; } .ds-panel strong { display: block; font-weight: 600; letter-spacing: -.02em; } .ds-panel p { color: #526173; margin: .5rem 0 0; }"
+    },
+    {
+      "name": "Carousel Progress",
+      "kind": "custom",
+      "description": "A slim, focusable progress segment for the problem narrative.",
+      "html": "<button class=\"ds-progress\" aria-label=\"Problema 1 de 4\"><span></span></button>",
+      "css": ".ds-progress { appearance: none; background: rgba(148,163,184,.2); border: 0; border-radius: 999px; cursor: pointer; height: .42rem; overflow: hidden; padding: 0; position: relative; width: 8rem; } .ds-progress span { background: linear-gradient(90deg, rgba(129,255,242,.88), rgba(34,184,168,.8)); box-shadow: 0 0 12px rgba(34,184,168,.22); display: block; height: 100%; width: 64%; } .ds-progress:focus-visible { outline: 2px solid rgba(16,157,143,.75); outline-offset: 3px; }"
     }
   ],
   "narrative": {
     "northStar": "Precision at the Bench",
-    "overview": "Comelu combines the measured confidence of a well-calibrated laboratory instrument with the clarity of contemporary product communication. The interface feels clinically clean and technically fluent without becoming sterile, bureaucratic, or futuristic.",
-    "keyCharacteristics": ["Calm technical credibility", "Warm specialized clarity", "Layered but legible surfaces", "Responsive and motion-optional interaction"],
+    "overview": "Comelu combines the measured confidence of a well-calibrated laboratory instrument with the clarity of contemporary product communication. The interface should feel clinically clean and technically fluent without turning sterile, bureaucratic, or futuristic. It earns attention through hierarchy, space, useful imagery, and crisp type—not decorative excess.\n\nThe landing is a restrained dark-to-light editorial journey: deep navy frames the promise and action, while cool paper surfaces make explanatory content calm and legible. Teal is a precise signal for action, progress, and focus, used sparingly enough to retain its authority.",
+    "keyCharacteristics": ["Calm technical credibility rather than generic enterprise formality.", "Warm, specialized clarity rooted in dental laboratory work.", "Layered but legible surfaces, with depth reserved for hierarchy and state.", "Responsive, keyboard-visible, and motion-optional interaction."],
     "rules": [
-      { "name": "The Measured Accent Rule", "body": "Teal carries intent. Keep it rare enough that action, focus, or status remains instantly recognizable.", "section": "colors" },
-      { "name": "The Evidence-First Type Rule", "body": "Headlines state practical value plainly; supporting copy explains the workflow without hype.", "section": "typography" },
-      { "name": "The Layered-Not-Glossy Rule", "body": "Use one subtle atmospheric gradient or soft shadow to establish hierarchy; do not stack effects into glass tiles.", "section": "elevation" }
+      { "name": "The Measured Accent Rule", "body": "Teal carries intent. Keep it rare enough that a waitlist action, focus ring, or status cue remains instantly recognizable.", "section": "colors" },
+      { "name": "The Evidence-First Type Rule", "body": "Headlines state the practical value plainly. Supporting copy explains the workflow; it does not inflate it with hype or generic AI language.", "section": "typography" },
+      { "name": "The Continuous Canvas Rule", "body": "Prefer a small number of large visual surfaces rather than alternating dark and light backgrounds section by section. Transitions should feel editorial and continuous, not like stacked website templates.", "section": "layout" },
+      { "name": "The Layered-Not-Glossy Rule", "body": "One subtle atmospheric gradient or soft shadow can establish hierarchy. Do not stack effects until cards read as glass tiles.", "section": "elevation" }
     ],
-    "dos": ["Do use dark navy to frame the promise and light paper for explanatory content.", "Do use teal with disciplined restraint.", "Do pair every interactive state with visible focus and semantic labeling."],
-    "donts": ["Don't turn the system into generic enterprise software or speculative AI aesthetics.", "Don't introduce heavy gradients or pervasive glassmorphism.", "Don't rely on color, hover, animation, or pointer precision as the only interaction cue."]
+    "dos": ["Do use dark navy to frame the brand promise and light paper to make explanatory content easy to scan.", "Do use teal to identify action, focus, selection, and progress with disciplined restraint.", "Do pair every interactive state with visible focus, semantic labeling, and non-color-only feedback.", "Do keep animation short, subtle, and optional; preserve the content and interaction when motion is disabled for reduced-motion preferences.", "Do choose imagery that feels specific to laboratory work, equipment, materials, or real operational context."],
+    "donts": ["Don't turn the system into generic enterprise software, hospital bureaucracy, an outdated ERP, a playful startup app, a consumer social feed, neon cyberpunk, or a speculative AI aesthetic.", "Don't introduce heavy gradients, pervasive glassmorphism, low-contrast dark surfaces, rounded bubble UI, skeuomorphism, busy layouts, or stock-photo-heavy composition.", "Don't use salesy, hype-driven, buzzword-heavy, overly technical, casual, humorous, or fear-based copy.", "Don't rely on color, hover, animation, or fine pointer precision as the only way to understand or operate the page."]
   }
 }
