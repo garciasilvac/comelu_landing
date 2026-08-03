@@ -75,7 +75,9 @@ components:
 
 Comelu combines the measured confidence of a well-calibrated laboratory instrument with the clarity of contemporary product communication. The interface should feel clinically clean and technically fluent without turning sterile, bureaucratic, or futuristic. It earns attention through hierarchy, space, useful imagery, and crisp type—not decorative excess.
 
-The system is a restrained dark-to-light editorial journey: deep navy frames the promise and action, while cool paper surfaces make explanatory content calm and legible. Teal is a precise signal for action, progress, and focus, used sparingly enough to retain its authority. The existing gradients support atmosphere and image legibility; they must remain subdued and never become the primary visual event.
+This system documents Comelu's public marketing landing page as a brand surface. It does not prescribe the future authenticated Comelu application, which is a product UI and will need operational patterns appropriate to its task-focused context.
+
+The landing is a restrained dark-to-light editorial journey: deep navy frames the promise and action, while cool paper surfaces make explanatory content calm and legible. Teal is a precise signal for action, progress, and focus, used sparingly enough to retain its authority. The existing gradients support atmosphere and image legibility; they must remain subdued and never become the primary visual event.
 
 **Key Characteristics:**
 
@@ -133,6 +135,8 @@ The palette uses deep navy for confidence, cool paper for clarity, and a limited
 The page uses a centered content container with a 1160px maximum width and responsive gutters of 1rem on mobile, 1.5rem from 640px, and 2rem from 1024px. Sections establish an editorial rhythm with 5.5rem of top padding, reduced on compact screens. The hero is intentionally full-bleed, while its copy remains aligned to the shared container.
 
 On small screens, controls and calls to action stack without hiding content; on larger screens, the hero gains a two-column grid at 1024px. Keep text columns constrained and avoid dense multi-column card grids. The page must remain functional and readable at 200% zoom.
+
+**The Continuous Canvas Rule.** Prefer a small number of large visual surfaces rather than alternating dark and light backgrounds section by section. Transitions should feel editorial and continuous, not like stacked website templates.
 
 ## Elevation & Depth
 
