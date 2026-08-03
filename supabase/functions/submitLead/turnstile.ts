@@ -1,6 +1,8 @@
 export const TURNSTILE_WAITLIST_ACTION = "waitlist";
 
 const SITEVERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+const ALWAYS_PASS_DUMMY_SECRET = "1x0000000000000000000000000000000AA";
+const LOCAL_DEVELOPMENT_HOSTNAMES = new Set(["localhost", "127.0.0.1"]);
 
 type SiteverifyResult = {
   success?: unknown;
@@ -14,6 +16,7 @@ type TurnstileValidationInput = {
   expectedAction: string;
   expectedHostnames: Set<string>;
   remoteIp?: string;
+  allowDummyTestMode?: boolean;
 };
 
 export type TurnstileValidationResult =
@@ -28,12 +31,23 @@ export const parseTurnstileHostnames = (value: string | undefined) =>
       .filter(Boolean),
   );
 
+export const canUseDummyTestMode = (input: {
+  enabled: boolean;
+  secret: string | undefined;
+  expectedHostnames: Set<string>;
+}) =>
+  input.enabled &&
+  input.secret === ALWAYS_PASS_DUMMY_SECRET &&
+  input.expectedHostnames.size > 0 &&
+  [...input.expectedHostnames].every((hostname) => LOCAL_DEVELOPMENT_HOSTNAMES.has(hostname));
+
 export const validateTurnstile = async ({
   token,
   secret,
   expectedAction,
   expectedHostnames,
   remoteIp,
+  allowDummyTestMode = false,
 }: TurnstileValidationInput): Promise<TurnstileValidationResult> => {
   if (!token || token.length > 2048) {
     return { valid: false, reason: "missing_token" };
@@ -61,8 +75,15 @@ export const validateTurnstile = async ({
     return { valid: false, reason: "verification_error" };
   }
 
+  if (result.success !== true) {
+    return { valid: false, reason: "invalid_token" };
+  }
+
+  if (allowDummyTestMode && secret === ALWAYS_PASS_DUMMY_SECRET) {
+    return { valid: true };
+  }
+
   if (
-    result.success !== true ||
     result.action !== expectedAction ||
     typeof result.hostname !== "string" ||
     !expectedHostnames.has(result.hostname)

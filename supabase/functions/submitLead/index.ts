@@ -1,6 +1,11 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { buildLeadEmailTemplate, type LeadEmailPayload } from "./emailTemplate.ts";
-import { parseTurnstileHostnames, TURNSTILE_WAITLIST_ACTION, validateTurnstile } from "./turnstile.ts";
+import {
+  canUseDummyTestMode,
+  parseTurnstileHostnames,
+  TURNSTILE_WAITLIST_ACTION,
+  validateTurnstile,
+} from "./turnstile.ts";
 
 type LeadPayload = {
   nombre: string;
@@ -242,13 +247,37 @@ Deno.serve(async (request) => {
     body && typeof body === "object" && !Array.isArray(body)
       ? asTrimmedString((body as Record<string, unknown>).turnstileToken)
       : "";
+
+  const turnstileSecret = Deno.env.get("TURNSTILE_SECRET");
+  const expectedHostnames = parseTurnstileHostnames(
+    Deno.env.get("TURNSTILE_HOSTNAMES"),
+  );
+  const allowDummyTestMode = canUseDummyTestMode({
+    enabled: readBooleanEnv("TURNSTILE_TEST_MODE"),
+    secret: turnstileSecret,
+    expectedHostnames,
+  });
+
+  console.log("[submitLead] Turnstile config", {
+    tokenPresent: Boolean(turnstileToken),
+    tokenLength: turnstileToken.length,
+    secretPresent: Boolean(turnstileSecret),
+    secretLength: turnstileSecret?.length,
+    expectedAction: TURNSTILE_WAITLIST_ACTION,
+    expectedHostnames,
+    allowDummyTestMode,
+  });
+
   const turnstile = await validateTurnstile({
     token: turnstileToken,
-    secret: Deno.env.get("TURNSTILE_SECRET"),
+    secret: turnstileSecret,
     expectedAction: TURNSTILE_WAITLIST_ACTION,
-    expectedHostnames: parseTurnstileHostnames(Deno.env.get("TURNSTILE_HOSTNAMES")),
+    expectedHostnames,
     remoteIp: ip === "unknown" ? undefined : ip,
+    allowDummyTestMode,
   });
+
+  console.log("[submitLead] Turnstile result", turnstile);
 
   if (!turnstile.valid) {
     const status = turnstile.reason === "configuration_error" ? 500 : 403;

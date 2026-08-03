@@ -11,6 +11,7 @@ const validationInput = {
   expectedHostnames: new Set(["comelu.cl"]),
   remoteIp: "203.0.113.1",
 };
+const alwaysPassDummySecret = "1x0000000000000000000000000000000AA";
 
 test("submitLead verifies a waitlist Turnstile token before inserting a lead", async () => {
   const handler = await readFile(new URL("./index.ts", import.meta.url), "utf8");
@@ -49,6 +50,38 @@ test("accepts only successful Siteverify results with the expected action and ho
   try {
     const result = await validateTurnstile(validationInput);
     assert.deepEqual(result, { valid: true });
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("accepts the official dummy token only when local test mode is enabled", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () =>
+    new Response(JSON.stringify({ success: true, hostname: "example.com", action: null }), { status: 200 });
+
+  try {
+    const result = await validateTurnstile({
+      ...validationInput,
+      token: "XXXX.DUMMY.TOKEN.XXXX",
+      secret: alwaysPassDummySecret,
+      expectedHostnames: new Set(["localhost", "127.0.0.1"]),
+      allowDummyTestMode: true,
+    });
+    assert.deepEqual(result, { valid: true });
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("keeps action and hostname validation when test mode uses a non-dummy secret", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () =>
+    new Response(JSON.stringify({ success: true, hostname: "example.com", action: null }), { status: 200 });
+
+  try {
+    const result = await validateTurnstile({ ...validationInput, allowDummyTestMode: true });
+    assert.deepEqual(result, { valid: false, reason: "invalid_token" });
   } finally {
     globalThis.fetch = originalFetch;
   }
