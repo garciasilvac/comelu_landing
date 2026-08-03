@@ -60,6 +60,31 @@ type FieldErrors = {
 type InlineValidatableField = "nombre" | "email" | "telefonoPais" | "telefonoNumero";
 type PlaceholderVariant = "default" | "hero" | "compact" | "audience";
 
+type TurnstileApi = {
+  render: (
+    container: HTMLElement,
+    options: {
+      sitekey: string;
+      action: string;
+      theme: "dark";
+      callback: (token: string) => void;
+      "expired-callback": () => void;
+      "error-callback": () => boolean;
+    },
+  ) => string;
+  reset: (widgetId?: string) => void;
+  remove: (widgetId?: string) => void;
+};
+
+declare global {
+  interface Window {
+    turnstile?: TurnstileApi;
+  }
+}
+
+const TURNSTILE_SCRIPT_ID = "comelu-turnstile-script";
+const TURNSTILE_ACTION = "waitlist";
+
 const NAV_LINKS = [
   { id: "que-resuelve", label: "Qué queremos resolver" },
   { id: "para-quien", label: "Para quién" },
@@ -331,7 +356,12 @@ function App() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileError, setTurnstileError] = useState("");
   const firstInputRef = useRef<HTMLInputElement>(null);
+  const turnstileContainerRef = useRef<HTMLDivElement>(null);
+  const turnstileWidgetIdRef = useRef<string | null>(null);
+  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 
   const year = new Date().getFullYear();
 
@@ -356,6 +386,63 @@ function App() {
 
     return () => window.clearInterval(intervalId);
   }, [allowCarouselMotion]);
+
+  useEffect(() => {
+    if (!turnstileSiteKey) {
+      setTurnstileError("No pudimos cargar la comprobación de seguridad. Intenta recargar la página.");
+      return undefined;
+    }
+
+    let cancelled = false;
+    const renderWidget = () => {
+      if (cancelled || !turnstileContainerRef.current || turnstileWidgetIdRef.current || !window.turnstile) return;
+
+      turnstileWidgetIdRef.current = window.turnstile.render(turnstileContainerRef.current, {
+        sitekey: turnstileSiteKey,
+        action: TURNSTILE_ACTION,
+        theme: "dark",
+        callback: (token) => {
+          setTurnstileToken(token);
+          setTurnstileError("");
+        },
+        "expired-callback": () => {
+          setTurnstileToken("");
+          setTurnstileError("La comprobación de seguridad expiró. Complétala nuevamente.");
+        },
+        "error-callback": () => {
+          setTurnstileToken("");
+          setTurnstileError("No pudimos verificar la comprobación de seguridad. Intenta nuevamente.");
+          return true;
+        },
+      });
+    };
+
+    const existingScript = document.getElementById(TURNSTILE_SCRIPT_ID) as HTMLScriptElement | null;
+    const script = existingScript ?? document.createElement("script");
+    const onLoad = () => renderWidget();
+    const onError = () => setTurnstileError("No pudimos cargar la comprobación de seguridad. Intenta recargar la página.");
+
+    if (!existingScript) {
+      script.id = TURNSTILE_SCRIPT_ID;
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.async = true;
+      document.head.append(script);
+    }
+
+    script.addEventListener("load", onLoad);
+    script.addEventListener("error", onError);
+    renderWidget();
+
+    return () => {
+      cancelled = true;
+      script.removeEventListener("load", onLoad);
+      script.removeEventListener("error", onError);
+      if (turnstileWidgetIdRef.current) {
+        window.turnstile?.remove(turnstileWidgetIdRef.current);
+        turnstileWidgetIdRef.current = null;
+      }
+    };
+  }, [turnstileSiteKey]);
 
   const scrollTo = (id: string, focusInput = false) => {
     const section = document.getElementById(id);
@@ -520,6 +607,11 @@ function App() {
 
     if (!validate()) return;
 
+    if (!turnstileToken) {
+      setTurnstileError("Completa la comprobación de seguridad antes de enviar.");
+      return;
+    }
+
     setIsSubmitting(true);
     const payload = {
       nombre: form.nombre.trim(),
@@ -531,19 +623,18 @@ function App() {
       intereses: form.intereses,
       otraNecesidad: form.otraNecesidad.trim(),
       checklist: form.checklist,
+      turnstileToken,
     };
 
     const functionsBaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-    if (!functionsBaseUrl || !anonKey) {
-      setFormError("Falta configurar VITE_SUPABASE_URL o VITE_SUPABASE_ANON_KEY.");
-      setIsSubmitting(false);
-      return;
-    }
-
-    let response: Response;
     try {
-      response = await fetch(`${functionsBaseUrl}/functions/v1/submitLead`, {
+      if (!functionsBaseUrl || !anonKey) {
+        setFormError("Falta configurar VITE_SUPABASE_URL o VITE_SUPABASE_ANON_KEY.");
+        return;
+      }
+
+      const response = await fetch(`${functionsBaseUrl}/functions/v1/submitLead`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -552,41 +643,43 @@ function App() {
         },
         body: JSON.stringify(payload),
       });
+
+      if (!response.ok) {
+        if (import.meta.env.DEV) {
+          const errorBody = await response.text().catch(() => "");
+          console.error("[submitLead] Non-OK response", {
+            status: response.status,
+            statusText: response.statusText,
+            body: errorBody,
+          });
+        }
+        setFormError("No pudimos guardar tu registro en este momento. Intenta nuevamente.");
+        return;
+      }
+
+      setSubmitted(true);
+      setForm(initialForm);
+      setFieldErrors({
+        nombre: "",
+        email: "",
+        telefonoPais: "",
+        telefonoNumero: "",
+        rol: "",
+        tamano: "",
+        intereses: "",
+      });
     } catch (error) {
       if (import.meta.env.DEV) {
         console.error("[submitLead] Network error while sending lead", error);
       }
       setFormError("No pudimos guardar tu registro en este momento. Intenta nuevamente.");
+    } finally {
       setIsSubmitting(false);
-      return;
-    }
-
-    if (!response.ok) {
-      if (import.meta.env.DEV) {
-        const errorBody = await response.text().catch(() => "");
-        console.error("[submitLead] Non-OK response", {
-          status: response.status,
-          statusText: response.statusText,
-          body: errorBody,
-        });
+      setTurnstileToken("");
+      if (turnstileWidgetIdRef.current) {
+        window.turnstile?.reset(turnstileWidgetIdRef.current);
       }
-      setFormError("No pudimos guardar tu registro en este momento. Intenta nuevamente.");
-      setIsSubmitting(false);
-      return;
     }
-
-    setSubmitted(true);
-    setIsSubmitting(false);
-    setForm(initialForm);
-    setFieldErrors({
-      nombre: "",
-      email: "",
-      telefonoPais: "",
-      telefonoNumero: "",
-      rol: "",
-      tamano: "",
-      intereses: "",
-    });
   };
 
   return (
@@ -1144,6 +1237,16 @@ function App() {
               </section>
 
               <input type="hidden" name="checklist" value={form.checklist ? "true" : "false"} />
+
+              <div className="grid gap-2">
+                <p className="text-sm text-slate-400">Completa la comprobación de seguridad antes de enviar.</p>
+                <div ref={turnstileContainerRef} />
+                {turnstileError ? (
+                  <p className="text-sm text-rose-300" role="alert">
+                    {turnstileError}
+                  </p>
+                ) : null}
+              </div>
 
               {formError ? <p className="text-sm text-rose-300">{formError}</p> : null}
               {submitted ? (

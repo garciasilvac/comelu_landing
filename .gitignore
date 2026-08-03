@@ -10,6 +10,7 @@ pnpm-debug.log*
 .vscode/
 supabase/.temp/
 supabase/functions/submitLead/.preview/
+supabase/functions/.env
 
 # Supabase local metadata
 supabase/.branches/
