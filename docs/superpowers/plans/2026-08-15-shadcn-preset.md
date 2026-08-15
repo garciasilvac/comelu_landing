@@ -30,9 +30,9 @@
 **Interfaces:**
 - Produces: shadcn project configuration and semantic Tailwind theme tokens consumed by generated UI components.
 
-- [ ] Run `pnpm dlx shadcn@latest init --preset b3t20MAXvW --force --reinstall --yes`.
-- [ ] Run `pnpm dlx shadcn@latest info --json` and verify framework, base, style, icon library, aliases, and Tailwind CSS path.
-- [ ] Review the generated diff and commit it as `chore: apply shadcn preset foundation`.
+- [x] Run `pnpm dlx shadcn@latest init --preset b3t20MAXvW --force --reinstall --yes`.
+- [x] Run `pnpm dlx shadcn@latest info --json` and verify framework, base, style, icon library, aliases, and Tailwind CSS path.
+- [x] Review the generated diff and commit it as `chore: apply shadcn preset foundation`.
 
 ### Task 2: Install the complete component catalog
 
@@ -45,10 +45,10 @@
 **Interfaces:**
 - Produces: the full official component catalog available through the aliases recorded in `components.json`.
 
-- [ ] Preview with `pnpm dlx shadcn@latest add --all --dry-run`.
-- [ ] Install with `pnpm dlx shadcn@latest add --all --overwrite --yes`.
-- [ ] Review generated files for hardcoded aliases, wrong icon library imports, or incomplete composition.
-- [ ] Commit as `feat: install all shadcn components`.
+- [x] Preview with `pnpm dlx shadcn@latest add --all --dry-run`.
+- [x] Install with `pnpm dlx shadcn@latest add --all --overwrite --yes`.
+- [x] Review generated files for hardcoded aliases, wrong icon library imports, or incomplete composition.
+- [x] Commit as `feat: install all shadcn components`.
 
 ### Task 3: Integrate and verify the migration
 
@@ -60,9 +60,9 @@
 - Consumes: generated shadcn primitives and semantic theme tokens.
 - Produces: a buildable and smoke-tested landing page with unchanged product behavior.
 
-- [ ] Run `pnpm build` and resolve only migration-related type or import errors.
-- [ ] Start `pnpm dev`, smoke-test the landing page in a browser, and check the console.
-- [ ] Verify `prefers-reduced-motion`, keyboard focus, responsive navigation, FAQ, and form rendering.
-- [ ] Run a final `pnpm build` and inspect `git diff --check` plus repository status.
-- [ ] Commit integration fixes, if any, as `fix: align landing page with shadcn preset`.
+- [x] Run `pnpm build` and resolve only migration-related type or import errors.
+- [x] Start `pnpm dev`, smoke-test the landing page in a browser, and check the console.
+- [x] Verify `prefers-reduced-motion`, keyboard focus, responsive navigation, FAQ, and form rendering.
+- [x] Run a final `pnpm build` and inspect `git diff --check` plus repository status.
+- [x] Commit integration fixes, if any, as `fix: align landing page with shadcn preset`.
 - [ ] Push the branch and open a PR using the repository template if available.
