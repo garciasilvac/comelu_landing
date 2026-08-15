@@ -1,13 +1,13 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import {
-  CheckCircle2,
-  ChevronDown,
-  FlaskConical,
-  Menu,
-  Send,
-  Workflow,
-  X,
-} from "lucide-react";
+  CaretDownIcon,
+  CheckCircleIcon,
+  FlaskIcon,
+  FlowArrowIcon,
+  ListIcon,
+  PaperPlaneTiltIcon,
+  XIcon,
+} from "@phosphor-icons/react";
 import problema1Illustration from "./assets/illustrations/Problema_1.jpeg";
 import problema2Illustration from "./assets/illustrations/Problema_2.png";
 import problema3Illustration from "./assets/illustrations/Problema_3b.jpeg";
@@ -136,14 +136,14 @@ const AUDIENCE_BLOCKS = [
       "Para laboratorios con equipo y flujo de trabajo distribuido",
     detail:
       "Si el trabajo pasa por distintas manos, queremos construir una herramienta que dé claridad sobre tareas, responsables, estados y comunicación sin perder trazabilidad.",
-    icon: FlaskConical,
+    icon: FlaskIcon,
     placeholder: "Placeholder cliente 1: laboratorio dental",
   },
   {
     title: "Laboratorista independiente",
     description:
       "Para quienes hacen todo al mismo tiempo",
-    icon: Workflow,
+    icon: FlowArrowIcon,
     detail:
       "Cuando una sola persona vende, produce, coordina y cobra, cada minuto importa. Comelu apunta a simplificar esa operación con una experiencia más ordenada, amable y fácil de seguir.",
     placeholder: "Placeholder cliente 2: laboratorista independiente",
@@ -723,7 +723,7 @@ function App() {
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] p-0 text-slate-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition hover:bg-white/[0.08] hover:text-white lg:hidden"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
             >
-              {mobileMenuOpen ? <X className="h-[18px] w-[18px]" /> : <Menu className="h-[18px] w-[18px]" />}
+              {mobileMenuOpen ? <XIcon className="h-[18px] w-[18px]" /> : <ListIcon className="h-[18px] w-[18px]" />}
             </button>
           </div>
         </div>
@@ -794,7 +794,7 @@ function App() {
               <ul className="mt-6 grid gap-3 text-sm text-slate-200 sm:text-base" data-reveal data-delay={300}>
                 {HERO_BULLETS.map((item, index) => (
                   <li key={item} className="flex items-start gap-2" data-reveal data-delay={320 + index * 40}>
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#56f3e2]" />
+                    <CheckCircleIcon className="mt-0.5 h-4 w-4 shrink-0 text-[#56f3e2]" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -1064,7 +1064,7 @@ function App() {
                           Técnico dental
                         </option>
                       </select>
-                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                      <CaretDownIcon className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                     </div>
                     {fieldErrors.rol ? (
                       <p className="text-xs text-rose-300">{fieldErrors.rol}</p>
@@ -1125,7 +1125,7 @@ function App() {
                             España (+34)
                           </option>
                         </select>
-                        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                        <CaretDownIcon className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                       </div>
 
                       <input
@@ -1184,7 +1184,7 @@ function App() {
                           11+ personas
                         </option>
                       </select>
-                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                      <CaretDownIcon className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                     </div>
                   </div>
 
@@ -1262,7 +1262,7 @@ function App() {
                   disabled={isSubmitting}
                   className={`w-full disabled:cursor-not-allowed disabled:opacity-75 sm:w-auto ${primaryButton}`}
                 >
-                  <Send className="mr-2 h-4 w-4" />
+                  <PaperPlaneTiltIcon className="mr-2 h-4 w-4" />
                   {isSubmitting ? "Enviando..." : "Quiero unirme a la lista de espera"}
                 </button>
                 <p className="text-sm text-slate-400">
@@ -1302,7 +1302,7 @@ function App() {
                       onClick={() => setFaqOpenIndex(isOpen ? null : index)}
                     >
                       {item.q}
-                      <ChevronDown className={`h-4 w-4 text-slate-400 transition ${isOpen ? "rotate-180" : ""}`} />
+                      <CaretDownIcon className={`h-4 w-4 text-slate-400 transition ${isOpen ? "rotate-180" : ""}`} />
                     </button>
                   </h3>
                   <div
