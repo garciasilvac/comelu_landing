@@ -28,7 +28,9 @@ export function HeroNotifications() {
         className="hero-notification-trigger"
         aria-label="3 notificaciones"
       >
-        <BellRingingIcon aria-hidden="true" />
+        <span className="hero-notification-icon" aria-hidden="true">
+          <BellRingingIcon />
+        </span>
         <span className="hero-notification-count" aria-hidden="true">3</span>
       </PopoverTrigger>
       <PopoverContent side="bottom" align="end" sideOffset={10} className="hero-notification-popover">

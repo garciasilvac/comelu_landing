@@ -419,11 +419,16 @@
   transition: border-color 180ms ease, background-color 180ms ease;
 }
 
-.hero-notification-trigger svg {
-  width: 1rem;
-  height: 1rem;
+.hero-notification-icon {
+  display: grid;
+  place-items: center;
   transform-origin: top center;
   animation: hero-bell-alert 10s ease-in-out infinite;
+}
+
+.hero-notification-icon svg {
+  width: 1rem;
+  height: 1rem;
 }
 
 .hero-notification-trigger:hover {
@@ -1171,7 +1176,7 @@
     animation: none;
   }
 
-  .hero-notification-trigger svg {
+  .hero-notification-icon {
     animation: none;
   }
 
