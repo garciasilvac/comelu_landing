@@ -8,6 +8,8 @@
 
 **Tech Stack:** React 19, TypeScript 5.9, Vite 7, Tailwind CSS 4, shadcn Base Nova, Base UI, Phosphor Icons, Vitest, Testing Library.
 
+**Status (2026-08-15):** Implementation and rendered QA complete. All five behavioral tests and the production build pass. Desktop (1440×1000) and mobile (390×844) were verified with the Sheet interaction, focus handoff, responsive layout, and a clean final console. The in-app Browser was unavailable, so the documented Playwright fallback was used.
+
 ## Global Constraints
 
 - Continue on `feat/apply-shadcn-preset` in `/Users/CarlosG/wt-apply-shadcn-preset` and update PR #25.
