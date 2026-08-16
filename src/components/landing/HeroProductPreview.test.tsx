@@ -65,11 +65,37 @@ describe("HeroProductPreview", () => {
     expect(screen.getByLabelText("3 entregas programadas para hoy")).toBeVisible();
   });
 
-  it("exposes semantic tones on product records", () => {
+  it("exposes semantic tones on product records", async () => {
+    const user = userEvent.setup();
     render(<PreviewHarness />);
 
     expect(screen.getAllByText("En producción")[0].closest("article")).toHaveAttribute("data-tone", "progress");
     expect(screen.getAllByText("Por iniciar")[0].closest("article")).toHaveAttribute("data-tone", "warning");
-    expect(screen.getAllByText("Control de calidad")[0].closest("article")).toHaveAttribute("data-tone", "review");
+
+    await user.click(screen.getByRole("tab", { name: "Producción" }));
+    expect(screen.getByText("Control de calidad").closest("section")).toHaveAttribute("data-tone", "review");
+  });
+
+  it("shows separate client OT and payment states including overdue examples", async () => {
+    const user = userEvent.setup();
+    render(<PreviewHarness />);
+
+    await user.click(screen.getByRole("tab", { name: "Clientes" }));
+
+    const overdueOt = screen.getByText("1 OT atrasada");
+    const overduePayment = screen.getByText("1 pago vencido");
+    const criticalClient = overdueOt.closest(".hero-client-row");
+
+    expect(screen.getAllByText("OTs").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Pagos").length).toBeGreaterThan(0);
+    expect(overdueOt).toHaveAttribute("data-tone", "critical");
+    expect(overduePayment).toHaveAttribute("data-tone", "critical");
+    expect(criticalClient).toHaveAttribute("data-tone", "critical");
+
+    await user.click(screen.getByRole("tab", { name: "Órdenes" }));
+    expect(screen.getAllByText("Atrasada")[0]).toHaveAttribute("data-tone", "critical");
+
+    await user.click(screen.getByRole("tab", { name: "Pagos" }));
+    expect(screen.getByText("Vencida")).toHaveAttribute("data-tone", "critical");
   });
 });

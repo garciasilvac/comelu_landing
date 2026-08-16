@@ -2,7 +2,7 @@ import { TabsContent } from "@/components/ui/tabs";
 import { HeroNotifications } from "./HeroNotifications";
 
 export type ProductTabValue = "clients" | "orders" | "production" | "payments";
-export type StatusTone = "positive" | "progress" | "warning" | "review";
+export type StatusTone = "positive" | "progress" | "warning" | "review" | "critical";
 
 export const PRODUCT_TABS = [
   { value: "clients", label: "Clientes" },
@@ -12,9 +12,30 @@ export const PRODUCT_TABS = [
 ] as const satisfies readonly { value: ProductTabValue; label: string }[];
 
 const clients = [
-  { initials: "LA", name: "Clínica Los Andes", contact: "Dra. Camila Soto", activity: "6 OT activas", tone: "progress" },
-  { initials: "OS", name: "Centro Dental Orto Sur", contact: "Dr. Martín Rojas", activity: "3 OT activas", tone: "progress" },
-  { initials: "SM", name: "Clínica Santa María", contact: "Recepción clínica", activity: "Al día", tone: "positive" },
+  {
+    initials: "LA",
+    name: "Clínica Los Andes",
+    contact: "Dra. Camila Soto",
+    orders: { label: "6 activas", tone: "progress" },
+    payments: { label: "1 pendiente", tone: "warning" },
+    tone: "warning",
+  },
+  {
+    initials: "OS",
+    name: "Centro Dental Orto Sur",
+    contact: "Dr. Martín Rojas",
+    orders: { label: "1 OT atrasada", tone: "critical" },
+    payments: { label: "1 pago vencido", tone: "critical" },
+    tone: "critical",
+  },
+  {
+    initials: "SM",
+    name: "Clínica Santa María",
+    contact: "Recepción clínica",
+    orders: { label: "Al día", tone: "positive" },
+    payments: { label: "Al día", tone: "positive" },
+    tone: "positive",
+  },
 ] as const;
 
 const orders = [
@@ -38,9 +59,9 @@ const orders = [
     id: "OT-2039",
     client: "Centro Dental Orto Sur",
     work: "Puente 3 piezas",
-    state: "Control de calidad",
-    delivery: "18 ago",
-    tone: "review",
+    state: "Atrasada",
+    delivery: "15 ago",
+    tone: "critical",
   },
 ] as const;
 
@@ -52,7 +73,7 @@ const productionStages = [
 
 const payments = [
   { document: "Factura 00481", client: "Clínica Los Andes", order: "OT-2048", state: "Pendiente", tone: "warning" },
-  { document: "Factura 00476", client: "Centro Dental Orto Sur", order: "OT-2039", state: "Pagada", tone: "positive" },
+  { document: "Factura 00476", client: "Centro Dental Orto Sur", order: "OT-2039", state: "Vencida", tone: "critical" },
   { document: "Comprobante adjunto", client: "Clínica Santa María", order: "OT-2043", state: "Recibido", tone: "positive" },
 ] as const;
 
@@ -93,7 +114,16 @@ function ClientsPanel() {
               <strong>{client.name}</strong>
               <span>{client.contact}</span>
             </div>
-            <StatusBadge tone={client.tone}>{client.activity}</StatusBadge>
+            <div className="hero-client-statuses" aria-label={`Estados de ${client.name}`}>
+              <div>
+                <span className="hero-client-status-label">OTs</span>
+                <StatusBadge tone={client.orders.tone}>{client.orders.label}</StatusBadge>
+              </div>
+              <div>
+                <span className="hero-client-status-label">Pagos</span>
+                <StatusBadge tone={client.payments.tone}>{client.payments.label}</StatusBadge>
+              </div>
+            </div>
           </article>
         ))}
       </div>
@@ -102,7 +132,7 @@ function ClientsPanel() {
 }
 
 function OrdersPanel() {
-  const selectedOrder = orders[0];
+  const selectedOrder = orders.find((order) => order.tone === "critical") ?? orders[0];
 
   return (
     <TabsContent value="orders" className="hero-product-panel">
