@@ -423,7 +423,7 @@
   display: grid;
   place-items: center;
   transform-origin: top center;
-  animation: hero-bell-alert 10s ease-in-out infinite;
+  animation: hero-bell-alert 5s ease-in-out infinite;
 }
 
 .hero-notification-icon svg {
@@ -645,6 +645,11 @@
   --hero-tone-soft: oklch(0.42 0.1 300 / 20%);
 }
 
+:is(.hero-product-window, .hero-notification-popover) [data-tone="critical"] {
+  --hero-tone: oklch(0.76 0.16 25);
+  --hero-tone-soft: oklch(0.42 0.13 25 / 22%);
+}
+
 .hero-status {
   display: inline-flex;
   width: fit-content;
@@ -700,7 +705,6 @@
 )[data-tone] {
   border-color: color-mix(in oklch, var(--hero-tone), transparent 78%);
   background: linear-gradient(90deg, var(--hero-tone-soft), oklch(0.18 0.03 239 / 58%) 34%);
-  box-shadow: inset 3px 0 var(--hero-tone);
 }
 
 .hero-client-row,
@@ -720,8 +724,24 @@
   grid-template-columns: auto minmax(0, 1fr);
 }
 
-.hero-client-row .hero-status {
+.hero-client-statuses {
   grid-column: 2;
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.hero-client-statuses > div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.hero-client-status-label {
+  color: oklch(0.62 0.025 235);
+  font-size: 0.55rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .hero-client-avatar {
@@ -1082,8 +1102,9 @@
     padding: 0.85rem 1rem;
   }
 
-  .hero-client-row .hero-status {
+  .hero-client-statuses {
     grid-column: auto;
+    flex-wrap: nowrap;
   }
 
   .hero-production-grid {
@@ -1119,14 +1140,13 @@
   .hero-payment-row:hover {
     border-color: color-mix(in oklch, var(--hero-tone), transparent 64%);
     background: linear-gradient(90deg, var(--hero-tone-soft), oklch(0.24 0.045 239 / 68%) 40%);
-    box-shadow: inset 3px 0 var(--hero-tone), 0 12px 28px -24px var(--hero-tone);
+    box-shadow: 0 12px 28px -24px var(--hero-tone);
     transform: translateY(-1px);
   }
 
   .hero-table-row:not(.hero-table-head):hover {
     border-color: color-mix(in oklch, var(--hero-tone), transparent 64%);
     background: linear-gradient(90deg, var(--hero-tone-soft), oklch(0.23 0.04 239 / 62%) 40%);
-    box-shadow: inset 3px 0 var(--hero-tone);
     transform: translateX(2px);
   }
 
@@ -1135,7 +1155,7 @@
   .hero-mobile-order:hover {
     border-color: color-mix(in oklch, var(--hero-tone), transparent 64%);
     background: linear-gradient(90deg, var(--hero-tone-soft), oklch(0.23 0.045 239 / 72%) 44%);
-    box-shadow: inset 3px 0 var(--hero-tone), 0 16px 32px -26px var(--hero-tone);
+    box-shadow: 0 16px 32px -26px var(--hero-tone);
   }
 
   .hero-production-column:hover,
