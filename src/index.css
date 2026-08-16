@@ -152,6 +152,38 @@
   padding-bottom: 1rem;
 }
 
+.hero-mesh-background {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 78%,
+    color-mix(in oklch, var(--primary), transparent 78%),
+    transparent 42%
+  );
+  mask-image: linear-gradient(to bottom, black 0%, black 68%, transparent 100%);
+}
+
+.hero-mesh-background svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.28;
+}
+
+.hero-mesh-lines {
+  fill: none;
+  stroke: color-mix(in oklch, var(--primary), white 18%);
+  stroke-width: 0.8;
+  stroke-opacity: 0.24;
+}
+
+.hero-mesh-nodes {
+  fill: var(--chart-2);
+  fill-opacity: 0.55;
+}
+
 .hero-panel {
   position: relative;
   isolation: isolate;
