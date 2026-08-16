@@ -14,7 +14,10 @@ export type HeroSectionProps = {
 export function HeroSection({ onWaitlist, onProblems }: HeroSectionProps) {
   const [activeTab, setActiveTab] = useState<ProductTabValue>("orders");
   const activeTabIndex = PRODUCT_TABS.findIndex((tab) => tab.value === activeTab);
-  const tabListStyle = { "--hero-tab-index": activeTabIndex } as CSSProperties;
+  const tabListStyle = {
+    "--hero-tab-index": activeTabIndex,
+    "--hero-tab-translate": `${activeTabIndex * 100}%`,
+  } as CSSProperties;
 
   return (
     <section className="hero-section" aria-labelledby="hero-title">

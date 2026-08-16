@@ -25,12 +25,14 @@ describe("HeroSection", () => {
     const tabsList = screen.getByRole("tablist", { name: "Explorar Comelu" });
 
     expect(tabsList).toHaveStyle({ "--hero-tab-index": "1" });
+    expect(tabsList).toHaveStyle({ "--hero-tab-translate": "100%" });
     expect(container.querySelectorAll(".hero-tabs-indicator")).toHaveLength(1);
     expect(container.querySelector(".hero-kpi")).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("tab", { name: "Producción" }));
 
     expect(tabsList).toHaveStyle({ "--hero-tab-index": "2" });
+    expect(tabsList).toHaveStyle({ "--hero-tab-translate": "200%" });
   });
 
   it("keeps both existing conversion callbacks", async () => {
