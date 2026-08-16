@@ -3,11 +3,11 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 import {
   AudienceSection,
   FaqSection,
-  HeroSection,
   LandingFooter,
   ProblemsSection,
   TrustSection,
 } from "@/components/landing/landing-sections";
+import { HeroSection } from "@/components/landing/HeroSection";
 import { LandingHeader } from "@/components/landing/landing-header";
 import { WaitlistSection } from "@/components/landing/waitlist-section";
 import {
@@ -291,37 +291,39 @@ function App() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <LandingHeader onNavigate={scrollTo} onWaitlist={onWaitlistClick} />
-      <main className="mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 lg:px-8">
+      <main className="w-full pb-20">
         <HeroSection onWaitlist={onWaitlistClick} onProblems={() => scrollTo("que-resuelve")} />
-        <ProblemsSection
-          currentIndex={currentProblemIndex}
-          allowMotion={allowCarouselMotion}
-          onSelect={setCurrentProblemIndex}
-          onWaitlist={onWaitlistClick}
-        />
-        <AudienceSection onWaitlist={onWaitlistClick} />
-        <TrustSection />
-        <WaitlistSection
-          form={form}
-          fieldErrors={fieldErrors}
-          formError={formError}
-          turnstileError={turnstileError}
-          submitted={submitted}
-          isSubmitting={isSubmitting}
-          firstInputRef={firstInputRef}
-          turnstileContainerRef={turnstileContainerRef}
-          onSubmit={onSubmit}
-          onFieldChange={onFieldChange}
-          onFieldBlur={onFieldBlur}
-          onRoleChange={(rol: Role) => {
-            setForm((previous) => ({ ...previous, rol }));
-            if (fieldErrors.rol) setFieldErrors((previous) => ({ ...previous, rol: "" }));
-          }}
-          onSizeChange={(tamano: LabSize) => setForm((previous) => ({ ...previous, tamano }))}
-          onInterestChange={toggleInterest}
-          onNeedChange={(otraNecesidad) => setForm((previous) => ({ ...previous, otraNecesidad }))}
-        />
-        <FaqSection />
+        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+          <ProblemsSection
+            currentIndex={currentProblemIndex}
+            allowMotion={allowCarouselMotion}
+            onSelect={setCurrentProblemIndex}
+            onWaitlist={onWaitlistClick}
+          />
+          <AudienceSection onWaitlist={onWaitlistClick} />
+          <TrustSection />
+          <WaitlistSection
+            form={form}
+            fieldErrors={fieldErrors}
+            formError={formError}
+            turnstileError={turnstileError}
+            submitted={submitted}
+            isSubmitting={isSubmitting}
+            firstInputRef={firstInputRef}
+            turnstileContainerRef={turnstileContainerRef}
+            onSubmit={onSubmit}
+            onFieldChange={onFieldChange}
+            onFieldBlur={onFieldBlur}
+            onRoleChange={(rol: Role) => {
+              setForm((previous) => ({ ...previous, rol }));
+              if (fieldErrors.rol) setFieldErrors((previous) => ({ ...previous, rol: "" }));
+            }}
+            onSizeChange={(tamano: LabSize) => setForm((previous) => ({ ...previous, tamano }))}
+            onInterestChange={toggleInterest}
+            onNeedChange={(otraNecesidad) => setForm((previous) => ({ ...previous, otraNecesidad }))}
+          />
+          <FaqSection />
+        </div>
       </main>
       <LandingFooter onNavigate={scrollTo} onWaitlist={onWaitlistClick} />
     </div>
