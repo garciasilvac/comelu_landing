@@ -56,13 +56,6 @@ export const NAV_LINKS = [
   { id: "faq", label: "FAQ" },
 ] as const;
 
-export const HERO_BULLETS = [
-  "Una experiencia simple para ordenar órdenes y archivos por caso",
-  "Un seguimiento moderno y amigable del estado de cada trabajo",
-  "Más trazabilidad sin depender de WhatsApp, Excel o mensajes sueltos",
-  "Cobros y comprobantes vinculados a cada orden de forma intuitiva",
-] as const;
-
 export const PROBLEM_CARDS = [
   {
     title: "Información incompleta al iniciar una orden de trabajo dental",

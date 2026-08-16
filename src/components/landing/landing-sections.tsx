@@ -1,12 +1,10 @@
-import { CheckCircleIcon, SparkleIcon } from "@phosphor-icons/react";
+import { SparkleIcon } from "@phosphor-icons/react";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { landingHeroImages } from "@/lib/landingAssets";
-import { AUDIENCE_BLOCKS, FAQ_ITEMS, HERO_BULLETS, NAV_LINKS, PROBLEM_CARDS } from "./landing-data";
+import { AUDIENCE_BLOCKS, FAQ_ITEMS, NAV_LINKS, PROBLEM_CARDS } from "./landing-data";
 
 type ActionProps = {
   onWaitlist: () => void;
@@ -18,64 +16,6 @@ export function SectionIntro({ title, description }: { title: string; descriptio
       <h2 className="font-heading text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">{title}</h2>
       <p className="mt-3 text-pretty text-base leading-7 text-muted-foreground">{description}</p>
     </div>
-  );
-}
-
-export function HeroSection({ onWaitlist, onProblems }: ActionProps & { onProblems: () => void }) {
-  return (
-    <section
-      className="hero-panel full-bleed-dark-section scroll-mt-24"
-      data-reveal
-      style={{
-        ["--hero-image-desktop" as string]: `url(${landingHeroImages.desktop})`,
-        ["--hero-image-mobile" as string]: `url(${landingHeroImages.mobile})`,
-      }}
-    >
-      <div className="hero-panel-inner">
-        <div className="hero-grid">
-          <div className="hero-copy" data-reveal>
-            <Badge variant="outline" className="border-primary/50 bg-primary/15 text-sky-100">
-              Software para laboratorios dentales en Chile
-            </Badge>
-            <h1 className="mt-5 max-w-4xl font-heading text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-              El Software que cambiará la gestión del laboratorio dental
-            </h1>
-            <p className="mt-5 max-w-3xl text-base text-slate-200 sm:text-lg">
-              Organiza órdenes, archivos, estados y pagos. Sin depender de Excel, WhatsApp o mensajes sueltos
-            </p>
-            <p className="mt-4 max-w-3xl text-sm text-slate-300 sm:text-base">
-              Construiremos la solución para el problema real del rubro en Chile. Será simple, amigable y con
-              trazabilidad clara para seguir cada caso fácilmente.
-            </p>
-            <ul className="mt-6 grid gap-3 text-sm text-slate-100 sm:text-base">
-              {HERO_BULLETS.map((item) => (
-                <li key={item} className="flex items-start gap-2">
-                  <CheckCircleIcon className="mt-0.5 shrink-0 text-amber-300" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button type="button" size="lg" className="w-full sm:w-auto" onClick={onWaitlist}>
-                Unirme a la lista de espera
-              </Button>
-              <Button
-                type="button"
-                size="lg"
-                variant="outline"
-                className="w-full border-white/30 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:w-auto"
-                onClick={onProblems}
-              >
-                Ver lo que buscamos resolver
-              </Button>
-            </div>
-            <p className="mt-3 max-w-2xl text-sm text-slate-300">
-              Déjanos tus datos y te contactaremos cuando abramos los primeros accesos y espacios de validación.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
   );
 }
 

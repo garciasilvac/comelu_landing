@@ -30,9 +30,10 @@ describe("Comelu landing", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "El Software que cambiará la gestión del laboratorio dental",
+        name: "Toda la operación de tu laboratorio dental, en un solo lugar.",
       }),
     ).toBeVisible();
+    expect(screen.queryByText("El Software que cambiará la gestión del laboratorio dental")).not.toBeInTheDocument();
     expect(screen.getByRole("textbox", { name: "Nombre" })).toBeRequired();
     expect(screen.getByRole("textbox", { name: "Email" })).toBeRequired();
     expect(screen.getByRole("combobox", { name: "Rol" })).toBeRequired();
@@ -40,6 +41,16 @@ describe("Comelu landing", () => {
     expect(document.querySelector("#para-quien")).toBeInTheDocument();
     expect(document.querySelector("#lista-espera")).toBeInTheDocument();
     expect(document.querySelector("#faq")).toBeInTheDocument();
+  });
+
+  it("switches product previews through accessible shadcn tabs", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("tab", { name: "Producción" }));
+
+    expect(screen.getByText("Por iniciar")).toBeVisible();
+    expect(screen.getAllByText("Control de calidad")[0]).toBeVisible();
   });
 
   it("shows accessible validation when the required form is empty", async () => {

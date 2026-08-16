@@ -3,11 +3,11 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 import {
   AudienceSection,
   FaqSection,
-  HeroSection,
   LandingFooter,
   ProblemsSection,
   TrustSection,
 } from "@/components/landing/landing-sections";
+import { HeroSection } from "@/components/landing/HeroSection";
 import { LandingHeader } from "@/components/landing/landing-header";
 import { WaitlistSection } from "@/components/landing/waitlist-section";
 import {
