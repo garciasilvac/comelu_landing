@@ -17,8 +17,20 @@ describe("HeroSection", () => {
     expect(screen.getByText("Software para laboratorios dentales en Chile")).toBeVisible();
     expect(screen.getByRole("tablist", { name: "Explorar Comelu" })).toBeVisible();
     expect(screen.getByRole("tab", { name: "Órdenes" })).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByLabelText("Dato ilustrativo: 18 órdenes de trabajo activas")).toBeVisible();
-    expect(screen.getByLabelText("Dato ilustrativo: 3 entregas programadas para hoy")).toBeVisible();
+  });
+
+  it("moves one shared selection indicator with the controlled tab", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<HeroSection onWaitlist={vi.fn()} onProblems={vi.fn()} />);
+    const tabsList = screen.getByRole("tablist", { name: "Explorar Comelu" });
+
+    expect(tabsList).toHaveStyle({ "--hero-tab-index": "1" });
+    expect(container.querySelectorAll(".hero-tabs-indicator")).toHaveLength(1);
+    expect(container.querySelector(".hero-kpi")).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("tab", { name: "Producción" }));
+
+    expect(tabsList).toHaveStyle({ "--hero-tab-index": "2" });
   });
 
   it("keeps both existing conversion callbacks", async () => {

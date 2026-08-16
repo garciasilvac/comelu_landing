@@ -1,8 +1,10 @@
+import { type CSSProperties, useState } from "react";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HeroMeshBackground } from "./HeroMeshBackground";
-import { HeroProductPreview, PRODUCT_TABS } from "./HeroProductPreview";
+import { HeroProductPreview, PRODUCT_TABS, type ProductTabValue } from "./HeroProductPreview";
 
 export type HeroSectionProps = {
   onWaitlist: () => void;
@@ -10,6 +12,10 @@ export type HeroSectionProps = {
 };
 
 export function HeroSection({ onWaitlist, onProblems }: HeroSectionProps) {
+  const [activeTab, setActiveTab] = useState<ProductTabValue>("orders");
+  const activeTabIndex = PRODUCT_TABS.findIndex((tab) => tab.value === activeTab);
+  const tabListStyle = { "--hero-tab-index": activeTabIndex } as CSSProperties;
+
   return (
     <section className="hero-section" aria-labelledby="hero-title">
       <HeroMeshBackground />
@@ -36,24 +42,21 @@ export function HeroSection({ onWaitlist, onProblems }: HeroSectionProps) {
           </div>
         </div>
 
-        <Tabs defaultValue="orders" className="hero-product-tabs">
-          <TabsList aria-label="Explorar Comelu" className="hero-tabs-list">
+        <Tabs
+          value={activeTab}
+          onValueChange={(value) => setActiveTab(value as ProductTabValue)}
+          className="hero-product-tabs"
+        >
+          <TabsList aria-label="Explorar Comelu" className="hero-tabs-list" style={tabListStyle}>
+            <span className="hero-tabs-indicator" aria-hidden="true" />
             {PRODUCT_TABS.map((tab) => (
               <TabsTrigger key={tab.value} value={tab.value} className="hero-tab-trigger">
-                {tab.label}
+                <span className="hero-tab-label">{tab.label}</span>
               </TabsTrigger>
             ))}
           </TabsList>
 
           <div className="hero-preview-stage" data-hero-enter="preview">
-            <div className="hero-kpi hero-kpi-orders" aria-label="Dato ilustrativo: 18 órdenes de trabajo activas">
-              <span className="hero-kpi-dot" aria-hidden="true" />
-              <span><strong>18</strong> OT activas</span>
-            </div>
-            <div className="hero-kpi hero-kpi-deliveries" aria-label="Dato ilustrativo: 3 entregas programadas para hoy">
-              <span className="hero-kpi-dot" aria-hidden="true" />
-              <span><strong>3</strong> entregas hoy</span>
-            </div>
             <HeroProductPreview />
           </div>
         </Tabs>
