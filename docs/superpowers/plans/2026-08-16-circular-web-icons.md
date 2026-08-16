@@ -4,9 +4,9 @@
 
 **Goal:** Replace Comelu's square browser icon backgrounds with preset-aligned circular `sky-700` backgrounds and fully transparent outer corners, while preserving valid maskable and Safari assets.
 
-**Architecture:** `public/favicon.svg` remains the canonical standard icon. A focused Node script invokes macOS vector/raster tools to regenerate standard PNGs and ICO entries from that SVG, and derives a temporary full-bleed variant for maskable outputs. Vitest parses SVG, PNG, ICO, manifest, and HTML metadata directly so platform contracts are regression-tested without adding a runtime dependency.
+**Architecture:** `public/favicon.svg` remains the canonical standard icon. A focused Node script invokes macOS `sips` to regenerate standard PNGs and ICO entries from that SVG, and derives a temporary full-bleed variant for maskable outputs. Vitest parses SVG, PNG, ICO, manifest, and HTML metadata directly so platform contracts are regression-tested without adding a runtime dependency.
 
-**Tech Stack:** SVG, PNG, ICO, Node.js built-ins, macOS `qlmanage`/`sips`, Vitest, Vite.
+**Tech Stack:** SVG, PNG, ICO, Node.js built-ins, macOS `sips`, Vitest, Vite.
 
 ## Global Constraints
 
@@ -76,7 +76,7 @@ In `public/favicon.svg`, replace `<rect width="1254" height="1254" fill="#015AB5
 
 Create `scripts/generate-web-icons.mjs` using only `node:child_process`, `node:fs`, `node:os`, and `node:path`. It must:
 
-- render the canonical SVG at 512 px with `qlmanage`;
+- render the canonical SVG as a transparent PNG with `sips`;
 - resize it with `sips` to 16, 32, 48, 180, 192, and 512 px;
 - write the standard outputs to their existing names;
 - derive a temporary SVG with a full-canvas `#0369A1` rectangle and `<g transform="translate(62.7 62.7) scale(0.9)">` around the unchanged amber path;
