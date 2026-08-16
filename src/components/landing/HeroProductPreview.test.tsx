@@ -55,4 +55,21 @@ describe("HeroProductPreview", () => {
     expect(screen.getByRole("tab", { name: "Producción" })).toHaveAttribute("aria-selected", "true");
     expect(screen.getByText("Por iniciar")).toBeVisible();
   });
+
+  it("brands the product bar and keeps operational metrics inside Orders", () => {
+    render(<PreviewHarness />);
+
+    expect(screen.getByRole("img", { name: "Comelu" })).toHaveAttribute("src", "/comelu-horizontal.svg");
+    expect(screen.getByRole("button", { name: "3 notificaciones" })).toBeVisible();
+    expect(screen.getByLabelText("18 órdenes de trabajo activas")).toBeVisible();
+    expect(screen.getByLabelText("3 entregas programadas para hoy")).toBeVisible();
+  });
+
+  it("exposes semantic tones on product records", () => {
+    render(<PreviewHarness />);
+
+    expect(screen.getAllByText("En producción")[0].closest("article")).toHaveAttribute("data-tone", "progress");
+    expect(screen.getAllByText("Por iniciar")[0].closest("article")).toHaveAttribute("data-tone", "warning");
+    expect(screen.getAllByText("Control de calidad")[0].closest("article")).toHaveAttribute("data-tone", "review");
+  });
 });

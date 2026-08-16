@@ -9,7 +9,7 @@ describe("Comelu landing", () => {
     render(<App />);
 
     const logos = screen.getAllByRole("img", { name: "Comelu" });
-    expect(logos).toHaveLength(2);
+    expect(logos).toHaveLength(3);
     logos.forEach((logo) => expect(logo).toHaveAttribute("src", "/comelu-horizontal.svg"));
     expect(screen.getByRole("banner")).toHaveClass("bg-sky-700");
     expect(screen.getByRole("contentinfo")).toHaveClass("bg-sky-700");
