@@ -232,21 +232,21 @@ export function FaqSection() {
 export function LandingFooter({ onNavigate, onWaitlist }: ActionProps & { onNavigate: (id: string) => void }) {
   const year = new Date().getFullYear();
   return (
-    <footer className="mt-16 border-t bg-slate-950 text-slate-100">
+    <footer className="mt-16 border-t border-sky-800/40 bg-sky-700 text-white">
       <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[1fr_auto] lg:items-center lg:px-8">
         <div>
-          <p className="font-heading text-sm font-semibold">Comelu</p>
-          <p className="mt-1 text-sm text-slate-400">Software en construcción para laboratorios dentales</p>
-          <p className="mt-1 text-sm text-slate-500">© {year} Comelu. Todos los derechos reservados.</p>
+          <img src="/comelu-horizontal.svg" alt="Comelu" className="h-auto w-32 sm:w-36" />
+          <p className="mt-1 text-sm text-sky-100">Software en construcción para laboratorios dentales</p>
+          <p className="mt-1 text-sm text-sky-200/80">© {year} Comelu. Todos los derechos reservados.</p>
         </div>
         <nav className="flex flex-wrap items-center gap-1" aria-label="Navegación del pie">
           {NAV_LINKS.map((link) => (
-            <Button key={link.id} type="button" variant="ghost" className="text-slate-300 hover:bg-white/10 hover:text-white" onClick={() => onNavigate(link.id)}>
+            <Button key={link.id} type="button" variant="ghost" className="text-sky-50 hover:bg-white/15 hover:text-white focus-visible:ring-white/60" onClick={() => onNavigate(link.id)}>
               {link.id === "que-resuelve" ? "Problemas" : link.label}
             </Button>
           ))}
           <Separator orientation="vertical" className="mx-1 hidden h-5 bg-white/20 sm:block" />
-          <Button type="button" variant="ghost" className="text-sky-300 hover:bg-white/10 hover:text-sky-200" onClick={onWaitlist}>
+          <Button type="button" variant="ghost" className="text-amber-200 hover:bg-white/15 hover:text-amber-100 focus-visible:ring-white/60" onClick={onWaitlist}>
             Lista de espera
           </Button>
         </nav>

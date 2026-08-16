@@ -5,6 +5,16 @@ import { describe, expect, it } from "vitest";
 import App from "./App";
 
 describe("Comelu landing", () => {
+  it("uses the shared Comelu logo on matching sky navbar and footer surfaces", () => {
+    render(<App />);
+
+    const logos = screen.getAllByRole("img", { name: "Comelu" });
+    expect(logos).toHaveLength(2);
+    logos.forEach((logo) => expect(logo).toHaveAttribute("src", "/comelu-horizontal.svg"));
+    expect(screen.getByRole("banner")).toHaveClass("bg-sky-700");
+    expect(screen.getByRole("contentinfo")).toHaveClass("bg-sky-700");
+  });
+
   it("opens mobile navigation as a named modal surface", async () => {
     const user = userEvent.setup();
     render(<App />);
