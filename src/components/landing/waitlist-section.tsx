@@ -260,37 +260,45 @@ export function WaitlistSection({
 
               <input type="hidden" name="checklist" value={form.checklist ? "true" : "false"} />
 
-              <Field>
-                <FieldLabel>Comprobación de seguridad</FieldLabel>
-                <div ref={turnstileContainerRef} />
-                {turnstileError ? <FieldError>{turnstileError}</FieldError> : null}
-              </Field>
-
               {formError ? (
-                <Alert variant="destructive">
-                  <WarningCircleIcon />
-                  <AlertTitle>No pudimos enviar el formulario</AlertTitle>
-                  <AlertDescription>{formError}</AlertDescription>
+                <Alert
+                  variant="destructive"
+                  className="rounded-xl border-red-200 bg-red-50 px-4 py-3 text-red-950 shadow-sm has-[>svg]:gap-x-3 *:data-[slot=alert-description]:text-red-800"
+                >
+                  <WarningCircleIcon className="mt-0.5 size-5 text-red-600" />
+                  <AlertTitle className="font-semibold">No pudimos enviar el formulario</AlertTitle>
+                  <AlertDescription className="mt-1 leading-relaxed">{formError}</AlertDescription>
                 </Alert>
               ) : null}
               {submitted ? (
-                <Alert className="border-primary/30 bg-primary/5 text-primary">
-                  <CheckCircleIcon />
-                  <AlertTitle>Registro recibido</AlertTitle>
-                  <AlertDescription>
+                <Alert className="rounded-xl border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-950 shadow-sm has-[>svg]:gap-x-3 *:data-[slot=alert-description]:text-emerald-800">
+                  <CheckCircleIcon className="mt-0.5 size-5 text-emerald-600" />
+                  <AlertTitle className="font-semibold">Registro recibido</AlertTitle>
+                  <AlertDescription className="mt-1 leading-relaxed">
                     Te contactaremos cuando haya novedades, primeros accesos o instancias de validación.
                   </AlertDescription>
                 </Alert>
               ) : null}
 
-              <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Button type="submit" size="lg" disabled={isSubmitting} className="w-full sm:w-auto">
-                  {isSubmitting ? <Spinner data-icon="inline-start" aria-label="Enviando" /> : <PaperPlaneTiltIcon data-icon="inline-start" />}
-                  {isSubmitting ? "Enviando..." : "Quiero unirme a la lista de espera"}
-                </Button>
-                <p className="max-w-lg text-sm text-muted-foreground">
-                  Solo te contactaremos por novedades relevantes del producto.
-                </p>
+              <div
+                role="group"
+                aria-label="Acciones de envío"
+                className="flex flex-col items-stretch gap-6 lg:flex-row lg:items-start lg:justify-between"
+              >
+                <div className="flex flex-col items-start gap-3">
+                  <Button type="submit" size="lg" disabled={isSubmitting} className="w-full lg:w-auto">
+                    {isSubmitting ? <Spinner data-icon="inline-start" aria-label="Enviando" /> : <PaperPlaneTiltIcon data-icon="inline-start" />}
+                    {isSubmitting ? "Enviando..." : "Quiero unirme a la lista de espera"}
+                  </Button>
+                  <p className="max-w-lg text-sm text-muted-foreground">
+                    Solo te contactaremos por novedades relevantes del producto.
+                  </p>
+                </div>
+                <Field className="w-full lg:w-auto lg:min-w-76">
+                  <FieldLabel>Comprobación de seguridad</FieldLabel>
+                  <div ref={turnstileContainerRef} />
+                  {turnstileError ? <FieldError>{turnstileError}</FieldError> : null}
+                </Field>
               </div>
             </form>
           </CardContent>

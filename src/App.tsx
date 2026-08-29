@@ -178,12 +178,9 @@ function App() {
   const validateTelefono = (pais: string, numero: string) => {
     const paisTrimmed = pais.trim();
     const numeroTrimmed = numero.trim();
-    if (!paisTrimmed && !numeroTrimmed) return { telefonoPais: "", telefonoNumero: "" };
+    if (!numeroTrimmed) return { telefonoPais: "", telefonoNumero: "" };
     if (!paisTrimmed) {
       return { telefonoPais: "Selecciona un código de país si vas a dejar tu teléfono.", telefonoNumero: "" };
-    }
-    if (!numeroTrimmed) {
-      return { telefonoPais: "", telefonoNumero: "Ingresa tu número de teléfono o deja ambos campos vacíos." };
     }
     const digitsOnly = numeroTrimmed.replace(/\D/g, "");
     const countryDigits = paisTrimmed.replace(/\D/g, "");

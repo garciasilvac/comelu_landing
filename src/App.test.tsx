@@ -37,6 +37,7 @@ describe("Comelu landing", () => {
     expect(screen.getByRole("textbox", { name: "Nombre" })).toBeRequired();
     expect(screen.getByRole("textbox", { name: "Email" })).toBeRequired();
     expect(screen.getByRole("combobox", { name: "Rol" })).toBeRequired();
+    expect(screen.getByRole("combobox", { name: "Código de país" })).toHaveValue("+56");
     expect(document.querySelector("#que-resuelve")).toBeInTheDocument();
     expect(document.querySelector("#para-quien")).toBeInTheDocument();
     expect(document.querySelector("#lista-espera")).toBeInTheDocument();
@@ -61,6 +62,37 @@ describe("Comelu landing", () => {
 
     expect(screen.getByRole("textbox", { name: "Nombre" })).toHaveAttribute("aria-invalid", "true");
     expect(screen.getAllByText("El nombre debe tener al menos 2 letras.")[0]).toBeVisible();
+    const formAlert = screen.getByText("No pudimos enviar el formulario").closest('[role="alert"]');
+    expect(formAlert).toBeInTheDocument();
+    expect(formAlert).toHaveClass(
+      "border-red-200",
+      "bg-red-50",
+      "shadow-sm",
+    );
+  });
+
+  it("keeps submission and security controls together in one action row", () => {
+    render(<App />);
+
+    const actionRow = screen.getByRole("group", { name: "Acciones de envío" });
+    expect(actionRow).toContainElement(
+      screen.getByRole("button", { name: "Quiero unirme a la lista de espera" }),
+    );
+    expect(actionRow).toContainElement(screen.getByText("Comprobación de seguridad"));
+  });
+
+  it("keeps the phone optional when the default country code is selected", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.type(screen.getByRole("textbox", { name: "Nombre" }), "Carlos");
+    await user.type(screen.getByRole("textbox", { name: "Email" }), "carlos@example.com");
+    await user.selectOptions(screen.getByRole("combobox", { name: "Rol" }), "Laboratorista");
+    await user.selectOptions(screen.getByRole("combobox", { name: "Código de país" }), "+56");
+    await user.click(screen.getByRole("button", { name: "Quiero unirme a la lista de espera" }));
+
+    expect(screen.queryByText("Ingresa tu número de teléfono o deja ambos campos vacíos.")).not.toBeInTheDocument();
+    expect(screen.getByText("Completa la comprobación de seguridad antes de enviar.")).toBeVisible();
   });
 
   it("limits interest selection to three choices", async () => {
