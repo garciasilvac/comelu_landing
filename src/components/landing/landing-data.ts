@@ -147,7 +147,7 @@ export const INTERESTS: Interest[] = [
 export const INITIAL_FORM: FormState = {
   nombre: "",
   email: "",
-  telefonoPais: "",
+  telefonoPais: "+56",
   telefonoNumero: "",
   rol: "",
   tamano: "",

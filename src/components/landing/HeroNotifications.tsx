@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/popover";
 
 const notifications = [
-  { title: "Entrega programada hoy", detail: "OT-2039 · Centro Dental Orto Sur", tone: "warning" },
-  { title: "Orden pendiente de iniciar", detail: "OT-2043 · Clínica Santa María", tone: "warning" },
-  { title: "Pago pendiente", detail: "Factura 00481 · Clínica Los Andes", tone: "progress" },
+  { title: "Entrega programada hoy", detail: "OT-2039 · Centro Dental Sur", tone: "warning" },
+  { title: "Orden pendiente de iniciar", detail: "OT-2043 · Clínica Santa Marina", tone: "warning" },
+  { title: "Pago pendiente", detail: "Factura 00481 · Clínica Los Alpes", tone: "progress" },
 ] as const;
 
 export function HeroNotifications() {

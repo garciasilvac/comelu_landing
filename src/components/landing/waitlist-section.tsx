@@ -69,23 +69,20 @@ export function WaitlistSection({
     <section id="lista-espera" className="section-block scroll-mt-24" data-reveal>
       <div className="rounded-2xl bg-sky-50 px-4 py-8 ring-1 ring-sky-100 sm:px-8 sm:py-10">
         <SectionIntro
-          title="Únete temprano y ayúdanos a construir el software que el rubro necesita"
-          description="Déjanos tus datos para contactarte cuando abramos primeros accesos, entrevistas o instancias de validación del producto."
+          title="Únete y obtén promociones de lanzamiento"
+          description="Descuentos especiales y acceso privilegiado a módulos premium. Ayúdanos a construir el software que el rubro necesita"
         />
 
         <Card className="mx-auto mt-8 max-w-5xl shadow-sm">
           <CardHeader className="border-b">
-            <CardTitle>Lista de espera de Comelu</CardTitle>
-            <p className="text-sm text-muted-foreground">Los campos marcados son obligatorios.</p>
+            <CardTitle>Lista de espera</CardTitle>
           </CardHeader>
           <CardContent>
             <form className="grid gap-8" onSubmit={onSubmit} noValidate>
               <FieldSet>
-                <FieldLegend>Datos principales</FieldLegend>
-                <FieldDescription>Información necesaria para sumarte a la lista.</FieldDescription>
                 <FieldGroup className="grid gap-5 lg:grid-cols-3">
                   <Field data-invalid={Boolean(fieldErrors.nombre)}>
-                    <FieldLabel htmlFor="nombre">Nombre</FieldLabel>
+                    <FieldLabel htmlFor="nombre">Nombre y Apellido</FieldLabel>
                     <Input
                       ref={firstInputRef}
                       id="nombre"
@@ -94,14 +91,14 @@ export function WaitlistSection({
                       value={form.nombre}
                       onChange={(event) => onFieldChange("nombre", event.target.value)}
                       onBlur={() => onFieldBlur("nombre")}
-                      placeholder="Ej: Carlos González"
+                      placeholder="Escribe tu nombre"
                       aria-invalid={Boolean(fieldErrors.nombre)}
                       aria-describedby={fieldErrors.nombre ? "nombre-error" : "nombre-help"}
                     />
                     {fieldErrors.nombre ? (
                       <FieldError id="nombre-error">{fieldErrors.nombre}</FieldError>
                     ) : (
-                      <FieldDescription id="nombre-help">Escribe tu nombre y apellido.</FieldDescription>
+                      <FieldDescription id="nombre-help"></FieldDescription>
                     )}
                   </Field>
 
@@ -115,14 +112,14 @@ export function WaitlistSection({
                       value={form.email}
                       onChange={(event) => onFieldChange("email", event.target.value)}
                       onBlur={() => onFieldBlur("email")}
-                      placeholder="nombre@empresa.cl"
+                      placeholder="ej: nombre@empresa.cl"
                       aria-invalid={Boolean(fieldErrors.email)}
                       aria-describedby={fieldErrors.email ? "email-error" : "email-help"}
                     />
                     {fieldErrors.email ? (
                       <FieldError id="email-error">{fieldErrors.email}</FieldError>
                     ) : (
-                      <FieldDescription id="email-help">Formato esperado: nombre@empresa.cl</FieldDescription>
+                      <FieldDescription id="email-help"></FieldDescription>
                     )}
                   </Field>
 
@@ -158,7 +155,7 @@ export function WaitlistSection({
 
               <FieldSet>
                 <FieldLegend>Cuéntanos más</FieldLegend>
-                <FieldDescription>Campos opcionales que nos ayudan a priorizar mejor el producto.</FieldDescription>
+                <FieldDescription></FieldDescription>
                 <FieldGroup className="grid items-start gap-5 lg:grid-cols-2">
                   <Field data-invalid={Boolean(fieldErrors.telefonoPais || fieldErrors.telefonoNumero)}>
                     <FieldLabel htmlFor="telefono-pais">Teléfono</FieldLabel>
@@ -189,7 +186,7 @@ export function WaitlistSection({
                         value={form.telefonoNumero}
                         onChange={(event) => onFieldChange("telefonoNumero", event.target.value)}
                         onBlur={() => onFieldBlur("telefonoNumero")}
-                        placeholder="9 1234 5678"
+                        placeholder="ej: 9 1234 5678"
                         aria-label="Número de teléfono"
                         aria-invalid={Boolean(fieldErrors.telefonoNumero)}
                       />
@@ -260,37 +257,40 @@ export function WaitlistSection({
 
               <input type="hidden" name="checklist" value={form.checklist ? "true" : "false"} />
 
-              <Field>
-                <FieldLabel>Comprobación de seguridad</FieldLabel>
-                <div ref={turnstileContainerRef} />
-                {turnstileError ? <FieldError>{turnstileError}</FieldError> : null}
-              </Field>
-
               {formError ? (
-                <Alert variant="destructive">
-                  <WarningCircleIcon />
-                  <AlertTitle>No pudimos enviar el formulario</AlertTitle>
-                  <AlertDescription>{formError}</AlertDescription>
+                <Alert
+                  variant="destructive"
+                  className="rounded-xl border-red-200 bg-red-50 px-4 py-3 text-red-950 shadow-sm has-[>svg]:gap-x-3 *:data-[slot=alert-description]:text-red-800"
+                >
+                  <WarningCircleIcon className="mt-0.5 size-5 text-red-600" />
+                  <AlertTitle className="font-semibold">No pudimos enviar el formulario</AlertTitle>
+                  <AlertDescription className="mt-1 leading-relaxed">{formError}</AlertDescription>
                 </Alert>
               ) : null}
               {submitted ? (
-                <Alert className="border-primary/30 bg-primary/5 text-primary">
-                  <CheckCircleIcon />
-                  <AlertTitle>Registro recibido</AlertTitle>
-                  <AlertDescription>
+                <Alert className="rounded-xl border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-950 shadow-sm has-[>svg]:gap-x-3 *:data-[slot=alert-description]:text-emerald-800">
+                  <CheckCircleIcon className="mt-0.5 size-5 text-emerald-600" />
+                  <AlertTitle className="font-semibold">Registro recibido</AlertTitle>
+                  <AlertDescription className="mt-1 leading-relaxed">
                     Te contactaremos cuando haya novedades, primeros accesos o instancias de validación.
                   </AlertDescription>
                 </Alert>
               ) : null}
 
-              <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Button type="submit" size="lg" disabled={isSubmitting} className="w-full sm:w-auto">
+              <div
+                role="group"
+                aria-label="Acciones de envío"
+                className="flex flex-col items-stretch gap-6 lg:flex-row lg:items-start lg:justify-between"
+              >
+                <Button type="submit" size="lg" disabled={isSubmitting} className="w-full lg:w-auto">
                   {isSubmitting ? <Spinner data-icon="inline-start" aria-label="Enviando" /> : <PaperPlaneTiltIcon data-icon="inline-start" />}
                   {isSubmitting ? "Enviando..." : "Quiero unirme a la lista de espera"}
                 </Button>
-                <p className="max-w-lg text-sm text-muted-foreground">
-                  Solo te contactaremos por novedades relevantes del producto.
-                </p>
+                <Field className="w-full lg:w-auto lg:min-w-76">
+                  <FieldLabel>Comprobación de seguridad</FieldLabel>
+                  <div ref={turnstileContainerRef} />
+                  {turnstileError ? <FieldError>{turnstileError}</FieldError> : null}
+                </Field>
               </div>
             </form>
           </CardContent>
