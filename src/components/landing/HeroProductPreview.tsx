@@ -14,7 +14,7 @@ export const PRODUCT_TABS = [
 const clients = [
   {
     initials: "LA",
-    name: "Clínica Los Andes",
+    name: "Clínica Los Alpes",
     contact: "Dra. Camila Soto",
     orders: { label: "6 activas", tone: "progress" },
     payments: { label: "1 pendiente", tone: "warning" },
@@ -22,7 +22,7 @@ const clients = [
   },
   {
     initials: "OS",
-    name: "Centro Dental Orto Sur",
+    name: "Centro Dental Sur",
     contact: "Dr. Martín Rojas",
     orders: { label: "1 OT atrasada", tone: "critical" },
     payments: { label: "1 pago vencido", tone: "critical" },
@@ -30,7 +30,7 @@ const clients = [
   },
   {
     initials: "SM",
-    name: "Clínica Santa María",
+    name: "Clínica Santa Marina",
     contact: "Recepción clínica",
     orders: { label: "Al día", tone: "positive" },
     payments: { label: "Al día", tone: "positive" },
@@ -41,7 +41,7 @@ const clients = [
 const orders = [
   {
     id: "OT-2048",
-    client: "Clínica Los Andes",
+    client: "Clínica Los Alpes",
     work: "Corona zirconia",
     state: "En producción",
     delivery: "18 ago",
@@ -49,7 +49,7 @@ const orders = [
   },
   {
     id: "OT-2043",
-    client: "Clínica Santa María",
+    client: "Clínica Santa Marina",
     work: "Prótesis removible",
     state: "Por iniciar",
     delivery: "19 ago",
@@ -57,7 +57,7 @@ const orders = [
   },
   {
     id: "OT-2039",
-    client: "Centro Dental Orto Sur",
+    client: "Centro Dental Sur",
     work: "Puente 3 piezas",
     state: "Atrasada",
     delivery: "15 ago",
@@ -67,14 +67,14 @@ const orders = [
 
 const productionStages = [
   { title: "Por iniciar", count: 4, order: "OT-2051", work: "Incrustación cerámica", meta: "Entrega 20 ago", tone: "warning" },
-  { title: "En producción", count: 7, order: "OT-2048", work: "Corona zirconia", meta: "Clínica Los Andes", tone: "progress" },
+  { title: "En producción", count: 7, order: "OT-2048", work: "Corona zirconia", meta: "Clínica Los Alpes", tone: "progress" },
   { title: "Control de calidad", count: 3, order: "OT-2039", work: "Puente 3 piezas", meta: "Entrega 18 ago", tone: "review" },
 ] as const;
 
 const payments = [
-  { document: "Factura 00481", client: "Clínica Los Andes", order: "OT-2048", state: "Pendiente", tone: "warning" },
-  { document: "Factura 00476", client: "Centro Dental Orto Sur", order: "OT-2039", state: "Vencida", tone: "critical" },
-  { document: "Comprobante adjunto", client: "Clínica Santa María", order: "OT-2043", state: "Recibido", tone: "positive" },
+  { document: "Factura 00481", client: "Clínica Los Aples", order: "OT-2048", state: "Pendiente", tone: "warning" },
+  { document: "Factura 00476", client: "Centro Dental Sur", order: "OT-2039", state: "Vencida", tone: "critical" },
+  { document: "Comprobante adjunto", client: "Clínica Santa Marina", order: "OT-2043", state: "Recibido", tone: "positive" },
 ] as const;
 
 function ProductWindowHeader() {
