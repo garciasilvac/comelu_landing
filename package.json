@@ -12,7 +12,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "test": "pnpm test:frontend-only && vitest run",
-    "test:frontend-only": "node scripts/check-frontend-only.mjs",
+    "test:frontend-only": "node scripts/check-frontend-only.mjs && node --test test/frontend-only-boundary.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

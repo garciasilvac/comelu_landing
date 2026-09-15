@@ -18,6 +18,15 @@ El comportamiento del frontend no cambia:
 
 Estas variables son configuración pública de cliente. No se deben agregar credenciales server-side a ningún ejemplo `.env` ni al bundle.
 
+El código runtime sólo puede leer estas claves mediante `import.meta.env`:
+
+- variables públicas: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_TURNSTILE_SITE_KEY`;
+- built-ins documentados de Vite: `DEV`, `PROD`, `MODE`, `BASE_URL`, `SSR`.
+
+El guard rechaza cualquier otra lectura con acceso por punto o corchetes, así como cualquier nombre `VITE_*` no incluido en esta lista.
+
+El directorio `scripts/` mantiene una allowlist estrecha para tooling frontend: `check-frontend-only.mjs` y `generate-web-icons.mjs`. Los scripts de backend, correo o migraciones no pertenecen a este repositorio.
+
 ## Histórico SQL reconciliado
 
 El SQL histórico está reconciliado en `comelu-app` como:
