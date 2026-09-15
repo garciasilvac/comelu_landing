@@ -34,7 +34,7 @@ describe("Comelu landing", () => {
       }),
     ).toBeVisible();
     expect(screen.queryByText("El Software que cambiará la gestión del laboratorio dental")).not.toBeInTheDocument();
-    expect(screen.getByRole("textbox", { name: "Nombre" })).toBeRequired();
+    expect(screen.getByRole("textbox", { name: "Nombre y Apellido" })).toBeRequired();
     expect(screen.getByRole("textbox", { name: "Email" })).toBeRequired();
     expect(screen.getByRole("combobox", { name: "Rol" })).toBeRequired();
     expect(screen.getByRole("combobox", { name: "Código de país" })).toHaveValue("+56");
@@ -60,7 +60,7 @@ describe("Comelu landing", () => {
 
     await user.click(screen.getByRole("button", { name: "Quiero unirme a la lista de espera" }));
 
-    expect(screen.getByRole("textbox", { name: "Nombre" })).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByRole("textbox", { name: "Nombre y Apellido" })).toHaveAttribute("aria-invalid", "true");
     expect(screen.getAllByText("El nombre debe tener al menos 2 letras.")[0]).toBeVisible();
     const formAlert = screen.getByText("No pudimos enviar el formulario").closest('[role="alert"]');
     expect(formAlert).toBeInTheDocument();
@@ -85,7 +85,7 @@ describe("Comelu landing", () => {
     const user = userEvent.setup();
     render(<App />);
 
-    await user.type(screen.getByRole("textbox", { name: "Nombre" }), "Carlos");
+    await user.type(screen.getByRole("textbox", { name: "Nombre y Apellido" }), "Carlos");
     await user.type(screen.getByRole("textbox", { name: "Email" }), "carlos@example.com");
     await user.selectOptions(screen.getByRole("combobox", { name: "Rol" }), "Laboratorista");
     await user.selectOptions(screen.getByRole("combobox", { name: "Código de país" }), "+56");
