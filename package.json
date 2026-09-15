@@ -11,9 +11,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "test": "vitest run",
-    "preview": "vite preview",
-    "email:preview": "node --experimental-strip-types supabase/functions/submitLead/preview.ts"
+    "test": "pnpm test:frontend-only && vitest run",
+    "test:frontend-only": "node scripts/check-frontend-only.mjs && node --test test/frontend-only-boundary.test.mjs",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
